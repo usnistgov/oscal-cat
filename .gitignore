@@ -1,0 +1,68 @@
+#  Specifies intentionally untracked files to ignore when using Git
+#  http://git-scm.com/docs/gitignore
+
+# Working, caching, and resource management dynamically created files
+*.log
+*.sass-cache
+*.swp
+*.swo
+*.sw[mnpcod]
+*.tmp
+*.tmp.*
+npm-debug.log*
+
+# The Ionic/Angular-Specific Directories
+# that host files not authored during development:
+node_modules
+platforms
+electron
+coverage
+plugins
+hooks
+dist
+temp
+tmp
+www
+# ... and their content
+node_modules/
+platforms/
+electron/
+coverage/
+plugins/
+hooks/
+dist/
+temp/
+tmp/
+www/
+plugins/android.json
+plugins/ios.json
+
+# Tool-created project management and organization files:
+*.sublime-project
+*.sublime-workspace
+*.fslckout
+*.vscode
+*.xcode
+*.metal
+*.idea
+.sourcemaps/
+.versions/
+.firebase/
+.vscode/
+.xcode/
+.metal/
+.idea/
+
+
+# The rest of the possible "sneaky" files
+**/bower_components or sometimes it is lib/**
+.angular/
+.DS_Store
+.vscode/
+.DS_Store
+*.DS_Store
+Thumbs.db
+UserInterfaceState.xcuserstate
+*.xcuserstate
+*.xc
+$RECYCLE.BIN/
