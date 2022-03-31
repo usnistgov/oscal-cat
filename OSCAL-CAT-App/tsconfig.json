@@ -1,0 +1,40 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "compileOnSave": false,
+
+  "compilerOptions": {
+
+    "resolveJsonModule": true, // The way to import JSON files right in
+    "esModuleInterop": true, // The way to import JSON files right in
+    "allowSyntheticDefaultImports": true, // The way to import JSON files right in
+
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "es2020",
+    "lib": ["es2018", "dom"]
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  }, 
+  // debugging options for VS
+    "name": "vscode-typescript-debugging",
+    "version": "1.0.0",
+    "devDependencies": {
+      "typescript": "^2.7.2"
+    },
+    "scripts": {
+      "start": "ionic serve",
+      "prestart": "ionic build",
+      "build": "tsc"
+    }
+}

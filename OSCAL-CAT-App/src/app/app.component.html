@@ -1,0 +1,95 @@
+<!-- 
+  <ion-app>
+  <ion-router-outlet></ion-router-outlet>
+</ion-app> 
+
+[class.dark]="this.dark"
+[class.dark-theme]="this.dark"
+-->
+<ion-app [class.dark-theme]="this.dark">
+  <ion-split-pane contentId="main-content">
+
+    <ion-menu contentId="main-content">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>OSCAL Catalog <br />Authoring Tool (CAT)</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content>
+
+        <ion-list lines="none">
+          <ion-list-header>Catalog Parts</ion-list-header>
+          <ion-menu-toggle autoHide="false" *ngFor="let page of appPartsPages; let i = index">
+            <ion-item *ngIf="page.sequence===1" [routerLink]="page.url" routerLinkActive="selected"
+              routerDirection="root" detail="false">
+              <ion-icon slot="start" [name]="page.icon + '-outline'"></ion-icon>
+              <ion-label>
+                {{page.title}}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+
+        <ion-list lines="none">
+          <ion-list-header>Catalog File</ion-list-header>
+          <ion-menu-toggle autoHide="false" *ngFor="let page of appPartsPages; let i = index">
+            <ion-item *ngIf="page.sequence===2" [routerLink]="page.url" routerLinkActive="selected"
+              routerDirection="root" detail="false">
+              <ion-icon slot="start" [name]="page.icon + '-outline'"></ion-icon>
+              <ion-label>
+                {{page.title}}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+
+        <ion-list lines="none">
+          <ion-list-header>
+            Extras
+          </ion-list-header>
+
+          <ion-menu-toggle autoHide="false">
+            <ion-item button (click)="openTutorial()" detail="false">
+              <ion-icon slot="start" name="school-outline"></ion-icon>
+              <ion-label>Show Tutorial</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-menu-toggle autoHide="false">
+            <ion-item routerLink="/support" routerLinkActive="active" routerDirection="root" detail="false">
+              <ion-icon slot="start" name="mail-outline"></ion-icon>
+              <ion-label>
+                Support
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-item>
+            <ion-icon slot="start" name="moon-outline"></ion-icon>
+            <ion-label>
+              Dark Mode
+            </ion-label>
+            <ion-toggle [(ngModel)]="dark" (ionChange)="flipDarkMode()"></ion-toggle>
+          </ion-item>
+
+          <ion-menu-toggle autoHide="false">
+            <ion-item routerLink="/app/tabs/about" routerLinkActive="active" routerDirection="root" detail="false">
+              <ion-icon slot="start" name="information"></ion-icon>
+              <ion-label>
+                About
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+
+    <ion-router-outlet id="main-content">
+
+    </ion-router-outlet>
+
+  </ion-split-pane>
+
+</ion-app>

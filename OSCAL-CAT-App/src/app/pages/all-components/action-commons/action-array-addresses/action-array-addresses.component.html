@@ -1,0 +1,171 @@
+<div>
+
+  <!--
+  <form *ngIf="addressListFields" [(formArrayName)]="addressListFields" (ngSubmit)="submitAddress()">
+   -->
+  <form *ngIf="addressesGroup" [(formGroup)]="addressesGroup" (ngSubmit)="submitAddress()">
+    <ion-title>
+      <ion-text *ngIf="!this.isSingleMode">
+        <span> {{getListTitle()}} </span>
+      </ion-text>
+      <ion-text  *ngIf="this.isSingleMode">
+        <span> {{getAddressTitle()}} </span>
+      </ion-text>
+
+    </ion-title>
+
+    <div formArrayName="addressArray" *ngIf="addressesGroup.get('addressArray')['controls'].length>0">
+      <div *ngFor="let addressInstance of addressesGroup.get('addressArray')['controls']; let idx=index;">
+        <!-- div  -->
+        <div [formGroupName]="idx">
+          <!-- formControlName="address"  [formGroupName]="i" -->
+          <div *ngIf="!this.isSingleMode">
+            <ion-buttons slot="end" style="float:right">
+              <ion-button (click)="onRemoveAddress(idx)" color="warning" slot="end">
+                <ion-icon slot="start" icon="backspace-outline"></ion-icon> <!-- -->
+                Remove Address {{idx+1}}/{{addressesGroup.get('addressArray')['controls'].length}}
+              </ion-button>
+            </ion-buttons>
+          </div>
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <div *ngIf="!hideTitle && addressTitle">
+                  <ion-label *ngIf="!!addressTitle" title="Entity address">
+                    {{addressTitle}}
+                  </ion-label>
+                  <ion-label *ngIf="!!!addressTitle">
+                    New Address
+                  </ion-label>
+                </div>
+                <div *ngIf="!hideTitle && !addressTitle && !this.isSingleMode">
+                  <ion-title color="primary">
+                    Address {{idx+1}}
+                  </ion-title>
+                </div>
+                <!-- Idx:{{addressIndex}} onDelegate:{{toRemoveAddress===null}} -->
+                <ion-buttons *ngIf="!toRemoveAddress && idx>=0" slot="end">
+                  <ion-button (click)="onRemoveAddress(idx)" color="warning" slot="end">
+                    <ion-icon slot="start" icon="backspace-outline"></ion-icon>
+                    Remove Address
+                  </ion-button>
+                </ion-buttons>
+              </ion-col>
+              <ion-col>
+
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-item>
+                  <ion-label position="floating">Address Type</ion-label>
+                  <ion-input formControlName="type" title="The Type of the Address (e.g. Office, Home, etc)"
+                    type="text">
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-item>
+                  <ion-label position="floating">Organization/Person/Contact</ion-label>
+                  <ion-input formControlName="addressTo" title="The Name of the Addressee" type="text">
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-item>
+                  <ion-label position="floating">Street/Building/Office/Apartment</ion-label>
+                  <ion-input type="text" formControlName="streetAddress"></ion-input>
+                  <ion-buttons slot="end" *ngIf="!hasExtraLines(idx)">
+                    <ion-button (click)="onAddExtraLine(idx)" color="secondary" slot="end">
+                      <ion-icon slot="start" icon="return-down-back-outline"></ion-icon>
+                      Add Extra Line
+                    </ion-button>
+                  </ion-buttons>
+                </ion-item>
+
+              </ion-col>
+            </ion-row>
+
+            <!-- Extra Address-Lines Logic -->
+            <div formArrayName="extraLines">
+              <!-- Length: {{addressInstance.get('extraLines').length }}-->
+              <div *ngFor="let extraInfo of addressInstance.get('extraLines')['controls']; let idxExtra = index;"
+                [formGroupName]="idxExtra">
+                <ion-row>
+                  <ion-col>
+                    <ion-item>
+                      <ion-label position="floating">Extra Line {{idxExtra+1}}</ion-label>
+                      <ion-input type="text" formControlName="extraLine"></ion-input>
+
+                      <ion-buttons slot="end">
+                        <ion-button (click)="onAddExtraLine(idx)" color="secondary" slot="end"
+                          *ngIf="addressInstance.get('extraLines')['controls'].length === idxExtra+1">
+                          <ion-icon slot="start" icon="return-down-back-outline"></ion-icon>
+                          Add Extra Line
+                        </ion-button>
+                        <ion-button (click)="onRemoveExtraLine(idx, idxExtra)" color="warning" slot="end">
+                          <ion-icon slot="start" icon="backspace-outline"></ion-icon>
+                          Remove
+                        </ion-button>
+                      </ion-buttons>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </div>
+
+            <ion-row>
+              <ion-col>
+                <ion-item>
+                  <ion-label position="floating">City Name</ion-label>
+                  <ion-input type="text" formControlName="city"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-item>
+                  <ion-label position="floating">State/Province/Region</ion-label>
+                  <ion-input formControlName="state" type="text"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col>
+                <ion-item>
+                  <ion-label position="floating" placeholder="1">Postal (ZIP) Code</ion-label>
+                  <ion-input formControlName="postalCode" type="text"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-item>
+                  <ion-label position="floating">Country</ion-label>
+                  <ion-input formControlName="country" type="text"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+        </div>
+        <!-- 
+        oscal-address-form title="address of the {{entryName}} goes here" [addressData]="address" [hideTitle]="false"
+        addressTitle="Address {{i+1}}" addressIndex="{{i}}" (toRemoveAddress)="onRemoveAddress">
+        </oscal-address-form
+        -->
+      </div>
+    </div>
+    <div *ngIf="!this.isSingleMode">
+      <ion-buttons slot="end">
+        <ion-button (click)="onAddAddress()" color="secondary" slot="end">
+          <ion-icon slot="start" icon="add-circle-outline"></ion-icon>
+          Add New Address
+        </ion-button>
+      </ion-buttons>
+    </div>
+
+  </form>
+</div>

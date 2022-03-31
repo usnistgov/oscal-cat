@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Selected Controls</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <oscal-nav-cat></oscal-nav-cat>
+  <div *ngIf="safeToShowTree()">
+    <oscal-tree-profile [treeNodes]="this.proInfo"></oscal-tree-profile>
+  </div>
+  <div *ngIf="!safeToShowTree()">
+    <ion-item>
+      <ion-label color="warning">
+        No Controls for profile were selected from the catalog.<br />
+        Please, use yellow back button to return and select controls.
+      </ion-label>
+    </ion-item>
+  </div>
+</ion-content>

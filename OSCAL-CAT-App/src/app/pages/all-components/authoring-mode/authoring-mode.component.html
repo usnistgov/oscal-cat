@@ -1,0 +1,48 @@
+<div>
+  <ion-progress-bar [type]="undefined" *ngIf="showLoader"></ion-progress-bar>
+  <form>
+    <ion-radio-group [(ngModel)]="mode" value="mode" [disabled]="modeFormDone" [ngModelOptions]="{standalone: true}">
+      <ion-list-header>
+        Select Authoring Method ( Step 1 of 2 )
+      </ion-list-header>
+      <ion-grid>
+        <ion-row *ngFor="let choice of modeValues">
+          <ion-col>
+            <ion-item [disabled]="!modeLabels[choice].on || modeFormDone">
+              <ion-radio slot="start" [value]="choice" (click)="radioClick(choice)">
+              </ion-radio>
+              <ion-label>{{modeLabels[choice].label}}</ion-label>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-button (click)="submitModeForm()" [disabled]="modeFormDone">
+              Select Authoring Method
+            </ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button (click)="submitReset()" *ngIf="modeFormDone">
+              Redo Method Selection (<< Back) </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-radio-group>
+  </form>
+</div>
+<div *ngIf="modeFormDone">
+  <ion-list-header>
+    Select Authoring Method ( Step 2 of 2 )
+  </ion-list-header>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label>Selected Mode: </ion-label>
+          <ion-label>{{modeLabels[mode].label}} </ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+</div>

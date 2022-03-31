@@ -1,0 +1,453 @@
+<div>
+  <form [formGroup]="metaForm" (ngSubmit)="submitForm()">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-title>Metadata Information</ion-title>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-text></ion-text>
+        </ion-col>
+      </ion-row>
+
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">Title
+            </ion-label>
+            <ion-input title="Title of the Catalog-Profile (e.g. My Test Sample Catalog)" formControlName="title"
+              type="text"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">Last Modified</ion-label>
+            <ion-datetime title="Last Modified Date-Time (You can use controls on the right instead of typing)"
+              type="text" formControlName="last_modified" displayFormat="MMM DD, YYYY HH:mm">
+            </ion-datetime>
+            <ion-buttons slot="end">
+              <ion-button title="Sets 'Last Modified' Value to Present Date-Time" (click)="setTimeToNow()">
+                <ion-icon slot="start" name="stopwatch-outline"></ion-icon>Set to Now
+              </ion-button>
+              <ion-button title="Auto-Updates Last Modified at Save Time" (click)="autoUpdateLater()">
+                <ion-icon *ngIf="!autoUpdateDates" slot="start" name="calendar-outline"></ion-icon>
+                <ion-icon *ngIf="autoUpdateDates" [color]="getAutoUpdateColor()" slot="start"
+                  name="checkmark-done-outline"></ion-icon>
+                <span *ngIf="!autoUpdateDates">Set Auto-Update Later</span>
+                <span *ngIf="autoUpdateDates">Auto-Update is Set</span>
+              </ion-button>
+            </ion-buttons>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">Catalog Version</ion-label>
+            <ion-input title="Catalog Version (e.g. 1.0 or 1.1.2)" type="text" formControlName="version"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">OSCAL Version</ion-label>
+            <ion-input title="OSCAL Version (e.g. 1.0.0-rc2 or 1.0.0 )" type="text" formControlName="oscalVersion">
+            </ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col *ngIf="!hasPredefinedRolesAlready()" offset="offsetSm">
+          <ion-tab-button (click)="appendDefaultRoles()" title="Press this button to add predefined authoring roles">
+            <ion-icon icon="person-add-outline" color="success"></ion-icon>
+            <ion-label>Add all predefined roles</ion-label>
+          </ion-tab-button>
+        </ion-col>
+
+      </ion-row>
+    </ion-grid>
+
+    <!-- Parties/Roles/Maps that were already entered -->
+    <ion-grid *ngIf=" haveParties() || haveRoles() || haveResponsible() ">
+      <ion-row>
+        <!-- Column for parties -->
+        <ion-col>
+          <ion-label *ngIf="!haveParties()">
+            No Parties (Optional)
+          </ion-label>
+          <div *ngIf="haveParties()">
+            <ion-list>
+              <ion-list-header>
+                Parties [{{metaInfo.parties.length}}]
+              </ion-list-header>
+              <!-- let entryInfo of subArray.controls; let i=index;  {{party.uuid}}-->
+              <div *ngFor="let party of this.metaInfo.parties;">
+                <ion-item>
+                  <ion-icon [icon]="party.type==='person'?'body-outline':'business-outline'"></ion-icon>
+                  &nbsp;&nbsp;&nbsp;
+                  <ion-label class="ion-text-wrap fixed-width-text">{{party.name}}<br /> </ion-label>
+                  <ion-button [title]="'Press to remove '.concat(party.type, ' ', party.name)" color="danger"
+                    (click)="removeParty($event,party)">
+                    <ion-icon icon='close-outline'></ion-icon>
+                  </ion-button>
+                  <ion-button [title]="'Press to edit '.concat(party.type, ' ', party.name)"
+                    (click)="startPartyEdit($event,party)">
+                    <ion-icon icon='pencil-outline'></ion-icon>
+                  </ion-button>
+                </ion-item>
+              </div>
+            </ion-list>
+          </div>
+        </ion-col>
+        <!-- Column for Roles -->
+        <ion-col>
+          <div *ngIf="!haveRoles()">
+            No Roles (Optional)
+          </div>
+          <div *ngIf="haveRoles()">
+            <ion-list>
+              <ion-list-header>
+                Roles [{{metaInfo.roles.length}}]
+              </ion-list-header>
+              <!-- let entryInfo of subArray.controls; let i=index;  {{party.uuid}}-->
+              <div *ngFor="let role of this.metaInfo.roles;">
+                <ion-item>
+                  <ion-icon icon="people-outline"></ion-icon>
+                  &nbsp;&nbsp;&nbsp;
+                  <ion-label class="ion-text-wrap fixed-width-text">{{role.title}} [{{role.id}}]</ion-label>
+                  <ion-button *ngIf="!isPresetRole(role)"
+                    [title]="'Press to remove '.concat(role.title, ' with ID', role.id)" color="danger"
+                    (click)="removeRole($event,role)">
+                    <ion-icon icon='close-outline'></ion-icon>
+                  </ion-button>
+                  <ion-button [title]="'Press to edit Role '.concat(role.title, ' with ID:', role.id)"
+                    (click)="startRoleEdit($event,role)">
+                    <ion-icon icon='pencil-outline'></ion-icon>
+                  </ion-button>
+                </ion-item>
+              </div>
+            </ion-list>
+          </div>
+        </ion-col>
+        <!-- Column for Responsible Parties -->
+        <ion-col>
+          <div *ngIf="!haveResponsible()">
+            No Responsible Parties (Optional)
+          </div>
+          <div *ngIf="haveResponsible()">
+            <ion-list>
+              <ion-list-header>
+                Responsible Parties [{{metaInfo.responsibleParties.length}}]
+              </ion-list-header>
+              <div *ngFor="let party of this.metaInfo.responsibleParties;">
+                <ion-item>
+                  <ion-icon icon="people-outline"></ion-icon>
+                  &nbsp;&nbsp;&nbsp;
+                  <ion-label class="ion-text-wrap fixed-width-text">{{party.roleID}} [{{party.partyUuids.length}}]
+                  </ion-label>
+                  <ion-button [title]="'Press to remove '.concat(party.roleID, ' with ID')" color="danger"
+                    (click)="removeResponsibleParty($event,party)">
+                    <ion-icon icon='close-outline'></ion-icon>
+                  </ion-button>
+                  <ion-button [title]="'Press to edit Responsible Party with '.concat(' Role ID:', party.roleID)"
+                    (click)="startRespPartyEdit($event,party)">
+                    <ion-icon icon='pencil-outline'></ion-icon>
+                  </ion-button>
+                </ion-item>
+              </div>
+            </ion-list>
+          </div>
+        </ion-col>
+      </ion-row>
+      <!-- The place for the EDITING controls -->
+      <ion-row class="tab-cell-row">
+        <ion-col class="tab-cell-row">
+
+          <!-- EDITING PARTY={Person | Organization} -->
+          <div *ngIf="isEditingParty()" class="tab-cell-row-framed">
+            <oscal-act-party-info #entityTab [isModal]="false" [createNew]="false" [hideTitle]="false"
+              [partyInfo]="currentEditedParty" [entryName]="currentEditedParty.name" actionName="Adding"
+              [theParent]="this" (saveTab)="saveEditedParty($event)" (closeTab)="cancelEditTab($event)">
+            </oscal-act-party-info>
+          </div>
+
+          <!-- EDITING Role={Built-In | Custom} -->
+          <div *ngIf="isEditingRole()" class="tab-cell-row-framed">
+            <oscal-array-roles #roleTab [rolesArray]="[currentEditedRole]" singleMode="true"
+              parentEntity="Meta-Information" listTitle="Role" inputName="Role" hideAddButton="true" actionName="Edit"
+              [iconName]="'people-outline'" hideAddElementButton="true" showAddCancelButtons="true"
+              (saveTab)="saveEditedRole($event)" (closeTab)="cancelEditTab($event)"
+              [isPresetRole]="isPresetRole(currentEditedRole)">
+            </oscal-array-roles>
+          </div>
+          <!-- EDITING ResponsibleParty={Built-In | Custom} -->
+          <div *ngIf="isEditingRespParty()" class="tab-cell-row-framed">
+            <oscal-map-roles #respPartyTab [responsibleParty]="this.currentEditedRespParty"
+              [roles]="this.metaInfo.roles" [actors]="this.metaInfo.parties" singleMode="true"
+              parentEntity="Meta-Information" listTitle="Responsible Party" inputName="Responsible Party"
+              hideAddButton="true" actionName="Edit" [iconName]="'share-social-outline'" hideAddElementButton="true"
+              showAddCancelButtons="true" (saveTab)="saveEditedResponsibleParty($event)"
+              (closeTab)="cancelEditTab($event)">
+            </oscal-map-roles>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+
+    <!-- This is the beginning of the dynamic controls and data-driven layouts -->
+    <ng-template #appAddressHost appAddEditInfo></ng-template>
+
+    <ion-grid class="topless bottomless">
+      <ion-row class="justify-content-between topless bottomless">
+        <ion-col class="topless, bottomless">
+          <ion-toolbar class="topless, bottomless">
+            <ion-buttons class="" style="display: flex;justify-content: space-evenly;">
+
+              <ion-tab-button [ngClass]="{'tab-selected' : isPartyTabActive()}"
+                (click)="showTab4POoP($event,'Person', 'body-outline')">
+                <ion-icon icon="beer-outline"></ion-icon>
+                <ion-label>Add Party</ion-label>
+                <ion-badge *ngIf="activeEntityAddTabName=='Person'">Adding Entity</ion-badge>
+              </ion-tab-button>
+
+              <ion-tab-button [ngClass]="{'tab-selected' : activeEntityAddTabName=='Role'}"
+                (click)="showTab4AddRole($event,'Role', 'people-outline')">
+                <ion-icon icon="people-outline"></ion-icon>
+                <ion-label>Add Role</ion-label>
+                <ion-badge *ngIf="activeEntityAddTabName=='Role'">Adding Role</ion-badge>
+              </ion-tab-button>
+
+              <ion-tab-button [ngClass]="{'tab-selected' : isAddMapTabActive() }"
+                (click)="showAddMap($event,'Responsible Party', 'share-social-outline')" [disabled]="!isReadyToMap()">
+                <ion-icon icon="share-social-outline"></ion-icon>
+                <ion-label>Add Responsible Party</ion-label>
+                <ion-badge *ngIf="isAddMapTabActive()">Adding R.P.</ion-badge>
+              </ion-tab-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-col>
+      </ion-row>
+      <!-- The place for the ADDING controls -->
+      <ion-row class="tab-cell-row">
+        <ion-col class="tab-cell-row">
+          <!-- Hidden the dynamic UI Pop-Up-->
+          <div class="tab-cell-row-hidden">
+            <ng-template #addEditData appAddEditInfo></ng-template>
+          </div>
+          <div *ngIf="isPartyTabActive()" class="tab-cell-row-framed">
+            <oscal-act-party-info #entityTab [isModal]="false" [createNew]="true" [hideTitle]="false"
+              [partyInfo]="currentEmptyParty" [iconName]="currentPartyIcon" [entryName]="currentPartyName"
+              actionName="Adding" [theParent]="this" (saveTab)="addPOoP($event)" (closeTab)="cancelAddTab($event)">
+            </oscal-act-party-info>
+          </div>
+          <div *ngIf="'Role' === activeEntityAddTabName" class="tab-cell-row-framed">
+            <oscal-array-roles #roleTab [rolesArray]="[undefined]" singleMode="true" parentEntity="Meta-Information"
+              listTitle="Role" inputName="Role" hideAddButton="true" actionName="Add" [iconName]="'people-outline'"
+              hideAddElementButton="true" showAddCancelButtons="true" (saveTab)="addRole($event)"
+              (closeTab)="cancelAddTab($event)">
+            </oscal-array-roles>
+          </div>
+          <!-- Adding Responsible Party -->
+          <div *ngIf="isAddMapTabActive()" class="tab-cell-row-framed">
+            <oscal-map-roles #roleTab [roles]="this.metaInfo.roles" [actors]="this.metaInfo.parties" singleMode="true"
+              parentEntity="Meta-Information" listTitle="Responsible Party" inputName="Responsible Party"
+              hideAddButton="true" actionName="Add" [iconName]="'share-social-outline'" hideAddElementButton="true"
+              showAddCancelButtons="true" (saveTab)="addResponsibleParty($event)" (closeTab)="cancelAddTab($event)">
+            </oscal-map-roles>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <!-- Existing Entities  haveDocIds() || haveProperties() || haveLinks() || haveLocations()  -->
+    <ion-grid *ngIf=" haveDocIds() || haveProperties() || haveLinks() || haveLocations() ">
+      <ion-row>
+        <!-- Doc-Id Entities List -->
+        <ion-col>
+          <ion-label *ngIf="!this.haveDocIds()">
+            No Doc. IDs (Optional)
+          </ion-label>
+
+          <div *ngIf="this.haveDocIds()">
+            <ion-list>
+              <ion-list-header>
+                Document IDs [{{metaInfo.documentIDS.length}}]
+              </ion-list-header>
+              <!-- let entryInfo of subArray.controls; let i=index;  {{party.uuid}}-->
+              <div *ngFor="let doc of this.metaInfo.documentIDS;">
+                <ion-item>
+                  <ion-icon icon="information-circle-outline"></ion-icon>
+                  &nbsp;&nbsp;&nbsp;
+                  <ion-label class="ion-text-wrap fixed-width-text">{{doc.identifier}}<br /> </ion-label>
+                  <ion-button [title]="'Press to remove '.concat(doc.identifier, ' ', doc.namespace)" color="danger"
+                    (click)="removeDocId($event,doc)">
+                    <ion-icon icon='close-outline'></ion-icon>
+                  </ion-button>
+                  <ion-button [title]="'Press to edit '.concat(doc.identifier, ' ', doc.namespace)"
+                    (click)="startDocIdEdit($event,doc)">
+                    <ion-icon icon='pencil-outline'></ion-icon>
+                  </ion-button>
+                </ion-item>
+              </div>
+            </ion-list>
+          </div>
+        </ion-col>
+
+        <!-- Properties Entities List -->
+        <ion-col>
+          <ion-label *ngIf="!this.haveProperties()">
+            No Properties (Optional)
+          </ion-label>
+          <div *ngIf="this.haveProperties()">
+            <ion-list>
+              <ion-list-header>
+                Properties [{{this.metaInfo.props.length}}]
+              </ion-list-header>
+              <!-- let entryInfo of subArray.controls; let i=index;  {{party.uuid}}-->
+              <div *ngFor="let prop of this.metaInfo.props;">
+                <ion-item>
+                  <ion-icon icon="pricetags-outline"></ion-icon>
+                  &nbsp;&nbsp;&nbsp;
+                  <ion-label class="ion-text-wrap fixed-width-text">{{prop.name}} = {{prop.value}} </ion-label>
+                  <ion-button [title]="'Press to remove '.concat(prop.name, '=', prop.value)" color="danger"
+                    (click)="this.removeProperty($event,prop)">
+                    <ion-icon icon='close-outline'></ion-icon>
+                  </ion-button>
+                  <ion-button [title]="'Press to edit '.concat(prop.name, ' = ', prop.value)"
+                    (click)="startPropertyEdit($event,prop)">
+                    <ion-icon icon='pencil-outline'></ion-icon>
+                  </ion-button>
+                </ion-item>
+              </div>
+            </ion-list>
+          </div>
+        </ion-col>
+
+        <!-- Links Entities List -->
+        <ion-col>
+          <ion-label *ngIf="!this.haveLinks()">
+            No Links (Optional)
+          </ion-label>
+          <div *ngIf="this.haveLinks()">
+            <ion-list>
+              <ion-list-header>
+                Links [{{this.metaInfo.links.length}}]
+              </ion-list-header>
+              <!-- let entryInfo of subArray.controls; let i=index;  {{party.uuid}}-->
+              <div *ngFor="let link of this.metaInfo.links;">
+                <ion-item>
+                  <ion-icon icon="link-outline"></ion-icon>
+                  &nbsp;&nbsp;&nbsp;
+                  <ion-label class="ion-text-wrap fixed-width-text">{{link.href}}</ion-label>
+                  <ion-button [title]="'Press to remove link'.concat(link.href)" color="danger"
+                    (click)="this.removeLink($event,link)">
+                    <ion-icon icon='close-outline'></ion-icon>
+                  </ion-button>
+                  <ion-button [title]="'Press to edit link '.concat(link.href)" (click)="startLinkEdit($event,link)">
+                    <ion-icon icon='pencil-outline'></ion-icon>
+                  </ion-button>
+                </ion-item>
+              </div>
+            </ion-list>
+          </div>
+        </ion-col>
+
+        <!-- Locations Entities List -->
+        <ion-col>
+          <ion-label *ngIf="!this.haveLocations()">
+            No Locations (Optional)
+          </ion-label>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <!-- Second row menu -->
+    <ion-grid>
+      <ion-row class="topless bottomless">
+        <ion-col class="topless bottomless">
+          <ion-toolbar class="topless bottomless">
+            <ion-buttons class="topless bottomless" style="display: flex;justify-content: space-evenly;">
+              <!-- Adding Document ID -->
+              <!-- (click)="modalPOoP('Document ID', 'information-circle-outline')" -->
+              <ion-tab-button [ngClass]="{'tab-selected' : activeEntityAddTabName=='DocID'}"
+                (click)="showMetaLink($event, 'DocID', 'information-circle-outline')">
+                <ion-icon icon="information-circle-outline"></ion-icon>
+                <ion-label>Add Document ID</ion-label>
+                <ion-badge *ngIf="activeEntityAddTabName=='DocID'">Adding Doc. ID</ion-badge>
+              </ion-tab-button>
+              <!-- Adding Property -->
+              <ion-tab-button [ngClass]="{'tab-selected' : activeEntityAddTabName=='Property'}"
+                (click)="showMetaLink($event, 'Property', 'information-circle-outline')">
+                <ion-icon icon="pricetags-outline"></ion-icon>
+                <ion-label>Add Property</ion-label>
+                <ion-badge *ngIf="activeEntityAddTabName=='Property'">Adding Property</ion-badge>
+              </ion-tab-button>
+              <!-- Adding Link Element-->
+              <ion-tab-button [ngClass]="{'tab-selected' : activeEntityAddTabName=='Link'}"
+                (click)="showMetaLink($event, 'Link', 'link-outline')">
+                <ion-label>Add Link</ion-label>
+                <ion-icon icon="link-outline"></ion-icon>
+                <ion-badge *ngIf="activeEntityAddTabName=='Link'">Adding Link</ion-badge>
+              </ion-tab-button>
+              <!-- Adding Location-->
+              <!-- (click)="modalPOoP('Location', 'location-outline')" -->
+              <ion-tab-button [ngClass]="{'tab-selected' : activeEntityAddTabName=='Location'}"
+                (click)="showMetaLink($event, 'Location', 'information-circle-outline')">
+                <ion-icon icon="location-outline"></ion-icon>
+                <ion-label>Add Location</ion-label>
+                <ion-badge *ngIf="activeEntityAddTabName=='Location'">Adding Location</ion-badge>
+              </ion-tab-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-col>
+      </ion-row>
+      <!-- The controls for editing separate entries (second row) -->
+      <ion-row class="tab-cell-row">
+        <ion-col class="tab-cell-row">
+          <div *ngIf="'DocID' === activeEntityAddTabName" class="tab-cell-row-framed">
+            <oscal-array-document-ids #propertyTab [ID]="'docId'" [idArray]="[undefined]" singleMode="true"
+              parentEntity="Meta-Information" listTitle="Document ID" inputName="Document ID" hideAddButton="true"
+              (closeTab)="cancelAddTab($event)" hideAddElementButton="true" showAddCancelButtons="true"
+              (saveTab)="this.addEditDocID($event, false)">
+            </oscal-array-document-ids>
+          </div>
+          <div *ngIf="'Property' === activeEntityAddTabName" class="tab-cell-row-framed">
+            <oscal-array-properties #propertyTab [ID]="'metaProperty'" [propertiesArray]="[undefined]"
+              listTitle="Property" actionName="Add" iconName="pricetags-outline" parentEntity="Meta-Information"
+              inputName="Property" singleMode="true" hideAddButton="true" (closeTab)="cancelAddTab($event)"
+              hideAddElementButton="true" showAddCancelButtons="true" (saveTab)="this.addEditProperty($event, false)">
+            </oscal-array-properties>
+          </div>
+          <div *ngIf="'Link' === activeEntityAddTabName" class="tab-cell-row-framed">
+            <!--  formArrayName="Links" -->
+            <oscal-array-links #linkTab [ID]="'metaLinks'" [linksArray]="[undefined]" listTitle="Link" actionName="Add"
+              iconName="link-outline" parentEntity="Meta-Information" parentName="Meta-Information" inputName="Link"
+              singleMode="true" hideAddButton="true" hideAddElementButton="true" showAddCancelButtons="true"
+              (closeTab)="cancelAddTab($event)" (saveTab)="this.addEditLink($event, false)">
+            </oscal-array-links>
+          </div>
+          <div *ngIf="'Location' === activeEntityAddTabName" class="tab-cell-row-framed">
+            <oscal-location-info #locationTab [ID]="'metaLocation'" [locationInfo]="undefined" actionName="Add"
+              iconName="pricetags-outline" parentName="Meta-Information" inputName="Document ID" singleMode="true"
+              hideAddButton="true">
+            </oscal-location-info>
+          </div>
+
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+  <div>
+    <ng-template #addEditData2 appAddEditInfo></ng-template>
+  </div>
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col size="6"></ion-col>
+      <ion-col size="6"></ion-col>
+    </ion-row>
+  </ion-grid>
+  <br />
+</div>

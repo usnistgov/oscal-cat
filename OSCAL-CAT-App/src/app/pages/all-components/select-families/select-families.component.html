@@ -1,0 +1,26 @@
+<ion-grid>
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-title>Select Control Family :</ion-title>
+        <ion-select *ngIf="listStyle" [(ngModel)]="selectedValue" placeholder="Select Family" interface="action-sheet"
+          (ionChange)="selectionChange($event)" selectedText="{{ selectedValue }}">
+          <ion-select-option *ngFor="let item of selectItems" value="{{ item.key }}">
+            {{ item.key }}-{{ item.value }}
+          </ion-select-option>
+        </ion-select>
+        <ion-select *ngIf="!listStyle" [(ngModel)]="selectedValue" placeholder="Select Family" interface="popover"
+          (ionChange)="selectionChange($event)" selectedText="{{ selectedValue }}">
+          <ion-select-option *ngFor="let item of selectItems" value="{{ item.key }}">
+            {{ item.key }}-{{ item.value }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+    <ion-col>
+      <ion-item>
+        <ion-label *ngIf="familyLabel" floating>{{ familyLabel }}</ion-label>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+</ion-grid>

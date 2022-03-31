@@ -1,0 +1,16 @@
+div.floaty {
+  position: absolute;
+  top: 18; //or wherever you want it to float
+  left: 13;
+  background: #eaeaea;
+  width: 30px;
+  height: 150px;
+}
+
+ion-fab-button.float {
+    top:18;
+    left:18;
+  --border-width: 0;
+  --padding-top: 10;
+  --padding-start: 10;
+}

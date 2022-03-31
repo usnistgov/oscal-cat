@@ -1,0 +1,196 @@
+<div>
+  <div class="tab-frame">
+    <div *ngIf="!!localForm">
+      <form [formGroup]="localForm" (ngSubmit)="onSubmitData()">
+        <br />
+        <!-- color="warning" -->
+        <ion-title *ngIf="!hideTitle" style="text-align: center;">
+          <ion-icon icon="{{iconName}}"></ion-icon>&nbsp;&nbsp;&nbsp;{{getActionEntityTitle()}}
+        </ion-title>
+        <br />
+
+        <ion-buttons *ngIf="!!localForm" class="even-ion-buttons">
+          <ion-button (click)="onCancelButton()" color="danger" background="warning"
+            title="Press to cancel changes to {{getActionEntityTitle()}}">
+            <ion-icon slot="start" icon="close-circle-outline"></ion-icon>Cancel
+          </ion-button>
+          <ion-button [disabled]="!localForm.valid" (click)="onSubmitData()" [color]="!localForm.valid?'dark':'success'"
+            title="Press to {{actionName}} {{entryName}}">
+            <ion-icon slot="start" icon="{{iconName}}"></ion-icon>Save {{getActualPartyName()}}
+            <!-- [color]="!localForm.valid?'dark':'success'" color="success" [class.button-crossR]="!localForm.valid"-->
+          </ion-button>
+        </ion-buttons>
+
+        <ion-grid>
+
+          <ion-row class="justify-content-between topless ">
+            <ion-col class="justify-content-between topless ">
+              <ion-item style="text-align: center;" class="justify-content-between topless bottomless spaceless">
+                <ion-label style="width:10%; text-align:left">Entity Type</ion-label>
+              </ion-item>
+
+
+              <ion-radio-group [value]="partyInfo.type" class="justify-content-between topless bottomless spaceless"
+                allow-empty-selection="false" (ionChange)="typeChanged($event)">
+                <ion-row class="justify-content-between topless bottomless spaceless">
+
+                  <ion-col class="justify-content-between topless bottomless spaceless">
+                    <ion-item>
+                      <ion-radio class="spaceless" value="person" (onChange)="typeChanged('person')">
+                      </ion-radio>&nbsp;&nbsp;&nbsp;
+                      <ion-label class="spaceless" position="fixed" checked="true">Person</ion-label>
+                      <ion-icon class="spaceless" icon="body-outline"></ion-icon>
+                    </ion-item>
+                  </ion-col>
+
+                  <!-- 
+                    <ion-col class="justify-content-between topless bottomless spaceless">
+                    <ion-item>
+                      <ion-icon icon="beer-outline"></ion-icon>&nbsp;&nbsp;&nbsp;
+                      <ion-label>Party</ion-label>
+                      <ion-radio slot="start" value="Party"></ion-radio>
+                    </ion-item>
+                  </ion-col 
+                -->
+
+                  <ion-col style="text-align: center;" class="justify-content-between topless bottomless spaceless">
+                    <ion-item>
+                      <ion-radio class="spaceless" value="organization" (onChange)="typeChanged('organization')">
+                      </ion-radio>&nbsp;&nbsp;&nbsp;
+                      <ion-label class="spaceless" position="fixed">Organization</ion-label>
+                      <ion-icon class="spaceless" icon="business-outline"></ion-icon>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+              </ion-radio-group>
+
+
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <ion-item>
+                <ion-label position="floating">{{entryName}} Name</ion-label>
+                <ion-input formControlName="partyName" title="Name of the {{entryName}} goes here" type="text">
+                </ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <ion-item>
+                <ion-label position="floating"> UUID for {{getActualPartyName()}}</ion-label>
+                <ion-input formControlName="uuid" title="Press Generate UUID or enter UUID of the {{entryName}}"
+                  type="text">
+                </ion-input>
+                <ion-buttons slot="end">
+                  <ion-button (click)="onAssignUUID()" color="secondary" slot="end">
+                    <ion-icon slot="start" icon="snow-outline"></ion-icon>
+                    <span *ngIf="localForm.get('uuid').value">Regenerate UUID</span>
+                    <span *ngIf="!localForm.get('uuid').value">Generate UUID</span>
+                  </ion-button>
+                </ion-buttons>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <ion-item>
+                <ion-label position="floating">Short Name for {{getActualPartyName()}} (Optional)
+                </ion-label>
+                <ion-input formControlName="shortName" title="Short name of the {{entryName}}  goes here" type="text">
+                </ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <!-- placeholder="Enter any remarks here..." -->
+              <ion-item>
+                <ion-label position="floating">Remarks for {{getActualPartyName()}} (Optional)</ion-label>
+                <ion-textarea rows="6" formControlName="remarks" title="Remarks for the {{entryName}} goes here"
+                  type="text">
+                </ion-textarea>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <!--  phonesArray="Phones" [stringData]="['AA@a.com']" -->
+              <oscal-array-phones [ID]="'phoneNumbers'" [phonesArray]="[]" listTitle="Phone Numbers"
+                [parentEntity]="entryName" [parentName]="getActualPartyName()" inputName="Phone"
+                [isArrayOptional]="'(Optional)'">
+              </oscal-array-phones>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <!--  formArrayName="Emails" [stringData]="['AA@a.com']" -->
+              <oscal-array-string [ID]="'emailAddresses'" [stringData]="[]" listTitle="Emails"
+                [parentEntity]="entryName" [parentName]="getActualPartyName()" inputName="Email"
+                [validateAs]="getEmailValidator()" [isArrayOptional]="'(Optional)'">
+              </oscal-array-string>
+            </ion-col>
+          </ion-row>
+
+
+          <ion-row>
+            <ion-col>
+              <!--  formArrayName="addresses" -->
+              <oscal-address-list [addressList]="addressList" [entryName]="entryName" [partyName]="getActualPartyName()"
+                [isArrayOptional]="'(Optional)'">
+              </oscal-address-list>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <!--  formArrayName="memberOfOrganizations" [stringData]="['AA', 'AAA', 'BBB']" -->
+              <oscal-array-string [ID]="'topOrgs'" [stringData]="[]" listTitle="Organizations Memberships"
+                [isArrayOptional]="'(Optional)'" [parentEntity]="entryName" [parentName]="getActualPartyName()"
+                inputName="Membership">
+              </oscal-array-string>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <!--  formArrayName="Links" -->
+              <oscal-array-links [ID]="'topLinks'" [linksArray]="[]" listTitle="Links" [parentEntity]="entryName"
+                [parentName]="getActualPartyName()" inputName="Link" [isArrayOptional]="'(Optional)'">
+              </oscal-array-links>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <!--  formArrayName="location UUID" -->
+              <oscal-array-string [ID]="'topUUIDs'" [stringData]="[]" listTitle="Location UUIDs"
+                [parentEntity]="entryName" [parentName]="getActualPartyName()" inputName="UUID"
+                [isArrayOptional]="'(Optional)'">
+              </oscal-array-string>
+            </ion-col>
+          </ion-row>
+
+        </ion-grid>
+      </form>
+      <ion-buttons class="even-ion-buttons">
+        <ion-button (click)="onCancelButton()" color="danger"
+          title="Press to cancel changes to {{actionName}} {{entryName}}">
+          <ion-icon slot="start" icon="close-circle-outline"></ion-icon>Cancel
+        </ion-button>
+        <ion-button [disabled]="!localForm.valid" (click)="onSubmitData()" [color]="!localForm.valid?'dark':'success'"
+          title="Press to {{actionName}} {{entryName}}">
+          <ion-icon slot="start" icon="{{iconName}}"></ion-icon>Save {{getActualPartyName()}}
+        </ion-button>
+      </ion-buttons>
+      <br />
+    </div>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>All Controls
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-title>&nbsp;&nbsp;Select Controls</ion-title>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-text>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          Select controls to be included in profile.
+        </ion-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <oscal-nav-cat></oscal-nav-cat>
+
+  <div class="content">
+    <div>
+      <ion-item>
+        <ion-button>
+          <ion-icon name="checkmark-outline"></ion-icon>&nbsp;Select Profile
+        </ion-button>
+        <ion-button>
+          <ion-icon name="cut-outline"></ion-icon>&nbsp;Use Profile
+        </ion-button>
+      </ion-item>
+    </div>
+  </div>
+
+  <div *ngIf=" theTree$ | async as theTree">
+    <oscal-tree-cat [treeNodes]="theTree" [theCat]="cat"></oscal-tree-cat>
+  </div>
+
+</ion-content>

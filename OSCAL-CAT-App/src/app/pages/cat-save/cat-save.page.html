@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Save Active OSCAL Catalog Snapshot In-App or Locally</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <br />
+  <ion-title>Save your current profile locally (when ready or to keep it), or save workspace until the next time.
+  </ion-title>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-icon color="primary" slot="start" name="information-circle-outline"></ion-icon>
+          <b>Workspace represents the collection of the objects and their states.</b>
+        </ion-item>
+        <ion-item>
+          <p>The objects reflect selections, actions, and transitions that modified catalogue or baseline,
+            while while you were working with the application. The </p>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-icon color="primary" slot="start" name="information-circle-outline"></ion-icon>
+          <b>Final file is a sample of the profile you had tailored in the application</b>
+        </ion-item>
+        <ion-item>
+          <p>The final file will contain JSON representation of an OSCAL Catalog, or OSCAL Profile. The file will have
+            all your changes.</p>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-button>Save Workspace (In APP Space)</ion-button>
+          <ion-button color="tertiary">Save Workspace (On Your Disk)</ion-button>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-button>Save File (In APP Space)</ion-button>
+          <ion-button slot="end" color="tertiary" (onClick)="saveFileLocally()">Save File (On Your Disk)</ion-button>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

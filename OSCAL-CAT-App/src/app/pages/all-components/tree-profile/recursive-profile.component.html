@@ -1,0 +1,47 @@
+<li *ngFor="let item of children">
+
+    <ion-item *ngIf="item.hasSomeIncluded(item)" class="node_style" class="node_style"
+        title="{{item.toolTip || item.getToolTip(item)}}">
+        <!--   *ngIf="showInProfile(item)" *ngIf="profileMode === 0 || item.included"-->
+        <!-- ion-button *ngIf="item.children" ></ion-button style="height:50px;margin:1px; padding: 0px; width: 60em; border: 1px solid #ccc;"-->
+        <ion-item (click)="closeOpen(item)" class="ion-no-padding">
+            <ion-icon *ngIf="!item.open && item.children" slot="start" icon="add" (click)="closeOpen(item)">
+            </ion-icon>
+            <ion-icon *ngIf="item.open  && item.children" slot="start" icon="arrow-down" (click)="closeOpen(item)">
+            </ion-icon>
+        </ion-item>
+        &nbsp;
+        <ion-label>{{ item.label }}</ion-label>
+
+        <ion-item>
+            <ion-item>
+                <ion-badge *ngIf="item.children && item.partsCount>0 && item.isCatalog() " color="medium">
+                    {{item.partsCount}} Groups
+                </ion-badge>
+                <ion-badge *ngIf="item.children && item.partsCount>0 && item.isGroup()" color="medium">
+                    {{item.partsCount}} Controls
+                </ion-badge>
+                <ion-badge *ngIf="item.partsCount>0 && item.isControl()" color="primary">{{item.partsCount}} Params
+                </ion-badge>
+            </ion-item>
+        </ion-item>
+
+        <ion-button (click)="presentPrompt(item)">Modify
+            <ion-icon slot="end" icon="chatbox-outline"></ion-icon>
+        </ion-button>
+        <!-- a class="nav-link active" routerLink="['/', 'cat-control', id1,id2]" routerLinkActive="active"
+                routerLinkActiveOptions="{exact: true}"></a -->
+        <!--             
+            <ion-button *ngIf="!item.children && item.partsCount>=0" (click)="navigateToControl(item)">Details...
+                <ion-icon slot="end" icon="enter-outline"></ion-icon>
+            </ion-button>
+
+            <ion-button  (click)="exclude(item)" color="danger">Out<ion-icon slot="end" icon="trash-outline"></ion-icon>
+            </ion-button> 
+        -->
+
+    </ion-item>
+    <ul recursive-tree-profile *ngIf="item.hasSomeIncluded(item)" xxx=" && item.children" [children]="item.children"
+        [parent]="item.parent" [class.hidden]="!item.open" [level]="level != undefined ? level + 1 : 0">
+    </ul>
+</li>

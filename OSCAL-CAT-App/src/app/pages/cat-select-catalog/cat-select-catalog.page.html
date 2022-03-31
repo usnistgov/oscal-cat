@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Select Catalog Controls
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-fab vertical="top" horizontal="left" slot="fixed">
+    <oscal-nav-cat></oscal-nav-cat>
+  </ion-fab>
+
+  <div class="content">
+    <div>
+      <ion-item>
+        <ion-button>Pre-Select Profile</ion-button>
+        <ion-button>Use Profile</ion-button>
+      </ion-item>
+    </div>
+  </div>
+  <div *ngIf=" theTree$ | async as theTree">
+    <div>
+      <oscal-tree-cat [treeNodes]="theTree" [theCat]="cat"></oscal-tree-cat>
+    </div>
+
+  </div>
+
+  <!-- ion-fab vertical="center" horizontal="left" slot="fixed">
+    <div>
+      <ion-fab-button fill="outline" (click)="viewModelChange(0)" m-tooltip="Next Page" color="success">
+        <ion-icon slot="start" name="library-outline"></ion-icon>Next&gt;
+      </ion-fab-button>
+
+      <ion-fab-button fill="outline" (click)="viewModelChange(1)" color="danger">
+        <ion-icon slot="start" name="filter-outline"></ion-icon>&lt;Back
+      </ion-fab-button>
+
+      <ion-fab-button fill="outline" (click)="viewModelChange(2)">
+        <ion-icon slot="start" name="list-outline"></ion-icon> Save
+      </ion-fab-button>
+    </div>
+  </ion-fab-->
+
+</ion-content>

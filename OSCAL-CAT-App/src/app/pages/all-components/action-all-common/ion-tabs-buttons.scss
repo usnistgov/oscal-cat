@@ -1,0 +1,141 @@
+:root {
+  --tab-border-color: var(--ion-color-warning-shade);
+  --tab-background-color: var(--ion-color-warning-contrast);
+  --tab-text-color: var(--ion-color-light);
+  --tab-visible-border: double;
+}
+
+.tab-selected {
+  // This is an overlap for the frame
+  // border-bottom-color: var(--tab-background-color);
+  // border-bottom: 3px solid var(--tab-background-color);
+  //position: relative;
+  //top: 10px;
+  z-index: 10;
+  //margin-bottom: 10px;
+  //border-bottom: 3px solid var(--tab-background-color);
+  // This is a highlight for the active tab
+  border-left-color: var(--tab-text-color);
+  border-left: 3px double;
+  border-top-color: var(--tab-text-color);
+  border-top: 3px double;
+  border-right-color: var(--tab-text-color);
+  border-right-style: double;
+  border-right-width: 3px;
+  background-color: var(--tab-background-color);
+  color: var(--tab-text-color);
+}
+
+.tab-cell-row-framed {
+  z-index: 1;
+  border-color: var(--tab-background-color);
+  background-color: var(--tab-background-color);
+  border: 3px double;
+}
+
+.array-header {
+  margin-top: 1em;
+}
+
+.text-centered{
+  text-align: center;
+}
+
+.spaceless {
+  margin-left: 0;
+  padding-left: 0;
+  margin-right: 0;
+  padding-right: 0;
+}
+
+.topless {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.bottomless {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.even-ion-buttons {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.tab-cell-row {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.tab-cell-row-hidden {
+  margin-top: 0;
+  padding-top: 0;
+  display: none;
+}
+
+.tab-frame {
+  border: thick ridge var(--tab-border-color);
+  background-color: var(--tab-background-color);
+  // rgb(9, 0, 9); //
+  // border: 3px green;
+}
+
+.button-off {
+  color: var(--tab-background-color);
+  // rgb(9, 0, 9); //black; //display: none;
+}
+
+.save-button-off {
+  border: 2.5px solid #ff3333;
+  border-radius: 1em;
+  text-decoration-color: #ff3333;
+  text-decoration: line-through;
+  color: var(--tab-background-color);
+  // rgb(9, 0, 9); // black;
+}
+
+.save-button-on {
+  border: 2.5px solid #33ff33;
+  border-radius: 1em;
+}
+
+.button-crossR {
+  position: relative;
+}
+.button-crossL {
+  position: relative;
+}
+
+.button-crossL:before {
+  position: absolute;
+  content: "";
+  left: 0;
+  top: 50%;
+  right: 0;
+  border-top: 2px solid;
+  border-color: #ff3333;
+  // text-decoration-color: #ff3333;
+  // inherit
+  -webkit-transform: rotate(-5deg);
+  -moz-transform: rotate(-5deg);
+  -ms-transform: rotate(-5deg);
+  -o-transform: rotate(-5deg);
+  transform: rotate(-5deg);
+}
+.button-crossR:before {
+  position: absolute;
+  content: "";
+  left: 0;
+  top: 50%;
+  right: 0;
+  border-top: 2px solid;
+  border-color: #ff3333;
+  // text-decoration-color: #ff3333;
+  // inherit
+  -webkit-transform: rotate(5deg);
+  -moz-transform: rotate(5deg);
+  -ms-transform: rotate(5deg);
+  -o-transform: rotate(5deg);
+  transform: rotate(5deg);
+}

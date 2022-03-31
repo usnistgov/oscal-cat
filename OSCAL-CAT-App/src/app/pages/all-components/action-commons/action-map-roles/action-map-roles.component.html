@@ -1,0 +1,134 @@
+<div class="tab-frame">
+  <form [formGroup]="subForm" (ngSubmit)="onSave()">
+    <!-- The General Title of the Form -->
+    <br />
+    <!-- color="warning" -->
+    <ion-title *ngIf="!hideTitle" style="text-align: center;">
+      <ion-icon icon="{{iconName}}"></ion-icon>&nbsp;&nbsp;&nbsp;{{getActionFormTitle()}}
+    </ion-title>
+    <br *ngIf="showAddCancelButtons" />
+
+    <ion-buttons *ngIf="showAddCancelButtons" class="even-ion-buttons bottomless" color="warning">
+      <ion-button #topCancel (click)="onCancelButton()" color="danger"
+        title="Press to cancel changes to {{actionName}} {{entityName}}">
+        <ion-icon slot="start" icon="close-circle-outline"></ion-icon>Cancel
+      </ion-button>
+      <ion-button #topSave [disabled]="!isValidForm()" (click)="onSubmitData()"
+        [color]="!isValidForm()?'dark':'success'" title="Press to {{actionName}} {{entityName}}">
+        <ion-icon slot="start" icon="{{iconName}}"></ion-icon>{{getSaveButtonTitle()}}
+      </ion-button>
+    </ion-buttons>
+
+    <div>
+      <ion-grid>
+
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-title centered> Select Role to Map (Below)</ion-title>
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item>
+              <ion-title centered> Select Parties for Role<span *ngIf="!!chosenRoleId"> [{{chosenRoleId}}]</span>
+              </ion-title>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <!-- [ngModelOptions]="{standalone: true}" -->
+            <div>
+              <ion-radio-group #rolesRadio [(ngModel)]="this.chosenRoleId" allow-empty-selection="true"
+                name="radio-role" (ionChange)="roleGroupChange($event)" [ngModelOptions]="{standalone: true}">
+                <ion-item *ngFor="let role of this.roles; let roleI = index;">
+                  <ion-label>{{role.title}} [{{role.id}}] </ion-label>
+                  <ion-radio slot="start" name="role.title" [value]="role.id">
+                  </ion-radio>
+                </ion-item>
+              </ion-radio-group>
+            </div>
+
+          </ion-col>
+          <ion-col>
+            <!--- [(ngModel)]="this.selectedActorsUUIDs" [ngModelOptions]="{standalone: true}" -->
+            <ion-list #actorsCheck value="role_index" allow-empty-selection="false" class="toppless bottomless"
+              (ionChange)="actorSelectChange($event)">
+              <ion-item *ngFor="let actor of this.actors; let act_i = index;" class="toppless bottomless">
+                <ion-label>{{actor.name}}</ion-label>
+                <ion-label>{{actor.uuid}}</ion-label>
+                <ion-checkbox slot="start" [value]="actor.uuid" (ionSelect)="actorSelectChange($event)"
+                  [checked]="this.isCheckedActor(actor.uuid)"></ion-checkbox>
+              </ion-item>
+
+            </ion-list>
+
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <ion-item>
+
+              <ion-title style="text-align: center;"> {{this.optionalLineOne()}}
+                <span *ngIf="!!this.optionalLineParties() || this.isValidForm()">
+                  <br />{{this.optionalLineParties()}}</span>
+                <span *ngIf="!!this.chosenRoleId  || this.isValidForm()">
+                  <br />Responsible for the Role of [{{chosenRoleId}}]</span>
+                  <!-- 
+                <span>
+                <br />Test::text={{getSelectedPartiesAsText()}} length={{this.selectedActorsUUIDs.length}}
+                  roleID={{this.chosenRoleId}} Is-Valid={{this.isValidForm()}}</span>
+                  -->
+              </ion-title>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <!-- Remarks -->
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label position="floating">Remarks for {{getSelectedPartiesAsText()}} (Optional)</ion-label>
+              <ion-textarea #remarksInput rows="6" title="Remarks for the {{getSelectedPartiesAsText()}} go here"
+                type="text" [(ngModel)]="this.localResponsible.remarks" [ngModelOptions]="{standalone: true}">
+                <!-- [value]="this.localResponsible.remarks"  -->
+              </ion-textarea>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <!-- Links -->
+        <ion-row>
+          <ion-col>
+            <oscal-array-links #linksArray [parentName]="getSelectedPartiesAsText()" [isArrayOptional]="'(Optional)'"
+              [linksArray]="this.localResponsible.links">
+            </oscal-array-links>
+          </ion-col>
+        </ion-row>
+        <!-- Properties -->
+        <ion-row>
+          <ion-col>
+            <oscal-array-properties #propsArray [parentName]="getSelectedPartiesAsText()"
+              [isArrayOptional]="'(Optional)'" [propertiesArray]="this.localResponsible.props">
+            </oscal-array-properties>
+          </ion-col>
+        </ion-row>
+
+      </ion-grid>
+    </div>
+
+    <!-- The Second set of Top Buttons-->
+    <ion-buttons *ngIf="showAddCancelButtons" class="even-ion-buttons bottomless" color="warning">
+      <ion-button #bottomCancel (click)="onCancelButton()" color="danger"
+        title="Press to cancel changes to {{actionName}} {{entityName}}">
+        <ion-icon slot="start" icon="close-circle-outline"></ion-icon>Cancel
+      </ion-button>
+      <ion-button #bottomSave [disabled]="!this.isValidForm()" (click)="onSubmitData()"
+        [color]="!isValidForm()?'dark':'success'" title="Press to {{actionName}} {{entityName}}">
+        <ion-icon slot="start" icon="{{iconName}}"></ion-icon>{{getSaveButtonTitle()}}
+      </ion-button>
+    </ion-buttons>
+
+    <br />
+  </form>
+</div>

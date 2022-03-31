@@ -1,0 +1,7 @@
+{
+  "name": "oscal-cat",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

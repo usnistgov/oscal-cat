@@ -1,0 +1,133 @@
+.oscal-prompt-class {
+  --backdrop-opacity: 0.2;
+  --background: linear-gradient(0deg, rgb(8, 8, 98) 1%, rgb(6, 6, 36) 100%);
+  --min-width: 30%;
+}
+
+.treePopUpInfo {
+  //border: 1px red solid;
+  border-radius: 5px;
+  padding: 2px 5px;
+  --border: 1px red solid;
+  --height: auto;
+  --min-width: 50%;
+}
+// Does not work at the moment
+body.dark {
+  .treePopUpInfo {
+    border: 1px red solid;
+    border-radius: 5px;
+    padding: 2px 5px;
+    --background: #1f1f1f;
+    --backdrop-opacity: 50%;
+  }
+}
+
+p {
+  font-family: Lato;
+}
+.tree ul {
+  margin-left: -29px;
+}
+
+.tree li .node_style {
+  list-style-type: none; // Kill list markers
+  position: relative;
+  border: 2px solid #666666;
+  height: 52px;
+  margin: 1px; /* 3px makes guides flush */
+  /* width: 60em;*/ /*This can either make staircase or inverse it*/
+}
+
+.tree li {
+  list-style-type: none;
+  margin: 5px;
+  position: relative;
+}
+
+.tree li::before {
+  content: "";
+  position: absolute;
+  top: -20px;
+  left: -13px; // line-up of the
+  border-left: 2px solid #666666;
+  border-bottom: 2px solid #666666;
+  border-radius: 0px 0 0 0;
+  width: 20px;
+  height: 40px;
+}
+
+.tree li::after {
+  position: absolute;
+  content: "";
+  top: 20px;
+  left: -13px;
+  border-left: 2px solid #666666;
+  border-top: 1.5px solid #666666;
+  border-radius: 0px 0 0 0;
+  width: 20px;
+  height: 100%;
+}
+
+// Make sure no empty guide sticks out
+.tree li:last-child::after {
+  display: none;
+}
+// Round up the last visual guide
+.tree li:last-child:before {
+  border-radius: 0 0 0 5px;
+}
+// Hide the visual guide before the first bar-item
+ul.tree > li:first-child::before {
+  display: none;
+}
+
+ul.tree > li:first-child::after {
+  border-radius: 0 0 0 5px;
+}
+
+.tree li a {
+  border: 1px #666666 solid;
+  border-radius: 5 0 0 5;
+  padding: 2px 5px;
+}
+
+.tree li a:hover,
+.tree li a:hover + ul li a,
+.tree li a:focus,
+.tree li a:focus + ul li a {
+  background: #ccc;
+  color: #000;
+  border: 2px solid #000;
+}
+
+.tree li a:hover + ul li::after,
+.tree li a:focus + ul li::after,
+.tree li a:hover + ul li::before,
+.tree li a:focus + ul li::before .tree li a:hover + ul::before,
+.tree li a:focus + ul::before .tree li a:hover + ul ul::before,
+.tree li a:focus + ul ul::before {
+  border-color: #000; /*connector color on hover*/
+}
+
+.hidden {
+  display: none;
+}
+
+#tallTextArea {
+  height: 144pt;
+}
+
+ion-item {
+  .input-wrapper {
+    flex: none;
+    margin-left: auto;
+  }
+  ion-radio.checkbox {
+    margin-right: auto !important;
+  }
+}
+
+body.form-busy {
+  cursor: progress;
+}

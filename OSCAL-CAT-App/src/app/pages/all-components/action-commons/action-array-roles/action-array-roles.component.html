@@ -1,0 +1,115 @@
+<div class="tab-frame">
+
+  <form [formGroup]="subForm" (ngSubmit)="onSave()">
+    <!-- The General Title of the Form -->
+    <br />
+    <!-- color="warning" -->
+    <ion-title *ngIf="!hideTitle" style="text-align: center;">
+      <ion-icon icon="{{iconName}}"></ion-icon>&nbsp;&nbsp;&nbsp;{{getActionFormTitle()}}
+    </ion-title>
+    <br *ngIf="showAddCancelButtons" />
+
+    <ion-buttons *ngIf="showAddCancelButtons" class="even-ion-buttons bottomless" color="warning">
+      <ion-button (click)="onCancelButton()" color="danger"
+        title="Press to cancel changes to {{actionName}} {{entityName}}">
+        <ion-icon slot="start" icon="close-circle-outline"></ion-icon>Cancel
+      </ion-button>
+      <ion-button [disabled]="!subForm.valid" (click)="onSubmitData()" [color]="!subForm.valid?'dark':'success'"
+        title="Press to {{actionName}} {{entityName}}">
+        <ion-icon slot="start" icon="{{iconName}}"></ion-icon>{{getSaveButtonTitle()}}
+      </ion-button>
+    </ion-buttons>
+
+    <div formArrayName="entries" class="topless">
+      <div *ngFor="let entryInfo of subArray.controls; let i=index;" class="topless">
+        <div [formGroupName]="i" class="topless">
+
+          <div class="topless">
+            <ion-buttons *ngIf="!singleMode" slot="end" style="float:right">
+              <ion-button (click)="onRemoveElement(i)" color="warning" slot="end">
+                <ion-icon slot="start" icon="backspace-outline"></ion-icon>
+                Remove {{this.getInputName()}} {{i+1}}/{{subArray.controls.length}}
+              </ion-button>
+            </ion-buttons>
+          </div>
+          
+          <ion-grid class="topless">
+            <ion-row>
+              <ion-col>
+                <!-- The Each-Item Title -->
+                <div *ngIf="displayItemTitle()">
+                  <ion-title color="primary">
+                    {{this.getInputName()}} {{i+1}}
+                  </ion-title>
+                </div>
+              </ion-col>
+              <ion-col>
+              </ion-col>
+            </ion-row>
+            <ion-row *ngFor="let mapKV of this.inputsMap|keyvalue; let inputIndex = index;">
+              <ion-col *ngIf="!mapKV.value.complexInputType">
+                <ion-item>
+                  <ion-label position="floating">
+                    {{mapKV.value.labelName + (isOptional(mapKV.value)?this.label4Optional:'')}}
+                  </ion-label>
+                  <ion-input [formControlName]="mapKV.value.fieldToMap" [title]="getToolTip(mapKV.value.inputTip)"
+                    type="text">
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col *ngIf="!!mapKV.value.complexInputType">
+                <ion-item *ngIf="mapKV.value.inputAs==='textarea'">
+                  <ion-label position="floating">
+                    {{mapKV.value.labelName + (isOptional(mapKV.value)?this.label4Optional:'')}}
+                  </ion-label>
+                  <ion-textarea [formControlName]="mapKV.value.fieldToMap" [title]="getToolTip(mapKV.value.inputTip)"
+                    type="text" rows="2" autoGrow="true">
+                  </ion-textarea>
+                </ion-item>
+                <div *ngIf="mapKV.value.inputAs==='oscal-array-links'">
+                  <!--  formArrayName="Links" -->
+                  <oscal-array-links [ID]="'topLinks'" [linksArray]="[]" listTitle="Links" parentEntity="Role"
+                    parentName="Role" inputName="Link"
+                    [isArrayOptional]="(isOptional(mapKV.value)?this.label4Optional:'')">
+                  </oscal-array-links>
+                </div>
+                <div *ngIf="mapKV.value.inputAs==='oscal-array-properties'">
+                  <!--  formArrayName="Links" -->
+                  <oscal-array-properties [ID]="'topLinks'" [propertiesArray]="[]" listTitle="Properties"
+                    parentEntity="Role" parentName="Role" inputName="Prop."
+                    [isArrayOptional]="(isOptional(mapKV.value)?this.label4Optional:'')">
+                  </oscal-array-properties>
+                </div>
+
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+
+
+        <ion-buttons *ngIf="showAddCancelButtons" class="even-ion-buttons" color="warning">
+          <ion-button (click)="onCancelButton()" color="danger"
+            title="Press to cancel changes to {{actionName}} {{entityName}}">
+            <ion-icon slot="start" icon="close-circle-outline"></ion-icon>Cancel
+          </ion-button>
+          <ion-button [disabled]="!subForm.valid" (click)="onSubmitData()" [color]="!subForm.valid?'dark':'success'"
+            title="Press to {{actionName}} {{entityName}}">
+            <ion-icon slot="start" icon="{{iconName}}"></ion-icon>{{getSaveButtonTitle()}}
+          </ion-button>
+        </ion-buttons>
+      </div>
+
+      <ion-buttons slot="end" *ngIf="!hideAddElementButton">
+        <ion-button *ngIf="!hideAddElementButton || this.singleMode" (click)="onAppendElement()" color="secondary"
+          slot="end">
+          <ion-icon slot="start" icon="add-circle-outline"></ion-icon>
+          Add New {{this.getInputName()}}
+        </ion-button>
+      </ion-buttons>
+
+      <div>
+      </div>
+    </div>
+    <br />
+  </form>
+</div>

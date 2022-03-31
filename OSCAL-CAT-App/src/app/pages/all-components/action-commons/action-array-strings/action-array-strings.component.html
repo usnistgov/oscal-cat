@@ -1,0 +1,38 @@
+<form [formGroup]="subForm" (ngSubmit)="onSave()">
+  <ion-title>
+    <ion-text>
+      <span> {{getListTitle()}}</span>
+    </ion-text>
+  </ion-title>
+  <div formArrayName="entries">
+    <ion-grid *ngFor="let entryInfo of subForm.get('entries')['controls']; let i=index;">
+      <ion-row [formGroupName]="i">
+        <ion-col>
+          <div>
+            <ion-item>
+              <ion-label position="floating">{{inputName}} {{i+1}}
+              </ion-label>
+              <ion-input formControlName="entry"
+                title="{{inputName}} for {{parentName || parentEntity}} should be entered here" type="text">
+              </ion-input>
+              <ion-buttons slot="end">
+                <ion-button (click)="onRemoveElement(i)" color="warning" slot="end">
+                  <ion-icon slot="start" icon="backspace-outline"></ion-icon>
+                  Remove {{inputName}} {{i+1}}/{{subForm.get('entries')['controls'].length}}
+                </ion-button>
+              </ion-buttons>
+            </ion-item>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-buttons slot="end">
+      <ion-button (click)="onAppendElement()" color="secondary" slot="end">
+        <ion-icon slot="start" icon="add-circle-outline"></ion-icon>
+        Add New {{inputName}}
+      </ion-button>
+    </ion-buttons>
+    <div>
+    </div>
+  </div>
+</form>

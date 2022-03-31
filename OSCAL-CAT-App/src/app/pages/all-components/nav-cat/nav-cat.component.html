@@ -1,0 +1,16 @@
+<ion-fab vertical="top" horizontal="end">
+  <ion-buttons>
+
+    <ion-fab-button *ngIf="pageState && pageState.prev" fill="outline" (click)="prevPage()"
+      [title]="this.getBackTitle()" color="warning" class="float">
+      <ion-icon name="arrow-back-circle"></ion-icon>
+    </ion-fab-button>
+
+    <!-- [disabled]="this.canMoveNext()" -->
+    <ion-fab-button *ngIf="pageState && pageState.next" fill="outline" (click)="nextPage()"
+      [title]="this.getNextTitle()" background-color="var(--ion-color-navigation)" class="float">
+      <ion-icon name="arrow-forward-circle"></ion-icon>
+    </ion-fab-button>
+
+  </ion-buttons>
+</ion-fab>

@@ -1,0 +1,49 @@
+<div>
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+                <ion-title>&nbsp;&nbsp;Select Authoring Mode</ion-title>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>
+                <ion-text>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    Select base catalog, start new editing, or continue previously saved session.
+                </ion-text>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</div>
+<div *ngIf="!this.newDraft && this.savedWork">
+    <!-- Continue working with the previously saved item(s) -->
+    <ion-grid *ngIf="this.savedWork">
+        <ion-row *ngFor="let workItem of this.savedWork; index as itemIndex">
+            <ion-col>
+                <ion-item>
+                    <ion-label>{{workItem}}</ion-label>
+                    <div onclick="this.popAlert(workItem, itemIndex)">
+                        <ion-icon slot="end" name="trash-outline"></ion-icon>
+                    </div>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</div>
+<div *ngIf="true">
+    <!-- Begin a new document -->
+    <ion-grid>
+        <ion-header>
+            Select a Known OSCAL
+        </ion-header>
+        <ion-row *ngFor="let oscalFile of this.oscalFiles">
+            <ion-col>
+                <ion-item>
+                    <ion-label>{{oscalFile.cat_label}}</ion-label>
+                    <div onclick="this.popAlert(workItem, itemIndex)">
+                        <ion-icon slot="end" name="trash-outline"></ion-icon>
+                    </div>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</div>

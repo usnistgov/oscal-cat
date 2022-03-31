@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Regroup Controls</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="no-padding">
+
+  <ion-fab vertical="top" horizontal="left" slot="fixed">
+    <oscal-nav-cat></oscal-nav-cat>
+  </ion-fab>
+  <div class="content">
+    <!--  [controlsList]="cat.getCatControlsList()" [theCat]="cat" -->
+    <oscal-tree-groups [treeNodes]="getTree()">
+    </oscal-tree-groups>
+
+  </div>
+</ion-content>

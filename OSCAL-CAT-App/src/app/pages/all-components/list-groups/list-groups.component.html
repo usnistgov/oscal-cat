@@ -1,0 +1,87 @@
+<ion-grid style="width: 97% !important;">
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-title>Controls</ion-title>
+      </ion-item>
+    </ion-col>
+    <ion-col>
+      <ion-item>
+        <ion-title>Current Groups</ion-title>
+      </ion-item>
+    </ion-col>
+    <ion-col>
+      <ion-item>
+        <ion-title>New Groups</ion-title>
+        <ion-button (click)="presentAddGroup()" color="tertiary">Add New Group
+          <ion-icon slot="end" icon="add-circle-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <div *ngFor="let item of controlsList">
+    <ion-row *ngIf="item.included">
+
+      <ion-col>
+        <ion-item>
+          <ion-label text-wrap>{{ item.label }}</ion-label>
+        </ion-item>
+
+      </ion-col>
+
+      <ion-col>
+        <ion-item>
+          <ion-label text-wrap>{{item.parent.label}}</ion-label>
+        </ion-item>
+      </ion-col>
+
+      <!-- ion-col>
+        <ion-button *ngIf="!item.children && item.partsCount>=0" (click)="presentRegroup(item)">Regroup...
+          <ion-icon slot="end" icon="arrow-forward-circle-outline"></ion-icon> <!-- "push-outline" -->
+      <!-- /ion-button>
+      </ion-col -->
+      <ion-col>
+        <ion-item>
+          <ion-label text-wrap>New Group</ion-label>
+          <ion-button (click)="presentRegroup(item)">Re-Group
+            <ion-icon slot="end" icon="add-circle-outline"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-col>
+
+    </ion-row>
+  </div>
+</ion-grid>
+
+
+<!--
+        <h4>Basic mat-select</h4>
+        <mat-form-field appearance="fill">
+          <mat-label>Favorite food</mat-label>
+          <mat-select>
+            <mat-option *ngFor="let food of foods" [value]="food.value">
+              {{food.viewValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+<ul>
+  <div *ngFor="let item of controlsList">
+      <ion-item *ngIf="item.included"> 
+        
+        <ion-label>{{ item.label }}</ion-label>
+        <ion-label>
+          {{item.parent.label}}
+        </ion-label>
+        <ion-button (click)="presentPrompt(item)">Add Group
+          <ion-icon slot="end" icon="chatbox-outline"></ion-icon>
+        </ion-button>
+        <ion-button *ngIf="!item.children && item.partsCount>=0" (click)="navigateToControl(item)">Regroup...
+          <ion-icon slot="end" icon="enter-outline"></ion-icon>
+        </ion-button>
+        
+      </ion-item>
+  </div>
+</ul>
+-->

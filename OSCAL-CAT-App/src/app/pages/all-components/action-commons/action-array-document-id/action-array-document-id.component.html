@@ -1,0 +1,98 @@
+<div class="tab-frame">
+
+  <form [formGroup]="subForm" (ngSubmit)="onSave()">
+    <!-- The General Title of the Form -->
+    <br *ngIf="showAddCancelButtons" />
+
+    <ion-title *ngIf="!hideTitle" [class.text-centered]="this.showAddCancelButtons">
+      <ion-text>
+        <span>{{getFormTitle()}}</span>
+      </ion-text>
+    </ion-title>
+
+    <div *ngIf="showAddCancelButtons">
+      <br />
+      <ion-buttons class="even-ion-buttons" color="warning">
+        <ion-button (click)="onCancelButton()" color="danger"
+          title="Press to cancel changes to {{actionName}} {{entityName}}">
+          <ion-icon slot="start" icon="close-circle-outline"></ion-icon>Cancel
+        </ion-button>
+        <ion-button [disabled]="!subForm.valid" [color]="!subForm.valid?'dark':'success'" (click)="onSubmitData()"
+          title="Press to {{actionName}} {{entityName}}">
+          <ion-icon slot="start" icon="{{iconName}}"></ion-icon>Save
+          {{!!this.getInputName()?this.getInputName():'Info'}}
+        </ion-button>
+      </ion-buttons>
+    </div>
+
+
+    <div formArrayName="entries">
+      <div *ngFor="let entryInfo of subArray.controls; let i=index;">
+        <div [formGroupName]="i">
+
+          <div>
+            <ion-buttons *ngIf="!singleMode" slot="end" style="float:right">
+              <ion-button (click)="onRemoveElement(i)" color="warning" slot="end">
+                <ion-icon slot="start" icon="backspace-outline"></ion-icon>
+                Remove {{this.getInputName()}} {{i+1}}/{{subArray.controls.length}}
+              </ion-button>
+            </ion-buttons>
+          </div>
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <!-- The Each-Item Title -->
+                <div *ngIf="displayItemTitle()">
+                  <ion-title color="primary">
+                    {{this.getInputName()}} {{i+1}}
+                  </ion-title>
+                </div>
+              </ion-col>
+              <ion-col>
+              </ion-col>
+            </ion-row>
+            <ion-row *ngFor="let mapKV of this.inputsMap|keyvalue; let inputIndex = index;">
+              <ion-col>
+                <ion-item>
+                  <ion-label position="floating">
+                    {{mapKV.value.labelName + (isOptional(mapKV.value)?this.label4Optional:'')}}
+                  </ion-label>
+                  <ion-input [formControlName]="mapKV.key" [title]="getToolTip(mapKV.value.inputTip)" type="text">
+                  </ion-input>
+
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+
+        <div *ngIf="showAddCancelButtons">
+          <ion-buttons class="even-ion-buttons" color="warning">
+            <ion-button (click)="onCancelButton()" color="danger"
+              title="Press to cancel changes to {{actionName}} {{entityName}}">
+              <ion-icon slot="start" icon="close-circle-outline"></ion-icon>Cancel
+            </ion-button>
+            <ion-button [disabled]="!subForm.valid" [color]="!subForm.valid?'dark':'success'" (click)="onSubmitData()"
+              title="Press to {{actionName}} {{entityName}}">
+              <ion-icon slot="start" icon="{{iconName}}"></ion-icon>Save
+              {{!!this.getInputName()?this.getInputName():'Info'}}
+            </ion-button>
+          </ion-buttons>
+          <br />
+        </div>
+
+      </div>
+
+      <ion-buttons slot="end" *ngIf="!hideAddElementButton">
+        <ion-button *ngIf="!hideAddElementButton || this.singleMode" (click)="onAppendElement()" color="secondary"
+          slot="end">
+          <ion-icon slot="start" icon="add-circle-outline"></ion-icon>
+          Add New {{this.getInputName()}}
+        </ion-button>
+      </ion-buttons>
+
+      <div>
+      </div>
+    </div>
+  </form>
+</div>
