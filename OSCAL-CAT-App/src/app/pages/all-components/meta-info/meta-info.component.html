@@ -118,7 +118,7 @@
                   <ion-label class="ion-text-wrap fixed-width-text">{{party.name}}<br /> </ion-label>
                   <ion-button [title]="'Press to remove '.concat(party.type, ' ', party.name)" color="danger"
                     (click)="removeParty($event,party)">
-                    <ion-icon icon='close-outline'></ion-icon>
+                    <ion-icon icon='trash-outline'></ion-icon>
                   </ion-button>
                   <ion-button [title]="'Press to edit '.concat(party.type, ' ', party.name)"
                     (click)="startPartyEdit($event,party)">
@@ -148,7 +148,7 @@
                   <ion-button *ngIf="!isPresetRole(role)"
                     [title]="'Press to remove '.concat(role.title, ' with ID:', role.id)" color="danger"
                     (click)="removeRole($event,role)">
-                    <ion-icon icon='close-outline'></ion-icon>
+                    <ion-icon icon='trash-outline'></ion-icon>
                   </ion-button>
                   <ion-button [title]="'Press to edit Role '.concat(role.title, ' with ID:', role.id)"
                     (click)="startRoleEdit($event,role)">
@@ -265,7 +265,7 @@
                   </ion-label>
                   <ion-button [title]="'Press to remove mapping for Responsible Party: '.concat(party.roleID)"
                     color="danger" (click)="removeResponsibleParty($event,party)">
-                    <ion-icon icon='close-outline'></ion-icon>
+                    <ion-icon icon='trash-outline'></ion-icon>
                   </ion-button>
                   <ion-button [title]="'Press to edit Responsible Party with '.concat(' Role ID:', party.roleID)"
                     (click)="startRespPartyEdit($event,party)">
@@ -355,7 +355,7 @@
                   <ion-label class="ion-text-wrap fixed-width-text">{{doc.identifier}}<br /> </ion-label>
                   <ion-button [title]="'Press to remove '.concat(doc.identifier, ' ', doc.namespace)" color="danger"
                     (click)="removeDocId($event,doc)">
-                    <ion-icon icon='close-outline'></ion-icon>
+                    <ion-icon icon='trash-outline'></ion-icon>
                   </ion-button>
                   <ion-button [title]="'Press to edit '.concat(doc.identifier, ' ', doc.namespace)"
                     (click)="startDocIdEdit($event,doc)">
@@ -385,7 +385,7 @@
                   <ion-label class="ion-text-wrap fixed-width-text">{{prop.name}} = {{prop.value}} </ion-label>
                   <ion-button [title]="'Press to remove '.concat(prop.name, '=', prop.value)" color="danger"
                     (click)="this.removeProperty($event,prop)">
-                    <ion-icon icon='close-outline'></ion-icon>
+                    <ion-icon icon='trash-outline'></ion-icon>
                   </ion-button>
                   <ion-button [title]="'Press to edit '.concat(prop.name, ' = ', prop.value)"
                     (click)="startPropertyEdit($event,prop)">
@@ -470,7 +470,7 @@
                   <ion-label class="ion-text-wrap fixed-width-text">{{link.href}}</ion-label>
                   <ion-button [title]="'Press to remove link'.concat(link.href)" color="danger"
                     (click)="this.removeLink($event,link)">
-                    <ion-icon icon='close-outline'></ion-icon>
+                    <ion-icon icon='trash-outline'></ion-icon>
                   </ion-button>
                   <ion-button [title]="'Press to edit link '.concat(link.href)" (click)="startLinkEdit($event,link)">
                     <ion-icon icon='pencil-outline'></ion-icon>
@@ -499,7 +499,7 @@
                   <ion-label class="ion-text-wrap fixed-width-text">{{location_info.uuid}}</ion-label>
                   <ion-button [title]="'Press to remove location'.concat(location_info.href)" color="danger"
                     (click)="this.removeLocation($event, location_info)">
-                    <ion-icon icon='close-outline'></ion-icon>
+                    <ion-icon icon='trash-outline'></ion-icon>
                   </ion-button>
                   <ion-button [title]="'Press to edit link '.concat(location_info.href)"
                     (click)="startLinkEdit($event,location_info)">

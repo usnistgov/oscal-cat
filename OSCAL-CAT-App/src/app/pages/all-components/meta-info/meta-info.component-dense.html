@@ -94,7 +94,7 @@
                   </ion-button>
                   <ion-button [title]="'Press to edit '.concat(party.type, ' ', party.name)"
                     (click)="startPartyEdit($event,party)">
-                    <ion-icon icon='pencil-outline'></ion-icon>
+                    <ion-icon icon='trash-outline'></ion-icon>
                   </ion-button>
                 </ion-item>
               </div>
@@ -124,7 +124,7 @@
                   </ion-button>
                   <ion-button [title]="'Press to edit Role '.concat(role.title, ' with ID:', role.id)"
                     (click)="startRoleEdit($event,role)">
-                    <ion-icon icon='pencil-outline'></ion-icon>
+                    <ion-icon icon='trash-outline'></ion-icon>
                   </ion-button>
                 </ion-item>
               </div>
@@ -153,7 +153,7 @@
                   </ion-button>
                   <ion-button [title]="'Press to edit Responsible Party with '.concat(' Role ID:', party.roleID)"
                     (click)="startRespPartyEdit($event,party)">
-                    <ion-icon icon='pencil-outline'></ion-icon>
+                    <ion-icon icon='trash-outline'></ion-icon>
                   </ion-button>
                 </ion-item>
               </div>
@@ -288,7 +288,7 @@
                   </ion-button>
                   <ion-button [title]="'Press to edit '.concat(doc.identifier, ' ', doc.namespace)"
                     (click)="startDocIdEdit($event,doc)">
-                    <ion-icon icon='pencil-outline'></ion-icon>
+                    <ion-icon icon='trash-outline'></ion-icon>
                   </ion-button>
                 </ion-item>
               </div>
@@ -318,7 +318,7 @@
                   </ion-button>
                   <ion-button [title]="'Press to edit '.concat(prop.name, ' = ', prop.value)"
                     (click)="startPropertyEdit($event,prop)">
-                    <ion-icon icon='pencil-outline'></ion-icon>
+                    <ion-icon icon='trash-outline'></ion-icon>
                   </ion-button>
                 </ion-item>
               </div>
@@ -347,7 +347,7 @@
                     <ion-icon icon='close-outline'></ion-icon>
                   </ion-button>
                   <ion-button [title]="'Press to edit link '.concat(link.href)" (click)="startLinkEdit($event,link)">
-                    <ion-icon icon='pencil-outline'></ion-icon>
+                    <ion-icon icon='trash-outline'></ion-icon>
                   </ion-button>
                 </ion-item>
               </div>

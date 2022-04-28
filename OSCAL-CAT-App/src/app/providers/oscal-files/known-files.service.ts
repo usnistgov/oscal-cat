@@ -22,7 +22,7 @@ export class KnownOscalFilesService {
         {
             cat_enum: KnownCatalogNames.NIST_800_53_Rev4,
             cat_id: 'NIST SP 800-53 Rev4 Catalog',
-            cat_label: '800-53 Rev4 Catalog',
+            cat_label: 'Catalog 800-53 Revision 4 ',
             cat_url: KnownOscalFilesService.catsUrl4NIST80053r4 + 'NIST_SP-800-53_rev4_catalog-min.json',
             cat_file: KnownOscalFilesService.catsPath + 'NIST_SP-800-53_rev4_catalog.json',
             cat_language: CatSampleFileLanguage.Json,
@@ -71,7 +71,7 @@ export class KnownOscalFilesService {
             ],
         }, {
             cat_id: '800-53 Rev5 Oscal Catalog',
-            cat_label: '800-53 Rev4',
+            cat_label: 'Catalog 800-53 Revision 5',
             cat_url: 'https://raw.githubusercontent.com/usnistgov/OSCAL/master/content/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5-FPD_catalog-min.json',
             // /Users/dac4/vBoxShares/ui4OSCAL/src/assets/oscal-cats/NIST-800-53-rev5.json
             cat_file: './../../assets/oscal-cats/NIST-800-53-rev5.json',
@@ -81,18 +81,21 @@ export class KnownOscalFilesService {
             cat_baselines: [
 
             ],
-        }, {
-            cat_id: 'Oscal Catalog JSON Schema',
-            cat_label: 'OSCAL Cat JSON-Schema',
-            cat_url: 'https://raw.githubusercontent.com/usnistgov/OSCAL/master/json/schema/oscal_catalog_schema.json',
-            cat_file: '',
-            cat_language: CatSampleFileLanguage.JsonSchema,
-            cat_location: CatSampleFileLocation.Both,
-            cat_use_as: CatSampleIntendedUse.Schema4Validation,
-            cat_baselines: [
-
-            ],
         },
+        /*         
+                {
+                    cat_id: 'Oscal Catalog JSON Schema',
+                    cat_label: 'OSCAL Cat JSON-Schema',
+                    cat_url: 'https://raw.githubusercontent.com/usnistgov/OSCAL/master/json/schema/oscal_catalog_schema.json',
+                    cat_file: '',
+                    cat_language: CatSampleFileLanguage.JsonSchema,
+                    cat_location: CatSampleFileLocation.Both,
+                    cat_use_as: CatSampleIntendedUse.Schema4Validation,
+                    cat_baselines: [
+        
+                    ],
+                }, 
+        */
     ];
     constructor() {
     }
@@ -112,6 +115,12 @@ export class KnownOscalFilesService {
     static getAllKnownFiles() {
         return KnownOscalFilesService.knownFiles;
     }
+
+}
+
+@Injectable({
+    providedIn: 'root'
+}) export class OscalCatalogsService {
 
 }
 

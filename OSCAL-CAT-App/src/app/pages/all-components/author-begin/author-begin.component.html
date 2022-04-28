@@ -8,42 +8,68 @@
         <ion-row>
             <ion-col>
                 <ion-text>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    Select base catalog, start new editing, or continue previously saved session.
+                    Start new profile with a catalog, or continue previously saved session.
                 </ion-text>
             </ion-col>
         </ion-row>
     </ion-grid>
 </div>
-<div *ngIf="!this.newDraft && this.savedWork">
-    <!-- Continue working with the previously saved item(s) -->
-    <ion-grid *ngIf="this.savedWork">
-        <ion-row *ngFor="let workItem of this.savedWork; index as itemIndex">
-            <ion-col>
-                <ion-item>
-                    <ion-label>{{workItem}}</ion-label>
-                    <div onclick="this.popAlert(workItem, itemIndex)">
-                        <ion-icon slot="end" name="trash-outline"></ion-icon>
-                    </div>
-                </ion-item>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
-</div>
-<div *ngIf="true">
-    <!-- Begin a new document -->
-    <ion-grid>
-        <ion-header>
-            Select a Known OSCAL
-        </ion-header>
-        <ion-row *ngFor="let oscalFile of this.oscalFiles">
-            <ion-col>
-                <ion-item>
-                    <ion-label>{{oscalFile.cat_label}}</ion-label>
-                    <div onclick="this.popAlert(workItem, itemIndex)">
-                        <ion-icon slot="end" name="trash-outline"></ion-icon>
-                    </div>
-                </ion-item>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
+<br />
+<div>
+    <ion-radio-group>
+        <div *ngIf="true">
+            <!-- Start with a new document (from scratch) -->
+            <ion-grid>
+                <ion-row>
+                    <ion-col>
+                        <ion-title>&nbsp;&nbsp;Start with a Known OSCAL Catalog</ion-title>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row *ngFor="let oscalFile of this.oscalFiles">
+                    <ion-col>
+                        <ion-item>
+                            <ion-radio>
+                            </ion-radio>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <ion-label>{{oscalFile.cat_label}}</ion-label>
+                            <div onclick="this.popAlert(workItem, itemIndex)">
+                            </div>
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </div>
+        <br />
+        <div *ngIf="!this.newDraft && this.hasSavedWork()">
+
+            <ion-grid *ngIf="this.savedWork">
+                <ion-row>
+                    <ion-col>
+                        <ion-title>&nbsp;&nbsp;Continue with the Previously Saved Work</ion-title>
+                    </ion-col>
+                </ion-row>
+                <!-- Continue working with the previously saved item(s) -->
+                <ion-row *ngFor="let workItem of this.savedWork; index as theItemIndex">
+                    <ion-col>
+                        <ion-item>
+                            <ion-radio>
+                            </ion-radio>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <ion-label>{{workItem}}</ion-label>
+
+                            <ion-button [title]="'Press to remove '.concat(workItem)" color="danger"
+                                (click)="removeWorkItem($event,theItemIndex)">
+                                <ion-icon icon='trash-outline'></ion-icon>
+                            </ion-button>
+                            <ion-button [title]="'Press to edit '.concat(workItem)"
+                                (click)="editWorkItemName($event,theItemIndex)">
+                                <ion-icon icon='pencil-outline'></ion-icon>
+                            </ion-button>
+
+
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </div>
+    </ion-radio-group>
 </div>

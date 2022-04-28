@@ -5,6 +5,20 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-title>&nbsp;&nbsp;Modify Selected Controls</ion-title>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-text>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          You can modify selected control to tailor them to your profile.
+        </ion-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
   <oscal-nav-cat></oscal-nav-cat>
   <div *ngIf="safeToShowTree()">
     <oscal-tree-profile [treeNodes]="this.proInfo"></oscal-tree-profile>

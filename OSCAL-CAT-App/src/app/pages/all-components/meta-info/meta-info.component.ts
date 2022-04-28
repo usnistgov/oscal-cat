@@ -482,28 +482,28 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     };
     const l: PartyOrganizationOrPerson = {
       type: PartyType.Person,
-      name: 'Lucifer',
+      name: 'Lucy',
       uuid: '66666666-6666-6666-6666-666666666666',
       remarks: 'Ruler of unfinished security and under-designed creations.',
       shortName: 'B4-1st',
     };
     const h: PartyOrganizationOrPerson = {
       type: PartyType.Organization,
-      name: 'Hell',
+      name: 'Bad.Org',
       uuid: '66666666-9999-6666-9999-666666666666',
       remarks: 'A place for the most interesting people that did not fit.',
       shortName: 'Bad',
     };
     const h2: PartyOrganizationOrPerson = {
       type: PartyType.Organization,
-      name: 'Heaven',
+      name: 'Good.Org',
       uuid: '69696969-9696-6969-9696-696969696969',
       remarks: 'A place for the most boring people ever lived.',
       shortName: 'Good',
     };
     const g: PartyOrganizationOrPerson = {
       type: PartyType.Organization,
-      name: 'God',
+      name: 'Creator.Org',
       uuid: '00000000-0000-0000-0000-000000000000',
       remarks: 'That is the only party capable of the ideal security. Though... Lucifer....',
       shortName: 'G-d',
