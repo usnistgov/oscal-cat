@@ -26,7 +26,11 @@ export class TreeProfileComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() { }
+
+
   OnInit() { }
+
+
   public ngOnChanges(changes: SimpleChanges) {
   }
 

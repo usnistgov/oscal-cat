@@ -1,3 +1,14 @@
-<ion-reorder-group disabled="false">
-    <ul class="tree" recursive-tree-groups [children]="treeNodes"></ul>
-</ion-reorder-group>
+<div slot="" fixed class="fixed-box">
+    <div *ngFor="">
+        <div class="drop-area" #groups>
+            <b>Group 1</b>
+        </div>
+    </div>
+</div>
+<div>
+    <ion-reorder-group disabled="false"></ion-reorder-group>
+    <ul class="tree" recursive-tree-groups [children]="this.treeNodes"></ul>
+
+
+
+</div>

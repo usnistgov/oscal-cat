@@ -170,7 +170,7 @@ export class CatalogService {
     }
   }
 
-  getCatGroupsList() {
+  getCatGroupsList(): Array<TreeItemEntry> {
     if (!this.allGroups) {
       this.getTreeNodesStat();
     }

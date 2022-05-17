@@ -1,8 +1,11 @@
-import { IonicModule } from '@ionic/angular';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { IonicModule, GestureController, Gesture } from '@ionic/angular';
 import { RouterModule, Router, NavigationExtras, } from '@angular/router';
 import { AlertController, } from '@ionic/angular';
-
+import {
+    AfterViewInit,
+    Component, ElementRef, Input, IterableDiffers,
+    OnChanges, QueryList, SimpleChanges, ViewChildren
+} from '@angular/core';
 
 import { CatalogService, } from './../../../providers/oscal-data/catalog.service';
 import { TreeItemEntry, TreeNodeType } from './../../../providers/app-state/app-tree/tree-elements';
@@ -12,18 +15,78 @@ import { TreeItemEntry, TreeNodeType } from './../../../providers/app-state/app-
     templateUrl: './recursive-groups.component.html',
     styleUrls: ['../action-all-common/tree-styles.scss'],
 })
-export class RecursiveGroupsComponent {
+export class RecursiveGroupsComponent implements AfterViewInit {
     @Input() level: number;
     @Input() label: string;
     @Input() children: TreeItemEntry;
     @Input() parent: TreeItemEntry;
 
+    @ViewChildren('node', { read: ElementRef }) dragNodes: QueryList<ElementRef>;
+    @ViewChildren('node', { read: ElementRef }) dropNodes: QueryList<ElementRef>;
 
     self = this;
     private alertControl = new AlertController();
+    gesturesArray: Array<Gesture> = [];
+    // gestureCtl: any;
     // private navigateParams = new NavParams();
-    constructor(private router: Router) {
+    constructor(private router: Router, private gestureCtl: GestureController) {
+        //this.gestureCtl = gestureCtl;
     }
+
+    /**
+     * View Children are hooked-up here to the actual page controls
+     * @memberof RecursiveGroupsComponent
+     */
+    ngAfterViewInit(): void {
+        // Always start ngAfterInit with no accidentally left-in gestures.
+        this.gesturesArray.map(gesture => gesture.destroy());
+        this.gesturesArray = new Array<Gesture>();
+
+        // Look at the nodes in Console
+        const x = this.dragNodes.toArray();
+        console.log(x);
+
+
+    }
+
+    hookUpGestureControl(oneElement: ElementRef) {
+        const drag = this.gestureCtl.create({
+            el: oneElement.nativeElement,
+            threshold: 1,
+            gestureName: 'drag',
+            onStart: ev => {
+                oneElement.nativeElement.style.backgroundColor = 'pink';
+                oneElement.nativeElement.style.opacity = '0.86';
+                oneElement.nativeElement.style.fontWeight = 'bold';
+                // this.contentScrollActive = false;
+                // this.ChangeDetectorRef.detectChanges();
+            },
+            onMove: ev => {
+                oneElement.nativeElement.style.transform = `translate(${ev.deltaX}ps, ${ev.deltaY}px)`;
+                oneElement.nativeElement.style.zIndex = 10;
+                this.checkDropzoneHover(ev.currentX, ev.currentY);
+            },
+            onEnd: ev => { },
+        });
+        drag.enable();
+        this.gesturesArray.push(drag);
+    }
+
+    checkDropzoneHover(x, y) {
+        // For every drop-zone
+        const i = 1;
+        const drop = this.dropNodes[i].nativeElement.getBoundingRect();
+
+
+    }
+
+    isInDropZone(x, y, zone) {
+        return ((x >= zone.left && x <= zone.right)
+            && (y >= zone.top || y <= zone.bottom)
+        );
+    }
+
+
 
     closeOpen(item: TreeItemEntry) {
         item.open = !item.open;
@@ -36,6 +99,8 @@ export class RecursiveGroupsComponent {
         console.log(`Item is packed as : ${urlParams}`);
         this.router.navigate(['cat-control'], urlParams);
     }
+
+
 
     async presentPrompt(item: TreeItemEntry) {
         console.log(item);

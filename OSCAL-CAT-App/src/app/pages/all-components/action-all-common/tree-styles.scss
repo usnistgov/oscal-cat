@@ -26,30 +26,50 @@ body.dark {
 p {
   font-family: Lato;
 }
+
+
+// ======================================
+// Styling for the custom tree rendering
+// ======================================
 .tree ul {
-  margin-left: -29px;
+  margin-left: -27px; 
+  // Play with this value to make a left-side of the tree nodes to move 
+  // value 0 makes it too indented
+  // values below (above in absolute) !!! -31 !!! shift connectors too far to the left
 }
 
 .tree li .node_style {
   list-style-type: none; // Kill list markers
   position: relative;
   border: 2px solid #666666;
-  height: 52px;
+  height: 50px;
   margin: 1px; /* 3px makes guides flush */
-  /* width: 60em;*/ /*This can either make staircase or inverse it*/
+  /* width: Can either make staircase or inverse it*/
+  width: 100%;
+  margin-left: -40px;
 }
 
 .tree li {
   list-style-type: none;
-  margin: 5px;
+  // Margins are spacing for the drop-down items
+  margin-top: 5px;    // Defines the gap size between tree-node elements vertically
+  margin-bottom: 5px; // Defines the gap size between tree-node elements vertically
+  // For EVEN-RIGHT sides - make it 0px
+  margin-right: 3px; // !!!Defines how much instep is for the right edge of the tree
   position: relative;
+}
+.tree li:first-child {
+  margin-top: 8px; // Makes the gap before the subgroups more obvious
+}
+.tree li:last-child {
+  margin-bottom: 11px; // Makes the gap after the subgroups more obvious
 }
 
 .tree li::before {
   content: "";
   position: absolute;
   top: -20px;
-  left: -13px; // line-up of the
+  left: -50px; // line-up of the
   border-left: 2px solid #666666;
   border-bottom: 2px solid #666666;
   border-radius: 0px 0 0 0;
@@ -61,7 +81,7 @@ p {
   position: absolute;
   content: "";
   top: 20px;
-  left: -13px;
+  left: -50px;
   border-left: 2px solid #666666;
   border-top: 1.5px solid #666666;
   border-radius: 0px 0 0 0;

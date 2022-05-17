@@ -24,7 +24,6 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
-@import "~@ionic/angular/css/flex-utils.css";
 
 /*
  * App CSS
@@ -32,3 +31,31 @@
  * Imports a file that can contain Sass/CSS that should be used in the app
   */
 @import "./app/app.scss";
+
+
+.transparent-modal {
+  --background: #00000066;
+
+  // &::part(media) {
+  //   height: 120px;
+  //   width: 343px;
+  // }
+
+  &::part(content) {
+    backdrop-filter: blur(12px);
+    text-align: center;
+    height: 180px;
+    width: 373px;
+    margin: auto;
+    border-radius: 2px;
+  }
+
+  &::part(backdrop) {
+    --background: transparent;
+    background-color: transparent;
+  }
+
+  ion-content {
+    --background: transparent;
+  }
+}

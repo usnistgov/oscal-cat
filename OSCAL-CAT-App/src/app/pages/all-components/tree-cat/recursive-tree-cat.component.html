@@ -1,5 +1,5 @@
 <li *ngFor="let item of children">
-    <div>
+    <div #node>
         <ion-item class="node_style" title="{{item.toolTip || item.getToolTip(item)}}">
 
             <ion-item (click)="closeOpen(item)" class="ion-no-padding">

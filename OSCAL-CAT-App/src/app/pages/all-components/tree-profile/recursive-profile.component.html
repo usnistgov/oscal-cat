@@ -41,7 +41,9 @@
         -->
 
     </ion-item>
+
     <ul recursive-tree-profile *ngIf="item.hasSomeIncluded(item)" xxx=" && item.children" [children]="item.children"
         [parent]="item.parent" [class.hidden]="!item.open" [level]="level != undefined ? level + 1 : 0">
     </ul>
+
 </li>

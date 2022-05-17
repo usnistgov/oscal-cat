@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { RouterModule, Router, NavigationExtras, } from '@angular/router';
 import { AlertController, } from '@ionic/angular';
 

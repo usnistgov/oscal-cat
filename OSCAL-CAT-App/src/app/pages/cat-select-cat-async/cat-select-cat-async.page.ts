@@ -29,7 +29,10 @@ export class CatSelectCatAsyncPage implements OnInit {
 
   async ngOnInit() {
     await this.presentLoading();
-    this.loadTree().then(() => { this.loading.dismiss(); });
+    this.loadTree().
+      then(() => {
+        this.loading.dismiss();
+      });
   }
 
   async loadTree() {
@@ -49,9 +52,10 @@ export class CatSelectCatAsyncPage implements OnInit {
       component: ActionWaitComponent,
       componentProps: {
         title: 'Wait! Loading Catalog ...',
-        color: 'red',
+        color: 'primary',
         timeout: 43000,
-      }
+      },
+      cssClass: 'transparent-modal'
     });
     console.log('presentLoading')
     await this.loading.present();

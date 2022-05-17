@@ -1,4 +1,5 @@
 import { Component, OnInit, Optional, SkipSelf } from '@angular/core';
+import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 
 
@@ -12,7 +13,11 @@ import { CatSelectCatalogPage } from '../cat-select-catalog/cat-select-catalog.p
   styleUrls: ['../cat-select-profile/cat-select-profile.page.scss', './../stylePages.scss'],
 })
 export class CatSelectProfileGroupsPage extends CatSelectCatalogPage implements OnInit {
+
   proInfo: Array<TreeItemEntry>;
+  router: Router;
+  mustGoBack: boolean = false;
+
   constructor(
     @Optional() @SkipSelf() theCatService: CatalogService,
     modalController: ModalController) {
@@ -21,11 +26,35 @@ export class CatSelectProfileGroupsPage extends CatSelectCatalogPage implements 
 
   async ngOnInit() {
     console.log(`In mgOnInitProfile`);
+    this.getTree();
   }
 
   getTree() {
-    this.proInfo = this.cat.getTreeProfileStat();
-    // console.log(`length0=${this.proInfo[0].children.length}`);
-    return this.proInfo;
+    try {
+      this.proInfo = this.cat.getTreeProfileStat();
+      if (this.proInfo) {
+        // console.log(`length0=${this.proInfo[0].children.length}`);
+        this.mustGoBack = !this.proInfo;
+      } else {
+        // Uncomment line below to force a return back and select controls
+        // this.router.navigateByUrl('/cat-select-async');
+      }
+    } catch (error) {
+      console.log(`Error at the profile tree retrieval ${error}`);
+    } finally {
+
+    }
   }
+
+
+  safeToShowTree(): boolean {
+    if (this.mustGoBack) {
+      return !this.mustGoBack;
+    }
+    if (!this.proInfo) {
+      this.getTree();
+    }
+    return !!this.proInfo;
+  }
+
 }

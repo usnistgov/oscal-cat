@@ -1,4 +1,4 @@
-import { Component, Input, IterableDiffers, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, Input, IterableDiffers, OnChanges, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { RouterModule, Router, NavigationExtras, } from '@angular/router';
 import { AlertController, } from '@ionic/angular';
 import { Observable, of, from } from 'rxjs';
@@ -19,6 +19,8 @@ export class RecursiveTreeCatComponent extends AllTreesBaseComponent {
     @Input() children: TreeItemEntry;
     @Input() parent: TreeItemEntry;
     @Input() theCat: CatalogService;
+
+
 
     // cat: CatalogService;
     self = this;

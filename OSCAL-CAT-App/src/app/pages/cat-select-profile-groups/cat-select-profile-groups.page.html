@@ -4,15 +4,47 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="no-padding">
+<ion-content class="ion-padding">
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-title>&nbsp;&nbsp;Add Groups and Regroup Controls</ion-title>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-text>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          Select appropriate grouping for controls.
+        </ion-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <oscal-nav-cat></oscal-nav-cat>
 
   <ion-fab vertical="top" horizontal="left" slot="fixed">
     <oscal-nav-cat></oscal-nav-cat>
   </ion-fab>
+
   <div class="content">
     <!--  [controlsList]="cat.getCatControlsList()" [theCat]="cat" -->
+    <!-- 
     <oscal-tree-groups [treeNodes]="getTree()">
+      <tree-root [state]="state" [options]="options" [focused]="true" [nodes]="getTree()"></tree-root>
     </oscal-tree-groups>
+   -->
+    <div *ngIf="!safeToShowTree()">
+      <ion-item>
+        <ion-label color="warning">
+          No Controls for profile were selected from the catalog.<br />
+          Please, use yellow back button to return and select controls.
+        </ion-label>
+      </ion-item>
+    </div>
+    <div *ngIf="safeToShowTree()"></div>
+    <oscal-tree-groups [treeNodes]="this.proInfo"></oscal-tree-groups>
+
+
 
   </div>
 </ion-content>

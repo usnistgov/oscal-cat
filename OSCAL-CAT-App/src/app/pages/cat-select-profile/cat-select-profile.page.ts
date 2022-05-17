@@ -13,9 +13,11 @@ import { CatSelectCatalogPage } from './../cat-select-catalog/cat-select-catalog
   styleUrls: ['./cat-select-profile.page.scss', './../stylePages.scss'],
 })
 export class CatSelectProfilePage extends CatSelectCatalogPage implements OnInit {
+
   proInfo: Array<TreeItemEntry>;
   router: Router;
   mustGoBack: boolean = false;
+
   constructor(
     @Optional() @SkipSelf() theCatService: CatalogService,
     modalController: ModalController,
@@ -30,6 +32,7 @@ export class CatSelectProfilePage extends CatSelectCatalogPage implements OnInit
   async ngOnInit() {
     console.log(`In mgOnInitProfile`);
     this.getTree();
+    console.log(`Tree was ${this.proInfo ? '+++loaded+++' : '!!!NOT LOADED!!!'}`)
   }
 
   getTree() {

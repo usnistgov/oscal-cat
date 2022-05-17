@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, SimpleChanges, OnChanges, OnInit, ViewChildren, ElementRef, QueryList } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
 
 
