@@ -1,3 +1,4 @@
+import { SessionData } from './../../../providers/app-state/state-nav-cat/state-session-data.service';
 // import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 
 import {
@@ -26,6 +27,7 @@ import {
   Link, TelephoneNumber, ResponsibleParty, Property,
   DocumentIdentifier, Location, Role
 } from './../../../interfaces/oscal-types/oscal-catalog.types';
+import { CurrentSessionData, NamedSessionNodes } from 'src/app/providers/app-state/state-nav-cat/state-session-data.service';
 
 
 export interface CloseAddEdit {
@@ -98,6 +100,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
   */
   @Input() metaInfo: PublicationMetadata;
 
+  activeSession: SessionData;
   activeEntityAddTabName = '';
   activeEditState: EditingState = EditingState.Off;
   activeEditIndex: number;
@@ -117,11 +120,19 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
   currentEditedLocation: Location;
 
   constructor(
+    private session: CurrentSessionData,
     public modalController: ModalController,
     public LMS: LogManagerService,
     private CFR: ComponentFactoryResolver,
     // private db: AppDbInProgressService,
   ) {
+    if (this.session.isKeyValue(NamedSessionNodes.ACTIVE_SESSION)) {
+      this.activeSession = this.session.getActiveSession();
+      if (this.activeSession && this.activeSession.meta) {
+        this.metaInfo = this.activeSession.meta;
+      }
+      console.log(`Active-Session ID: [${this.activeSession.uuid}]`);
+    }
     // this.db = new AppDbInProgressService(new Platform(), new SQLite(), new HttpClient(new HttpHandler()), new SQLitePorter());
 
     // console.log(`x-x-x: EL = ${db.entitiesList}`);
@@ -138,20 +149,38 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     // );
   }
 
+  updateMetaFromSession() {
+    if (this.activeSession && !this.activeSession.meta) {
+      if (this.activeSession.knownCat && this.activeSession.knownCat.cat_suffix) {
+        this.metaInfo.title = `Profile Based on ${this.activeSession.knownCat.cat_suffix}`;
+      } else if (this.activeSession && this.activeSession.name) {
+        this.metaInfo.title = this.activeSession.name;
+      }
+    }
+  }
+
+
   initMetaInfo() {
 
-    if (!!this.metaInfo) { return; } else {
+    if (!!this.metaInfo) {
+      this.updateMetaFromSession();
+      return;
+    } else {
       this.metaInfo = {
         title: '',
         version: '',
         lastModified: new Date(),
         oscalVersion: '',
       };
+      this.updateMetaFromSession();
     }
+
     console.log('Beginning Meta Component');
+    console.log(this.metaInfo);
+
     this.formBuilder = new FormBuilder();
     this.metaForm = this.formBuilder.group({
-      title: ['', Validators.required],
+      title: [this.metaInfo.title ? this.metaInfo.title : '', Validators.required],
       description: [''],
       oscalVersion: [
         '',
@@ -187,7 +216,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
 
   ngOnInit() {
     this.initMetaInfo();
-
+    this.updateMetaFromSession();
     // this.db = new AppDbInProgressService(Platform, );
   }
 

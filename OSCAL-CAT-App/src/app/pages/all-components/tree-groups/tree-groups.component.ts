@@ -30,11 +30,8 @@ export class TreeGroupsComponent implements OnInit, OnChanges, AfterViewInit {
 
   ngOnInit() {
 
-    console.log(`Root: ${this.treeNodes[0]}`);
-    for (let i = 0; i < 10; i++) {
-      console.log(`Child ${i + 1}: ${this.treeNodes[0].children[0]}`);
-    }
-
+    console.log(`Root: `);
+    console.log(this.treeNodes);
   }
 
   OnInit() { }

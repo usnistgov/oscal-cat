@@ -46,4 +46,10 @@
         [parent]="item.parent" [class.hidden]="!item.open" [level]="level != undefined ? level + 1 : 0">
     </ul>
 
+    <ion-modal [isOpen]="isModalOpen">
+        <ng-template>
+
+        </ng-template>
+    </ion-modal>
+
 </li>

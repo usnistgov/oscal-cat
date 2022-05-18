@@ -35,7 +35,8 @@ export class CatSelectCatAsyncPage implements OnInit {
       });
   }
 
-  async loadTree() {
+  async loadTree(useRev4 = true) {
+    this.cat.getCatalog(useRev4);
     if (!this.theTree$) {
       console.log('Reading Tree');
       this.theTree$ = this.cat.getTreeNodesAsync();

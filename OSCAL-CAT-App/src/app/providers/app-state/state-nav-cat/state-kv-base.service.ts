@@ -25,11 +25,13 @@ export class KvServiceBase {
      * @returns {Promise<any>}
      * @memberof KvServiceBase
      */
-    async setKeyValueObject(keyValue: string, dataValue: any): Promise<any> {
+    async setKeyValueObject<T>(keyValue: string, dataValue: T): Promise<any> {
         // Pack up the object from JSON to Stringified version
+        console.log(dataValue);
         let strValue = '';
         if (dataValue) {
             strValue = JSON.stringify(dataValue);
+            console.log(`Saving Key:${keyValue}\nas Str:${strValue}`)
         }
         return await this.storage.set(keyValue, strValue);
     }
@@ -42,7 +44,7 @@ export class KvServiceBase {
         try {
             returnValue = JSON.parse(theValue);
         } catch (error) {
-            console.log(`The error:${error} prevented parsing out the Key:${keyValue} from storage `)
+            console.log(`The error:${error} prevented parsing out storage\nFor the Key:[${keyValue}] `)
         } finally {
             return returnValue;
         }
@@ -62,7 +64,7 @@ export class KvServiceBase {
 
     async isKeyValue(keyValue: string): Promise<boolean> {
         const value = await this.storage.get(keyValue);
-        console.log(`The Key:${keyValue}={Value:${value}}`);
+        console.log(`IS-the-Key:${keyValue}={Value:${value}}`);
         return !!value;
     }
 

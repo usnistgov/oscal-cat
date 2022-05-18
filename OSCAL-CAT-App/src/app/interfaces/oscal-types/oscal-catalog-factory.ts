@@ -1,10 +1,25 @@
 import {
     ResponsibleParty, Address, DocumentIdentifier, PartyExternalIdentifier,
-    PartyOrganizationOrPerson, PartyType, Property, Link, Location, Role, TelephoneNumber
+    PartyOrganizationOrPerson, PartyType, Property, Link, Location, Role,
+    TelephoneNumber, Control, Part, Parameter,
 } from './oscal-catalog.types';
 
 
 export class OscalCatalogEmpties {
+
+    static getEmptyControl(): Control {
+        const emptyControl: Control = {
+            title: '',
+            id: '',
+            class: '',
+            controls: new Array<Control>(),
+            links: new Array<Link>(),
+            params: new Array<Parameter>(),
+            parts: new Array<Part>(),
+            props: new Array<Property>(),
+        }
+        return emptyControl;
+    }
 
 
     public static getEmptyResponsibleParty(): ResponsibleParty {

@@ -1,6 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
 
-import { LogManagerService } from './../logging/log-manager.service';
 import { TreeItemEntry, TreeNodeType } from './../app-state/app-tree/tree-elements';
 import { Convert, Catalog, Control, ControlGroup, } from './../../interfaces/oscal-types/oscal-catalog.types';
 
@@ -26,18 +25,41 @@ export class CatalogService {
   treeCats: Array<TreeItemEntry>;
   treeProfile: Array<TreeItemEntry>;
   catExample: any;
+  jsonCat4: Catalog;
+  jsonCat5: Catalog;
   wasHere: boolean;
   asyncCount = 0;
-  deepLog: LogManagerService;
+  isRev4 = true;
   // private handler: HttpHandler = new HttpXhrBackend();
   // private http = new HttpClient(this.handler);private http: HttpClient
+
+  // Blows up intermittently
+  fetchJsonCat(jsonFile: string): Catalog {
+    let newCat: Catalog;
+    fetch(jsonFile).then(
+      res => res.json()
+    ).then(jsonData => {
+      newCat = jsonData;
+    });
+    return newCat;
+  }
+
+  // BLows up occasionally with a circular reference
+  requireJsonCat(jsonFile: string): Catalog {
+    const newCat = require(jsonFile);
+    return newCat;
+  }
+
+
   constructor() {
     // Way 1 - Stopped working with variable, but works with literal
     // CAT: './../../assets/oscal-cats/NIST_SP-800-53_rev4_catalog.json'
-    this.deepLog = new LogManagerService();
     const start = new Date().getTime();
     // this.catExample = require('./../../../assets/oscal-cats/NIST_SP-800-53_rev4_catalog.json');
-    this.catExample = require('./../../../assets/oscal-cats/NIST_SP-800-53_rev4_catalog.json');
+    // this.catExample = require('./../../../assets/oscal-cats/NIST_SP-800-53_rev4_catalog.json');
+    this.jsonCat4 = require('./../../../assets/oscal-cats/NIST_SP-800-53_rev4_catalog.json');
+    this.jsonCat5 = require('./../../../assets/oscal-cats/NIST_SP-800-53_rev5-FINAL_catalog.json');
+
     const end = new Date().getTime();
     console.log(`Start:${start}\t end:${end}\ttime:${end - start}`);
 
@@ -75,7 +97,18 @@ export class CatalogService {
   OnInit() {
   }
 
-  getCatalog() { return this.catExample; }
+  getCatalog(useRev4 = true) {
+    // const useRev4 = true;
+    if (useRev4) {
+      //this.jsonCat4 = this.requireJsonCat('./../../../assets/oscal-cats/NIST_SP-800-53_rev4_catalog.json');
+      this.catExample = this.jsonCat4; // require('./../../../assets/oscal-cats/NIST_SP-800-53_rev4_catalog.json');
+    }
+    else { // if (!useRev4) 
+      // this.jsonCat5 = this.fetchJsonCat('./../../../assets/oscal-cats/NIST_SP-800-53_rev5-FINAL_catalog.json');
+      this.catExample = this.jsonCat5; // require('./../../../assets/oscal-cats/NIST_SP-800-53_rev4_catalog.json');
+    }
+    return this.catExample;
+  }
 
 
 
@@ -185,7 +218,7 @@ export class CatalogService {
       }
     }
 
-    this.deepLog.logData(this.groupsInit, 1);
+    // this.deepLog.logData(this.groupsInit, 1);
     return this.groupsInit;
   }
 

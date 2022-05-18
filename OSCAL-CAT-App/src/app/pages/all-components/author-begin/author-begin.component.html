@@ -16,7 +16,7 @@
 </div>
 <br />
 <div>
-    <ion-radio-group>
+    <ion-radio-group (ionChange)="handleRadioChange($event)">
         <div *ngIf="true">
             <!-- Start with a new document (from scratch) -->
             <ion-grid>
@@ -25,14 +25,14 @@
                         <ion-title>&nbsp;&nbsp;Start with a Known OSCAL Catalog</ion-title>
                     </ion-col>
                 </ion-row>
-
-                <ion-row *ngFor="let oscalFile of this.oscalFiles">
+                <!--  onclick="this.popAlert(oscalFile.cat_suffix, itemIndex)" -->
+                <ion-row *ngFor="let oscalFile of this.oscalFiles; let itemIndex = index">
                     <ion-col>
                         <ion-item>
-                            <ion-radio>
+                            <ion-radio value="{{itemIndex}}">
                             </ion-radio>&nbsp;&nbsp;&nbsp;&nbsp;
                             <ion-label>{{oscalFile.cat_label}}</ion-label>
-                            <div onclick="this.popAlert(workItem, itemIndex)">
+                            <div>
                             </div>
                         </ion-item>
                     </ion-col>
@@ -49,19 +49,19 @@
                     </ion-col>
                 </ion-row>
                 <!-- Continue working with the previously saved item(s) -->
-                <ion-row *ngFor="let workItem of this.savedWork; index as theItemIndex">
+                <ion-row *ngFor="let workItem of this.savedWork; let savedIndex = index">
                     <ion-col>
                         <ion-item>
-                            <ion-radio>
+                            <ion-radio value="{{2+savedIndex}}">
                             </ion-radio>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <ion-label>{{workItem}}</ion-label>
+                            <ion-label>{{workItem.name}} [{{workItem.uuid}}]</ion-label>
 
-                            <ion-button [title]="'Press to remove '.concat(workItem)" color="danger"
-                                (click)="removeWorkItem($event,theItemIndex)">
+                            <ion-button [title]="'Press to remove '.concat(workItem.name)" color="danger"
+                                (click)="removeWorkItem($event,savedIndex)">
                                 <ion-icon icon='trash-outline'></ion-icon>
                             </ion-button>
-                            <ion-button [title]="'Press to edit '.concat(workItem)"
-                                (click)="editWorkItemName($event,theItemIndex)">
+                            <ion-button [title]="'Press to edit '.concat(workItem.name)"
+                                (click)="editWorkItemName($event,savedIndex)" disabled="true">
                                 <ion-icon icon='pencil-outline'></ion-icon>
                             </ion-button>
 
