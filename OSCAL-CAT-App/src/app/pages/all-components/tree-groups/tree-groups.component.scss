@@ -1,0 +1,22 @@
+.fixed-box{
+    width:100%;
+    background: #fcfcfc;
+    height:80px;
+    z-index:1;
+}
+
+.drop-area{
+    border: 2px dashed #660066;
+    margin: 2px;
+    width: calc(33% - 4px);
+    align-items: center;
+    height: 150px;
+    display: inline-flex;
+    justify-content: center;
+    user-select: none;
+    background: #990099;
+}
+
+.item-group{
+    margin-top:100px;
+}
