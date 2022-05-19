@@ -131,7 +131,9 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
       if (this.activeSession && this.activeSession.meta) {
         this.metaInfo = this.activeSession.meta;
       }
-      console.log(`Active-Session ID: [${this.activeSession.uuid}]`);
+      if (this.activeSession && this.activeSession.uuid) {
+        console.log(`Active-Session ID: [${this.activeSession.uuid}]`);
+      }
     }
     // this.db = new AppDbInProgressService(new Platform(), new SQLite(), new HttpClient(new HttpHandler()), new SQLitePorter());
 

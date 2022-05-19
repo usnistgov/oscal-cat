@@ -21,9 +21,10 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   oscalFiles: Array<KnownOscalFileLocation>;
   chosenOscalCat: KnownOscalFileLocation;
   newDraft: boolean;
-  alertControl: AlertController;
+  //alertControl: AlertController;
 
-  constructor(private session: CurrentSessionData, public modalController: ModalController) {
+  constructor(private session: CurrentSessionData,
+    public alertControl: AlertController) {
     this.oscalFiles = KnownOscalFilesService.getAllKnownFiles();
   }
 
@@ -71,7 +72,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       this.chosenOscalCat = this.oscalFiles[value];
       this.chosenSession = undefined;
     }
-    this.activateSession();
+    this.activateSession(false);
     this.readSavedWork();
   }
 
@@ -86,22 +87,6 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     return (!!this.savedWork);
   }
 
-  removeWorkItem($event: Event, theItemIndex: number) {
-    // TODO: before killing existing work, it would be nice 
-    // to verify that button press is not a mistake.
-
-    if (!!this.savedWork) {
-      console.log(`Item Index ${theItemIndex} Event Target:${$event.target}`);
-      this.savedWork.splice(theItemIndex, 1);
-      if (this.savedWork.length > 0) {
-        this.session.setKeyValueObject(NamedSessionNodes.SAVED_SESSIONS, this.savedWork);
-      } else {
-        this.session.setKeyValueObject(NamedSessionNodes.SAVED_SESSIONS, null);
-        this.savedWork = null;
-      }
-
-    }
-  }
 
   editWorkItemName($event, theItemIndex: number) {
   }
@@ -147,63 +132,68 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     console.log('Begin-Page Will Destroy!!!!!!');
     this.activateSession();
   }
+
+
+
+
+  private removeWorkItem($event: Event, theItemIndex: number) {
+    // TODO: before killing existing work, it would be nice 
+    // to verify that button press is not a mistake.
+
+    if (!!this.savedWork) {
+      console.log(`Item Index ${theItemIndex} Event Target:${$event.target}`);
+      this.savedWork.splice(theItemIndex, 1);
+      if (this.savedWork.length > 0) {
+        this.session.setKeyValueObject(NamedSessionNodes.SAVED_SESSIONS, this.savedWork);
+      } else {
+        this.session.setKeyValueObject(NamedSessionNodes.SAVED_SESSIONS, null);
+        this.savedWork = null;
+      }
+
+    }
+  }
+
+  /**
+  * Function generates the pop-up
+  * @param item : the Tree-Item-Entry to generate the popup for
+  */
+  async presentDeleteWarning($event: Event, itemIndex: number) {
+    const item = this.savedWork[itemIndex]
+    const name = (item.fullName) ? item.fullName : item.name;
+    const uuid = item.uuid;
+    console.log(name);
+    const summaryHtml: string =
+      `<strong>Are you sure you want to delete</strong>`
+      + `<strong>Saved Item: ${name}<br /> `
+      + `With UUID: ${uuid} ?<br /><br /> </strong>`;
+    const alert = await this.alertControl.create({
+      header: `Delete Item?`,
+      subHeader: `Do You Really Want to Delete Work?`,
+      message: summaryHtml,
+      cssClass: 'oscal-prompt-class',
+      buttons: [
+        {
+          text: 'Delete',
+          handler: data => {
+            this.removeWorkItem($event, itemIndex);
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: data => {
+            return false;
+          }
+        },
+      ]
+    });
+    await alert.present();
+  }
+
+
 }
 
-/**
-   * Function generates the pop-up
-   * @param item : the Tree-Item-Entry to generate the popup for
-   */
-  // async presentPrompt(item:) {
-  //   console.log(item);
-  //   const isGroup: boolean = item.children ? true : false;
-  //   const nodeType = item.nodeType.toString();
-  //   const prefix: string = nodeType[0].toUpperCase() + nodeType.substr(1).toLowerCase();
-  //   console.log(`nodeType:${nodeType} => Prefix = ${prefix}`);
-  //   const summaryHtml: string = isGroup ? `<strong> ${prefix} ${item.key} Contains:<br /><br /> </strong>` +
-  //     `&nbsp;&nbsp;Total of ${item.partsCount} Controls/Subgroups. <br /><br />` +
-  //     `&nbsp;&nbsp;Control Short Names Span from ${item.children[0].key} to  ${item.children[item.partsCount - 1].key}.`
-  //     :
-  //     `<strong> ${prefix} ${item.key} </strong> ` +
-  //     ` ${(item.partsCount > 0) ? 'Has ' : 'Has no'} ` +
-  //     `${(item.partsCount > 0) ? item.partsCount.toString() : ''} Parameters.`;
-  //   const alert = await this.alertControl.create({
-  //     header: `${prefix} ${item.key} Info`,
-  //     subHeader: `Full Name: ${item.label}:`,
-  //     message: summaryHtml,
-  //     cssClass: 'oscal-prompt-class',
 
-  //     /*inputs: [
-  //         {
-  //             name: 'group',
-  //             value: prefix + ': ' + item.label + '\n\t\t' + item.label + '\n\t\t' + item.label +
-  //                 '\n\t\t' + item.label + '\n\t\t' + item.label,
-  //             type: 'textarea',
-  //             disabled: true,
-  //         },
-  //     ],*/
-  //     buttons: [
-  //       {
-  //         text: 'Close',
-  //         role: 'cancel',
-  //         handler: data => {
-  //           return false;
-  //         }
-  //       },
-  //       {
-  //         text: (item.nodeType === TreeNodeType.Control) ? 'Details...' : '',
-  //         handler: data => {
-  //           if (item.key) {
-  //             // Follow to Details Page
-  //           } else {
-  //             // Same as Close
-  //             return false;
-  //           }
-  //         }
-  //       }
-  //     ]
-  //   });
-  //   await alert.present();
-  // }
 
 
 

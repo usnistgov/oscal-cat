@@ -57,7 +57,7 @@
                             <ion-label>{{workItem.name}} [{{workItem.uuid}}]</ion-label>
 
                             <ion-button [title]="'Press to remove '.concat(workItem.name)" color="danger"
-                                (click)="removeWorkItem($event,savedIndex)">
+                                (click)="presentDeleteWarning($event,savedIndex)">
                                 <ion-icon icon='trash-outline'></ion-icon>
                             </ion-button>
                             <ion-button [title]="'Press to edit '.concat(workItem.name)"
