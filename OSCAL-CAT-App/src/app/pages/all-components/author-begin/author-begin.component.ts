@@ -93,7 +93,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
 
   ionViewWillLeave(): void {
     // Does not work to hook up the 
-    console.log('Begin-Page Will Leave!!!!!!');
+    console.log('!!!!!!======!!!!!! Begin-Page Will Leave!!!!!!');
     if (this.chosenOscalCat) {
       console.log(`Leaning with Cat`);
     } else if (this.chosenSession) {
@@ -154,8 +154,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Function generates the pop-up
-  * @param item : the Tree-Item-Entry to generate the popup for
+  * Function generates the Alert pop-up
   */
   async presentDeleteWarning($event: Event, itemIndex: number) {
     const item = this.savedWork[itemIndex]
@@ -163,14 +162,16 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     const uuid = item.uuid;
     console.log(name);
     const summaryHtml: string =
-      `<strong>Are you sure you want to delete</strong>`
-      + `<strong>Saved Item: ${name}<br /> `
-      + `With UUID: ${uuid} ?<br /><br /> </strong>`;
+      `<div>Are you sure you want to delete</div><br />`
+      + `<div> <strong>Saved Work:</strong></div>`
+      + `<div><strong>"${name}"<strong></div><br />`
+      + `<div>With UUID:<div>`
+      + ` <div><strong>[${uuid}]?</div></strong></div><br />`;
     const alert = await this.alertControl.create({
-      header: `Delete Item?`,
-      subHeader: `Do You Really Want to Delete Work?`,
+      header: `Delete Saved Work ?`,
+      //subHeader: `Are You Sure?`,
       message: summaryHtml,
-      cssClass: 'oscal-prompt-class',
+      cssClass: 'delete-alert-global-class',
       buttons: [
         {
           text: 'Delete',
@@ -188,6 +189,36 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       ]
     });
     await alert.present();
+  }
+
+
+  /// Rename work item Alert pop-up
+  async presentEditName($event: Event, itemIndex: number) {
+    const prompt = await this.alertControl.create({
+      header: 'Rename Saved Work',
+      message: "Enter new name for the saved item",
+      inputs: [
+        {
+          name: 'title',
+          placeholder: 'Title'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Save',
+          handler: data => {
+            console.log('Saved clicked');
+          }
+        }
+      ]
+    });
+    prompt.present();
   }
 
 

@@ -32,7 +32,7 @@
               </ion-button>
             </ion-buttons>
           </div>
-          
+
           <ion-grid class="topless">
             <ion-row>
               <ion-col>
@@ -70,14 +70,14 @@
                   <!--  formArrayName="Links" -->
                   <oscal-array-links [ID]="'topLinks'" [linksArray]="[]" listTitle="Links" parentEntity="Role"
                     parentName="Role" inputName="Link"
-                    [isArrayOptional]="(isOptional(mapKV.value)?this.label4Optional:'')">
+                    [isArrayOptionalText]="(isOptional(mapKV.value)?this.label4Optional:'')">
                   </oscal-array-links>
                 </div>
                 <div *ngIf="mapKV.value.inputAs==='oscal-array-properties'">
                   <!--  formArrayName="Links" -->
                   <oscal-array-properties [ID]="'topLinks'" [propertiesArray]="[]" listTitle="Properties"
                     parentEntity="Role" parentName="Role" inputName="Prop."
-                    [isArrayOptional]="(isOptional(mapKV.value)?this.label4Optional:'')">
+                    [isArrayOptionalText]="(isOptional(mapKV.value)?this.label4Optional:'')">
                   </oscal-array-properties>
                 </div>
 

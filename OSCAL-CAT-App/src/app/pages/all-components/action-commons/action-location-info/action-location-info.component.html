@@ -80,7 +80,7 @@
               <!-- Phones for Location -->
               <ion-col *ngIf="mapKV.value.inputAs==='oscal-array-phones'">
                 <oscal-array-phones #phonesArray [parentEntity]="this.defaultSingleTitle"
-                  [isArrayOptional]="'(Optional)'">
+                  [isArrayOptionalText]="'(Optional)'">
                 </oscal-array-phones>
               </ion-col>
 
@@ -89,7 +89,7 @@
                 <oscal-array-string #emailsArray [parentEntity]="this.defaultSingleTitle" [isArrayOptional]="true"
                   [ID]="'emailAddressesLocation'" [stringData]="[]" listTitle="Emails"
                   [parentEntity]="this.defaultSingleTitle" [parentName]="this.defaultSingleTitle" inputName="Email"
-                  [validateAs]="getEmailValidator()" [isArrayOptional]="'(Optional)'"></oscal-array-string>
+                  [validateAs]="getEmailValidator()" [isArrayOptionalText]="'(Optional)'"></oscal-array-string>
               </ion-col>
 
               <!-- URLs -->
@@ -97,20 +97,20 @@
                 <oscal-array-string #urlsArray [parentEntity]="this.defaultSingleTitle" [isArrayOptional]="true"
                   [ID]="'emailAddressesLocation'" [stringData]="[]" listTitle="URLs"
                   [parentEntity]="this.defaultSingleTitle" [parentName]="this.defaultSingleTitle" inputName="URL"
-                  [validateAs]="getEmailValidator()" [isArrayOptional]="'(Optional)'"></oscal-array-string>
+                  [validateAs]="getEmailValidator()" [isArrayOptionalText]="'(Optional)'"></oscal-array-string>
               </ion-col>
 
               <!-- Links-->
               <ion-col *ngIf="mapKV.value.inputAs==='oscal-array-links'">
                 <oscal-array-links #linksArray [parentEntity]="this.defaultSingleTitle"
-                  [isArrayOptional]="'(Optional)'">
+                  [isArrayOptionalText]="'(Optional)'">
                 </oscal-array-links>
               </ion-col>
 
               <!-- Properties-->
               <ion-col *ngIf="mapKV.value.inputAs==='oscal-array-properties'">
                 <oscal-array-properties #propsArray [parentEntity]="this.defaultSingleTitle"
-                  [isArrayOptional]="'(Optional)'">
+                  [isArrayOptionalText]="'(Optional)'">
                 </oscal-array-properties>
               </ion-col>
 

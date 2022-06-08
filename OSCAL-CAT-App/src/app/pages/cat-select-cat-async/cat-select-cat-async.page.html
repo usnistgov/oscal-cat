@@ -23,21 +23,23 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+
   <oscal-nav-cat></oscal-nav-cat>
-
-  <div class="content">
-    <div>
-      <ion-item>
-        <ion-button>
-          <ion-icon name="checkmark-outline"></ion-icon>&nbsp;Select Profile
-        </ion-button>
-        <ion-button>
-          <ion-icon name="cut-outline"></ion-icon>&nbsp;Use Profile
-        </ion-button>
-      </ion-item>
+  <oscal-select-baseline></oscal-select-baseline>
+  <!-- 
+    <div class="content">
+      <div>
+        <ion-item>
+          <ion-button>
+            <ion-icon name="checkmark-outline"></ion-icon>&nbsp;Select Profile
+          </ion-button>
+          <ion-button>
+            <ion-icon name="cut-outline"></ion-icon>&nbsp;Use Profile
+          </ion-button>
+        </ion-item>
+      </div>
     </div>
-  </div>
-
+  -->
   <div *ngIf=" theTree$ | async as theTree">
     <oscal-tree-cat [treeNodes]="theTree" [theCat]="cat"></oscal-tree-cat>
   </div>

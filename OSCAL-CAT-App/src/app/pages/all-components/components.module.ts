@@ -25,6 +25,7 @@ import { ArrayPhonesComponent } from './action-commons/action-array-phones/actio
 import { ArrayExternalIDsComponent } from './action-commons/action-array-external-ids/action-array-external-ids.component';
 import { ActionMapRolesComponent } from './action-commons/action-map-roles/action-map-roles.component';
 import { AuthorBeginComponent } from './author-begin/author-begin.component';
+import { SelectBaselineComponent } from './action-commons/action-select-baseline/action-select-baseline.component';
 
 
 
@@ -33,13 +34,13 @@ import { AuthorBeginComponent } from './author-begin/author-begin.component';
     ArrayAddressesComponent, ArrayStringsComponent, ArrayLinksComponent, LocationInfoComponent, LocationsArrayComponent,
     BackMatterComponent, ControlComponent, MetaInfoComponent, AuthoringModeComponent, ActionPartyInfoComponent,
     PropertiesArrayComponent, DocumentIDArrayComponent, ActionArrayRolesComponent, ArrayPhonesComponent,
-    ArrayExternalIDsComponent, ActionMapRolesComponent, AuthorBeginComponent,
+    ArrayExternalIDsComponent, ActionMapRolesComponent, AuthorBeginComponent, SelectBaselineComponent,
   ],
   exports: [SelectFamiliesComponent, NavCatComponent, ActionWaitComponent, ActionAncestorBaseComponent,
     ArrayAddressesComponent, ArrayStringsComponent, ArrayLinksComponent, LocationInfoComponent, LocationsArrayComponent,
     BackMatterComponent, ControlComponent, MetaInfoComponent, AuthoringModeComponent, ActionPartyInfoComponent,
     PropertiesArrayComponent, DocumentIDArrayComponent, ActionArrayRolesComponent, ArrayPhonesComponent,
-    ArrayExternalIDsComponent, ActionMapRolesComponent, AuthorBeginComponent,
+    ArrayExternalIDsComponent, ActionMapRolesComponent, AuthorBeginComponent, SelectBaselineComponent,
   ],
 
   imports: [IonicModule, ReactiveFormsModule, FormsModule, CommonModule,

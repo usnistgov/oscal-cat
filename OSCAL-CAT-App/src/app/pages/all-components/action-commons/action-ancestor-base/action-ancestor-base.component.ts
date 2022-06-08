@@ -43,7 +43,8 @@ export class ActionAncestorBaseComponent implements OnInit {
   @Input() hideAddElementButton: boolean;
 
   @Input() validateAs: Validators;
-  @Input() isArrayOptional?: string;
+  @Input() isArrayOptional?: boolean;
+  @Input() isArrayOptionalText?: string;
 
 
   @Output() public closeTab: EventEmitter<any> = new EventEmitter();
@@ -107,7 +108,7 @@ export class ActionAncestorBaseComponent implements OnInit {
       `${prefix} ${listTitle} for ${this.parentName} ${ending}` :
       `${prefix} ${listTitle} for ${this.parentEntity} ${ending}`);
 
-    return title.concat(' ', this.isArrayOptional || '');
+    return title.concat(' ', this.isArrayOptionalText || (this.isArrayOptional ? '(Optional)' : ''));
   }
 
   getInputName(): string {

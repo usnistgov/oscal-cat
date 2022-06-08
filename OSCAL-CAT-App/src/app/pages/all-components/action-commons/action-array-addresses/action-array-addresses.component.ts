@@ -22,8 +22,11 @@ export class ArrayAddressesComponent implements OnInit, AfterViewInit {
   @Input() public addressParentName: string;
   @Input() public addressList: Array<Address>;
   @Input() public addressData: Address;
-  @Input() public isArrayOptional?: string;
   @Input() public isSingleMode?: boolean;
+
+  @Input() public isArrayOptionalText?: string;
+  @Input() public isArrayOptional?: boolean;
+
 
   roleAddress: Address;
   roleInfo: Role;

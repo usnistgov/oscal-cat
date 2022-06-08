@@ -14,7 +14,8 @@ export class ArrayStringsComponent implements OnInit {
   @Input() parentName: string;
   @Input() inputName: string;
   @Input() validateAs: Validators;
-  @Input() isArrayOptional?: string;
+  @Input() isArrayOptionalText?: string;
+  @Input() isArrayOptional?: boolean;
 
   @Input() stringData: Array<string>;
   // Event emitters for call-backs, if needed

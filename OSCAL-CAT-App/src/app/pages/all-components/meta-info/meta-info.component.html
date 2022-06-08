@@ -353,11 +353,11 @@
                   <ion-icon icon="information-circle-outline"></ion-icon>
                   &nbsp;&nbsp;&nbsp;
                   <ion-label class="ion-text-wrap fixed-width-text">{{doc.identifier}}<br /> </ion-label>
-                  <ion-button [title]="'Press to remove '.concat(doc.identifier, ' ', doc.namespace)" color="danger"
+                  <ion-button [title]="'Press to remove '.concat(doc.identifier, ' ', doc.scheme)" color="danger"
                     (click)="removeDocId($event,doc)">
                     <ion-icon icon='trash-outline'></ion-icon>
                   </ion-button>
-                  <ion-button [title]="'Press to edit '.concat(doc.identifier, ' ', doc.namespace)"
+                  <ion-button [title]="'Press to edit '.concat(doc.identifier, ' ', doc.scheme)"
                     (click)="startDocIdEdit($event,doc)">
                     <ion-icon icon='pencil-outline'></ion-icon>
                   </ion-button>
@@ -497,12 +497,12 @@
                   <ion-icon icon="location-outline"></ion-icon>
                   &nbsp;&nbsp;&nbsp;
                   <ion-label class="ion-text-wrap fixed-width-text">{{location_info.uuid}}</ion-label>
-                  <ion-button [title]="'Press to remove location'.concat(location_info.href)" color="danger"
+                  <ion-button [title]="'Press to remove location: '.concat(location_info.title)" color="danger"
                     (click)="this.removeLocation($event, location_info)">
                     <ion-icon icon='trash-outline'></ion-icon>
                   </ion-button>
-                  <ion-button [title]="'Press to edit link '.concat(location_info.href)"
-                    (click)="startLinkEdit($event,location_info)">
+                  <ion-button [title]="'Press to edit location: '.concat(location_info.title)"
+                    (click)="startLocationEdit($event,location_info)">
                     <ion-icon icon='pencil-outline'></ion-icon>
                   </ion-button>
                 </ion-item>

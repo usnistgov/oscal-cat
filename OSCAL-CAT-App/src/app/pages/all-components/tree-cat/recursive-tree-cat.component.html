@@ -1,6 +1,6 @@
 <li *ngFor="let item of children">
     <div #node>
-        <ion-item class="node_style" title="{{item.toolTip || item.getToolTip(item)}}">
+        <ion-item class="node_style" title="{{item.toolTip || item.getNodeToolTip}}">
 
             <ion-item (click)="closeOpen(item)" class="ion-no-padding">
                 <ion-icon *ngIf="!item.open && item.children" slot="start" icon="add" class="ion-no-padding">
@@ -22,7 +22,7 @@
             </ion-item>
 
             <ion-item>
-                <ion-label [color]="item.hasSomeIncluded(item)?'success':'default'">In</ion-label>
+                <ion-label [color]="item.hasSomeIncluded()?'success':'default'">In</ion-label>
                 <ion-checkbox (click)="onJoinNodeCheck(item)" [(ngModel)]="item.included" color="success">
                 </ion-checkbox>
                 <!-- ion-label [color]="item.hasSomeExcluded(item)?'danger':'default'">Out</ion-label -->
@@ -34,8 +34,9 @@
             </ion-button>
 
         </ion-item>
-        <ul recursive-tree-cat *ngIf="item.children" [children]="item.children" [parent]="self"
-            [class.hidden]="!item.open" [level]="level != undefined ? level + 1 : 0">
+        <!--  [parent]="self" -->
+        <ul recursive-tree-cat *ngIf="item.children" [children]="item.children" [class.hidden]="!item.open"
+            [level]="level != undefined ? level + 1 : 0">
         </ul>
     </div>
 </li>

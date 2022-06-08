@@ -9,6 +9,10 @@ import { ActionAncestorBaseComponent, FieldInfo } from './action-ancestor-base.c
   templateUrl: './action-ancestor-base.component.html',
   styleUrls: ['./action-ancestor-base.component.scss'],
 })
+
+// The most abstract entity manipulation aggregation for entities with UI
+// Unfortunately, UI can not be inherited, so, implementation has to be done 
+// !!!!! at the inheritance point !!!!
 export abstract class ActionAncestorSimpleArrayComponent extends ActionAncestorBaseComponent implements OnInit {
 
 

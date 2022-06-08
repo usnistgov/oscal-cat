@@ -26,6 +26,9 @@ export class TreeItemEntry {
     parent?: TreeItemEntry;
     toolTip?: string;
 
+    baseline?: Array<string>;
+    basePriority?: Array<string>;
+
     constructor() {
         // this.included = false;
     }

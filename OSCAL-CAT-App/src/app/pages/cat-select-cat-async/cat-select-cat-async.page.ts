@@ -21,7 +21,10 @@ export class CatSelectCatAsyncPage implements OnInit {
   viewTab = 0;
   loading: any;
 
+
+
   constructor(theCatService: CatalogService, public modalController: ModalController) {
+
 
     this.cat = theCatService;
     // this.groups = this.cat.getTreeNodesStat();
@@ -124,5 +127,9 @@ export class CatSelectCatAsyncPage implements OnInit {
       });
     } else { return true; }
   }
+
+
+
+
 
 }

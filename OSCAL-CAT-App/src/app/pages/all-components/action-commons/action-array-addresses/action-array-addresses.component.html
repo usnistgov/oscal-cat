@@ -3,12 +3,12 @@
   <!--
   <form *ngIf="addressListFields" [(formArrayName)]="addressListFields" (ngSubmit)="submitAddress()">
    -->
-  <form *ngIf="addressesGroup" [(formGroup)]="addressesGroup" (ngSubmit)="submitAddress()">
+  <form *ngIf="addressesGroup" [formGroup]="addressesGroup" (ngSubmit)="submitAddress()">
     <ion-title>
       <ion-text *ngIf="!this.isSingleMode">
         <span> {{getListTitle()}} </span>
       </ion-text>
-      <ion-text  *ngIf="this.isSingleMode">
+      <ion-text *ngIf="this.isSingleMode">
         <span> {{getAddressTitle()}} </span>
       </ion-text>
 

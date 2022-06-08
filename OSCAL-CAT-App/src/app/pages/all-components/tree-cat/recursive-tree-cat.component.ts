@@ -16,7 +16,7 @@ import { AllTreesBaseComponent } from './all-tree-base';
 export class RecursiveTreeCatComponent extends AllTreesBaseComponent {
     @Input() level: number;
     @Input() label: string;
-    @Input() children: TreeItemEntry;
+    @Input() children: Array<TreeItemEntry>;
     @Input() parent: TreeItemEntry;
     @Input() theCat: CatalogService;
 

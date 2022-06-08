@@ -76,7 +76,7 @@
                   <br />{{this.optionalLineParties()}}</span>
                 <span *ngIf="!!this.chosenRoleId  || this.isValidForm()">
                   <br />Responsible for the Role of [{{chosenRoleId}}]</span>
-                  <!-- 
+                <!-- 
                 <span>
                 <br />Test::text={{getSelectedPartiesAsText()}} length={{this.selectedActorsUUIDs.length}}
                   roleID={{this.chosenRoleId}} Is-Valid={{this.isValidForm()}}</span>
@@ -100,8 +100,8 @@
         <!-- Links -->
         <ion-row>
           <ion-col>
-            <oscal-array-links #linksArray [parentName]="getSelectedPartiesAsText()" [isArrayOptional]="'(Optional)'"
-              [linksArray]="this.localResponsible.links">
+            <oscal-array-links #linksArray [parentName]="getSelectedPartiesAsText()"
+              [isArrayOptionalText]="'(Optional)'" [linksArray]="this.localResponsible.links">
             </oscal-array-links>
           </ion-col>
         </ion-row>
@@ -109,7 +109,7 @@
         <ion-row>
           <ion-col>
             <oscal-array-properties #propsArray [parentName]="getSelectedPartiesAsText()"
-              [isArrayOptional]="'(Optional)'" [propertiesArray]="this.localResponsible.props">
+              [isArrayOptionalText]="'(Optional)'" [propertiesArray]="this.localResponsible.props">
             </oscal-array-properties>
           </ion-col>
         </ion-row>

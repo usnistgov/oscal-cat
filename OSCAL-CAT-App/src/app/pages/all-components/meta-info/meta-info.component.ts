@@ -653,10 +653,20 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
   startLinkEdit($event, theLink: Link) {
     if (!this.currentEditedLink) {
       this.cancelEditTab<Link>(undefined);
-      this.startEntityEdit<Link>(theLink, this.metaInfo.links, EditingState.Property, this.currentEditedLink);
+      this.startEntityEdit<Link>(theLink, this.metaInfo.links, EditingState.Link, this.currentEditedLink);
     } else {
       this.currentEditedLink = undefined;
       this.cancelEditTab<Link>(theLink);
+    }
+  }
+
+  startLocationEdit($event, theLocation: Location) {
+    if (!this.currentEditedLocation) {
+      this.cancelEditTab<Location>(undefined);
+      this.startEntityEdit<Location>(theLocation, this.metaInfo.locations, EditingState.Location, this.currentEditedLocation);
+    } else {
+      this.currentEditedLocation = undefined;
+      this.cancelEditTab<Location>(theLocation);
     }
   }
 

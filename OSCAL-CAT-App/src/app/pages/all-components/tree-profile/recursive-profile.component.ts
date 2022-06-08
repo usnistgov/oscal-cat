@@ -12,7 +12,7 @@ import { TreeItemEntry, TreeNodeType } from './../../../providers/app-state/app-
 export class RecursiveProfileComponent {
     @Input() level: number;
     @Input() label: string;
-    @Input() children: TreeItemEntry;
+    @Input() children: Array<TreeItemEntry>;
     @Input() parent: TreeItemEntry;
 
 

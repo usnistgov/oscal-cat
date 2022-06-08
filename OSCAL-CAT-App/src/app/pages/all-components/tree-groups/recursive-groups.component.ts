@@ -18,7 +18,7 @@ import { TreeItemEntry, TreeNodeType } from './../../../providers/app-state/app-
 export class RecursiveGroupsComponent implements AfterViewInit {
     @Input() level: number;
     @Input() label: string;
-    @Input() children: TreeItemEntry;
+    @Input() children: Array<TreeItemEntry>;
     @Input() parent: TreeItemEntry;
 
     @ViewChildren('node', { read: ElementRef }) dragNodes: QueryList<ElementRef>;

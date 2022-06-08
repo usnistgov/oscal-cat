@@ -5,14 +5,15 @@ import { ModalController } from '@ionic/angular';
 
 import { TreeItemEntry } from '../../providers/app-state/app-tree/tree-elements';
 import { CatalogService } from '../../providers/oscal-data/catalog.service';
-import { CatSelectCatalogPage } from '../cat-select-catalog/cat-select-catalog.page';
+import { CatSelectCatAsyncPage } from '../cat-select-cat-async/cat-select-cat-async.page';
+
 
 @Component({
   selector: 'oscal-cat-select-profile-groups',
   templateUrl: './cat-select-profile-groups.page.html',
   styleUrls: ['../cat-select-profile/cat-select-profile.page.scss', './../stylePages.scss'],
 })
-export class CatSelectProfileGroupsPage extends CatSelectCatalogPage implements OnInit {
+export class CatSelectProfileGroupsPage extends CatSelectCatAsyncPage implements OnInit {
 
   proInfo: Array<TreeItemEntry>;
   router: Router;

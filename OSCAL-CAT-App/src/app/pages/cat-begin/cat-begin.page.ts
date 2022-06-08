@@ -12,4 +12,13 @@ export class CatBeginPage implements OnInit {
   ngOnInit() {
   }
 
+  ionViewWillLeave(): void {
+    console.log('<<<!!!>>>Begin Page ()=>{ Will Leave }');
+
+  }
+
+  stakeSession() {
+
+  }
+
 }

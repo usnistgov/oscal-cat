@@ -1,5 +1,5 @@
 <li *ngFor="let item of children">
-    <ion-item *ngIf="item.hasSomeIncluded(item)" class="node_style">
+    <ion-item *ngIf="item.hasSomeIncluded()" class="node_style">
         <!--   *ngIf="showInProfile(item)" *ngIf="profileMode === 0 || item.included"-->
         <!-- ion-button *ngIf="item.children" ></ion-button style="height:50px;margin:1px; padding: 0px; width: 60em; border: 1px solid #ccc;"-->
         <ion-icon *ngIf="!item.open && item.children" slot="start" icon="add" (click)="closeOpen(item)">
@@ -40,7 +40,7 @@
             -->
         <ion-reorder slot="end"></ion-reorder>
     </ion-item>
-    <ul recursive-tree-profile *ngIf="item.hasSomeIncluded(item)" xxx=" && item.children" [children]="item.children"
+    <ul recursive-tree-profile *ngIf="item.hasSomeIncluded()" xxx=" && item.children" [children]="item.children"
         [parent]="item.parent" [class.hidden]="!item.open" [level]="level != undefined ? level + 1 : 0">
     </ul>
 </li>

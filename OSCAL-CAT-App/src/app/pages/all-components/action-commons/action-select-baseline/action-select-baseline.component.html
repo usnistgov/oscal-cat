@@ -1,0 +1,44 @@
+<div>
+  <div style="border: 1px; width: 100%;">
+    <ion-button (click)="flipShowBAselineOptions()" color="">
+      Baselines
+      <ion-icon icon="options-outline"></ion-icon>
+    </ion-button>
+    <ion-grid class="baseline-grid" *ngIf="this.showBaselinesOptions">
+      <ion-row class="baseline-grid">
+        <ion-col class="baseline-grid">
+          <ion-toolbar class="topless, bottomless">
+            <ion-buttons class="" style="display: flex;justify-content: space-evenly;">
+
+              <!-- Mark baselines -->
+              <ion-tab-button [ngClass]="'tab-selected'">
+                <ion-icon icon="options-outline"></ion-icon>
+                <ion-label>Mark Baselines</ion-label>
+                <ion-badge *ngIf="false">Baselines Marked</ion-badge>
+              </ion-tab-button>
+
+              <!-- (click)="showTab4POoP($event,'Person', 'body-outline')"-->
+              <ion-tab-button [ngClass]="'tab-selected'">
+                <ion-icon icon="checkmark-outline"></ion-icon>
+                <ion-label>Pre-Select Baseline...</ion-label>
+                <ion-badge *ngIf="false">Adding Entity</ion-badge>
+              </ion-tab-button>
+              <!-- 
+                [ngClass]="{'tab-selected' : activeEntityAddTabName=='Role'}"
+                (click)="showTab4AddRole($event,'Role', 'people-outline')"
+                *ngIf="activeEntityAddTabName=='Role'"
+              -->
+              <ion-tab-button>
+                <ion-icon icon="cut-outline"></ion-icon>
+                <ion-label>Tailor Out Baseline...</ion-label>
+                <ion-badge *ngIf="false">Adding Role</ion-badge>
+              </ion-tab-button>
+
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+</div>

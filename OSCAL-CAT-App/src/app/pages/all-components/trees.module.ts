@@ -10,17 +10,20 @@ import { TreeProfileComponent } from './tree-profile/tree-profile.component';
 import { ListGroupsComponent } from './list-groups/list-groups.component';
 import { TreeGroupsComponent } from './tree-groups/tree-groups.component';
 import { RecursiveGroupsComponent } from './tree-groups/recursive-groups.component';
-import { ZCatTreeComponent } from './z-cat-tree-select/z-cat-tree-select.component';
+//import { XCatTreeComponent } from './x-cat-tree-select/x-cat-tree-select.component';
+//import { RecursiveXCatTreeSelectComponent } from './x-cat-tree-select/recursive-x-cat-tree-select.component';
 
 
 @NgModule({
-  declarations: [RecursiveTreeCatComponent, TreeCatComponent, TreeProfileComponent, RecursiveGroupsComponent,
-    RecursiveProfileComponent, ListGroupsComponent, TreeGroupsComponent, TreeGroupsComponent,
-    ZCatTreeComponent,
+  declarations: [TreeCatComponent, RecursiveTreeCatComponent,
+    TreeProfileComponent, RecursiveProfileComponent,
+    TreeGroupsComponent, RecursiveGroupsComponent,
+    ListGroupsComponent,
+    //    ZCatTreeComponent, RecursiveZCatTreeSelectComponent
   ],
   exports: [RecursiveTreeCatComponent, TreeCatComponent, TreeProfileComponent, RecursiveGroupsComponent,
     RecursiveProfileComponent, ListGroupsComponent, TreeGroupsComponent, TreeGroupsComponent,
-    ZCatTreeComponent,
+    //    ZCatTreeComponent, RecursiveZCatTreeSelectComponent
   ],
 
   imports: [IonicModule, ReactiveFormsModule, FormsModule, CommonModule,

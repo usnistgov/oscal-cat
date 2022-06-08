@@ -46,7 +46,8 @@ export class CatalogService {
 
   // BLows up occasionally with a circular reference
   requireJsonCat(jsonFile: string): Catalog {
-    const newCat = require(jsonFile);
+    const newCat: Catalog = require(jsonFile);
+
     return newCat;
   }
 

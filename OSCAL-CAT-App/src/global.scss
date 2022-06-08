@@ -59,3 +59,16 @@
     --background: transparent;
   }
 }
+
+
+.delete-alert-global-class {
+  // The class for styling the pop-up alerts on delete actions
+  --min-width: 34%; 
+  --backdrop-opacity: 0.2;
+  --background:linear-gradient(180deg, rgba(128, 0, 0, 1), rgba(222, 0, 0, 1));
+  // --background: rgba(128, 0, 0, 1) url("./assets/images/delete.png") no-repeat center !important; // Red Alert
+  // --background:linear-gradient(red, orange, yellow, green, blue); //Rainbow
+  // --background: linear-gradient(red 10%, 30%, blue 90%); 
+  // --background:url(./assets/images/delete.png);
+  // --background:linear-gradient(red 0%, orange 10%, orange 30%, yellow 50%, yellow 70%, green 90%, green 100%);
+}
