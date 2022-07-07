@@ -1,0 +1,31 @@
+name: OSCAL CAT CI
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+jobs:
+  build-test-app:
+    name: Build, Unit Test, E2E Test App
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+      with:
+        submodules: recursive
+      id: checkout
+    - name: Set up NodeJS
+      uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561
+      with:
+        node-version-file: 'OSCAL-CAT-App/.nvmrc'
+        cache: 'npm'
+        cache-dependency-path: 'OSCAL-CAT-App/package-lock.json'
+      id: setup
+    - name: Build and Test
+      run: |
+        cd ./OSCAL-CAT-App
+        npm ci --loglevel verbose
+        echo "$PWD/node_modules/.bin/" >> $GITHUB_PATH
+        npm run build
+      id: build-and-test
