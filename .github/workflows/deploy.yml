@@ -98,6 +98,9 @@ jobs:
         pwd
         pushd "${DEPLOY_REPO_CHECKOUT_PATH}"
         mkdir -p "${DEPLOY_AUTOCOMMIT_PATHSPEC}"
+        # If existing content, delete existing content from previous commit and
+        # keep nist-pages branch clean in the deploy subdirectory.
+        rm -rf "${DEPLOY_AUTOCOMMIT_PATHSPEC}/*"
         popd
         pushd "${MAIN_REPO_CHECKOUT_PATH}"
         ls -lha
@@ -127,5 +130,5 @@ jobs:
         branch: ${{ env.DEPLOY_REPO_GIT_REF }}
         file_pattern: '${{ env.DEPLOY_AUTOCOMMIT_PATHSPEC }}'
         skip_dirty_check: false
-        commit_message: Pushing generated oscal-tool website pages [ci skip]
+        commit_message: Pushing generated oscal-cat application [ci skip]
       id: finalize-deployment
