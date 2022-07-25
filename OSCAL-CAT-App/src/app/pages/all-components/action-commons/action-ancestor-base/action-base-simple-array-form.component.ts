@@ -135,5 +135,30 @@ export abstract class ActionAncestorSimpleArrayComponent extends ActionAncestorB
     }
   }
 
+  /**
+   * Generic LOOSE-ALL data close for the cases 
+   * when the close method was provided
+   * @memberof ActionAncestorSimpleArrayComponent
+   */
+  onCloseAnyTab() {
+    if (this.closeTab) {
+      this.closeTab.emit();
+    } else {
+      console.log(`Structural Error!: The closeTab Property was not provided !!!!`);
+    }
+  }
+
+  onSaveTabScalar<ScalarType>() {
+    if (this.closeTab) {
+      this.closeTab.emit();
+    }
+  }
+
+  onSaveTabArray<ArrayType>() {
+    if (this.closeTab) {
+      this.closeTab.emit();
+    }
+  }
+
 
 }

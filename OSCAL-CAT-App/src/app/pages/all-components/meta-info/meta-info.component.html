@@ -33,18 +33,27 @@
 
             <ion-popover trigger="open-last-modified" size="min" show-backdrop="false">
               <ng-template>
-                <ion-datetime #lastModifiedDate presentation="date" formControlName="last_modified_date" locale="en-US"
-                  title="Choose Last Modified Date value or use controls on the top-right instead"
-                  (ionChange)="this.patchFormatDate(lastModifiedDate.value)" showDefaultButtons="true">
-                  <div slot="title">Last Modified Date</div>
+                <div slot="title">Last Modified Date</div>
+                <ion-datetime #popoverDatetime presentation="date" title="Select Last Modified Date Value"
+                  (ionChange)="this.patchFormatDate(popoverDatetime.value)" showDefaultButtons="true"
+                  showDefaultTitle="true">
+
                 </ion-datetime>
               </ng-template>
             </ion-popover>
             <!--             
-              <ion-datetime #popoverDatetime
+
+#lastModifiedDate presentation="date" formControlName="last_modified_date" locale="en-US"
+                  title="Choose Last Modified Date value or use controls on the top-right instead"
+                  (ionChange)="this.patchFormatDate(lastModifiedDate.value)" showDefaultButtons="true"
+
+
+<div slot="title">Last Modified Date</div>
+
+            <ion-datetime #popoverDatetime
               title="Last Modified Date-Time (You can use controls on the right instead of typing)" type="text"
               formControlName="last_modified" displayFormat="MMM DD, YYYY HH:mm">
-            </ion-datetime> 
+            </ion-datetime>
 
             <ion-popover trigger="open-last-modified" size="min">
               <ng-template>

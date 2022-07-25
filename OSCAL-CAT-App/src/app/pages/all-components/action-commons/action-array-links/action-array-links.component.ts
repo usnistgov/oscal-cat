@@ -116,7 +116,9 @@ export class ArrayLinksComponent extends ActionAncestorSimpleArrayComponent impl
   }
 
   onCancelButton() {
-    this.closeTab.emit();
+    if (this.closeTab) {
+      this.closeTab.emit();
+    }
   }
 
   onSubmitData() {

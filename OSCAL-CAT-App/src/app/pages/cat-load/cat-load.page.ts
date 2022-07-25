@@ -12,4 +12,10 @@ export class CatLoadPage implements OnInit {
   ngOnInit() {
   }
 
+
+  ionViewWillLeave(): void {
+    // About to leave tha page - MUST update the session object
+
+  }
+
 }

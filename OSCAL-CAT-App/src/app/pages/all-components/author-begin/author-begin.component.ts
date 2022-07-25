@@ -40,25 +40,30 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
           if (value && Array.isArray(value) && value.length > 0) {
             this.savedWork = value;
 
-          } else {
-            this.savedWork = undefined;
-            // [];
-            const emptyWork: Array<SessionData> =
-              [
-                {
-                  name: 'Work item 1',
-                  uuid: UUIDv4(),
-                },
-                {
-                  name: 'Work Item 1001',
-                  uuid: UUIDv4(),
-                }];
-            this.session.setKeyValueObject<Array<SessionData>>(
-              NamedSessionNodes.SAVED_SESSIONS, emptyWork);
           }
+          /*        // Helps to save time when debugging session initialization   
+                    else {
+                      this.savedWork = undefined;
+                      // [];
+                      const emptyWork: Array<SessionData> =
+                        [
+                          {
+                            name: 'Work item 1',
+                            uuid: UUIDv4(),
+                          },
+                          {
+                            name: 'Work Item 1001',
+                            uuid: UUIDv4(),
+                          }];
+                      this.session.setKeyValueObject<Array<SessionData>>(
+                        NamedSessionNodes.SAVED_SESSIONS, emptyWork);
+                    } 
+          */
         });
     }
   }
+
+
 
   handleRadioChange($event: Event) {
     console.log($event);
@@ -72,8 +77,8 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       this.chosenOscalCat = this.oscalFiles[value];
       this.chosenSession = undefined;
     }
-    this.activateSession(false);
-    this.readSavedWork();
+    // this.activateSession(false);
+    // this.readSavedWork();
   }
 
   popAlert(data: string, idx: number) {
@@ -91,20 +96,21 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   editWorkItemName($event, theItemIndex: number) {
   }
 
-  ionViewWillLeave(): void {
+  parentIonViewWillLeave(): void {
     // Does not work to hook up the 
     console.log('!!!!!!======!!!!!! Begin-Page Will Leave!!!!!!');
     if (this.chosenOscalCat) {
-      console.log(`Leaning with Cat`);
+      console.log(`Leaving with new Cat (new Session)`);
     } else if (this.chosenSession) {
-      console.log(`Leaning with Session`);
+      console.log(`Leaving with Existing Session`);
     }
+    this.activateSession();
   }
 
   activateSession(addSessionToList: boolean = true) {
-    console.log(`Cat-Activate-In`);
     console.log(this.chosenOscalCat);
     if (this.chosenOscalCat) {
+      // Need to create a new persisted session
       console.log(`Cat-Activate - Chosen-Cat`);
       const newSession: SessionData = {
         name: `Profile Draft Based on ${this.chosenOscalCat.cat_suffix}`,
@@ -124,6 +130,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       }
       this.session.saveActiveSession(newSession);
     } else if (!this.chosenOscalCat && this.chosenSession) {
+      // Session was already persisted
       this.session.saveActiveSession(this.chosenSession);
     }
   }

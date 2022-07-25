@@ -27,12 +27,10 @@ export class SessionData {
     public uuid: string;
     public name: string;
     public fullName?: string;
+
     public knownCat?: KnownOscalFileLocation;
-
     public catalog?: Catalog;
-
     public meta?: PublicationMetadata;
-
     public catTree?: TreeNodeType;
     public proTree?: TreeNodeType;
     public regroupTree?: TreeNodeType;

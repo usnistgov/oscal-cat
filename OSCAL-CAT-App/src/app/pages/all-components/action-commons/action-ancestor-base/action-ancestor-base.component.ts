@@ -15,7 +15,14 @@ export interface FieldInfo {
   inputAs?: string;
   isPreset?: boolean;
 }
-
+/**
+ * The primary Base-Component for generalized handling of the 
+ *  Form Controls/Groups/Arrays and mapping them to TypeScript
+ *  Entities with name-field-array mapping in an unified way 
+ * @export
+ * @class ActionAncestorBaseComponent
+ * @implements {OnInit}
+ */
 @Component({
   selector: 'oscal-action-ancestor-base',
   templateUrl: './action-ancestor-base.component.html',

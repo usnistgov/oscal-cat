@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
-import { ArrayAddressesComponent} from './action-array-addresses.component';
+import { ArrayAddressesComponent } from './action-array-addresses.component';
 
 
 describe('ActionAddressFormComponent', () => {

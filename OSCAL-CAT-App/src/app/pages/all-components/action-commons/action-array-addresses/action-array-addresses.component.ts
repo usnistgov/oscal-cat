@@ -4,9 +4,9 @@ import { FormArray, FormBuilder, FormGroup, FormGroupDirective, Validators, Form
 import { BooleanValueAccessor, ModalController, NavParams } from '@ionic/angular';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { Address, Role } from './../../../../interfaces/oscal-types/oscal-catalog.types';
+import { Address, Role } from '../../../../interfaces/oscal-types/oscal-catalog.types';
 import { OscalCatalogEmpties } from '../../../../interfaces/oscal-types/oscal-catalog-factory';
-import { LogManagerService } from './../../../../providers/logging/log-manager.service';
+import { LogManagerService } from '../../../../providers/logging/log-manager.service';
 
 @Component({
   selector: 'oscal-address-list',

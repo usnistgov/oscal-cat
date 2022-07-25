@@ -56,33 +56,6 @@ export class DocumentIDArrayComponent extends ActionAncestorSimpleArrayComponent
     this.localForm.addControl(this.ID, this.subForm);
   }
 
-  /*
-
-    XXXgetControlsArray(): FormArray {
-      const controls = new Array<FormGroup>();
-      if (this.idArray && this.idArray.length > 0) {
-        this.idArray.forEach(
-          (dataEntry: DocumentIdentifier, idx: number) => {
-            controls.push(this.getNewFormGroup(dataEntry));
-          });
-      }
-      this.subArray = new FormArray(controls);
-      return this.subArray;
-    }
-
-    XXXgetNewFormGroup(data?: DocumentIdentifier): FormGroup {
-      const preparedGroup = {};
-      for (const [key, value] of this.inputsMap) {
-        console.log(`Key=${key}, Val=${value}`);
-        preparedGroup[key] = new FormControl(
-          (data ? data[key] : ''),
-          (value.validateAs ? value.validateAs : [])
-        );
-      }
-      return new FormGroup(preparedGroup);
-    }
-
-   */
 
 
   getControlsArray() {

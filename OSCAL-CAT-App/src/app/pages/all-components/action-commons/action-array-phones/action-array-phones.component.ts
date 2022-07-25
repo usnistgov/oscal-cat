@@ -67,9 +67,9 @@ export class ArrayPhonesComponent extends ActionAncestorSimpleArrayComponent imp
    * @memberof DocumentIDArrayComponent
    */
   onSave() {
-    const savedDocId = OscalCatalogEmpties.getEmptyPhoneNumber();
-    const updatedDocId = this.getUpdatedElementByFieldToMap<TelephoneNumber>(savedDocId);
-    this.saveTab.emit(updatedDocId);
+    const savedPhone = OscalCatalogEmpties.getEmptyPhoneNumber();
+    const updatedPhones = this.getUpdatedElementByFieldToMap<TelephoneNumber>(savedPhone);
+    this.saveTab.emit(updatedPhones);
     this.closeTab.emit();
   }
 

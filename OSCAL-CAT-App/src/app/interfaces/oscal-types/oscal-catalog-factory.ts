@@ -55,7 +55,13 @@ export class OscalCatalogEmpties {
         return emptyPhone;
     }
 
-
+    /**
+     * Produces empty Person-Organization or Party POoP
+     * @static
+     * @param {string} [typeName]
+     * @returns {PartyOrganizationOrPerson}
+     * @memberof OscalCatalogEmpties
+     */
     public static getEmptyPOoP(typeName?: string): PartyOrganizationOrPerson {
         console.log(`T-Name = ${typeName}`)
         const emptyPOoP: PartyOrganizationOrPerson = {
@@ -74,13 +80,13 @@ export class OscalCatalogEmpties {
             telephoneNumbers: new Array<TelephoneNumber>(),
             // annotations: new Array<Annotation>(),//  Removed past Apr-6-2021
         }
-        // Address push for testing how info flows into address
+        // Address push enable for for testing how info flows into address
         /*
           emptyPOoP.addresses.push(
               {
                 city: 'New York',
-                country: 'Ours',
-                addrLines: ['One', 'Two'], // postalAddress: ['One', 'Two'], // Pre Apr-6
+                country: 'US',
+                addrLines: ['One Line', 'Two Intersection'], // postalAddress: ['One', 'Two'], // Pre Apr-6
                 postalCode: '00000-0000',
                 state: 'OK',
                 type: 'Some',
@@ -100,11 +106,14 @@ export class OscalCatalogEmpties {
         }
         /*
         const emptyAddress: Address = {
-        city: 'New Villa',
-        country: 'Some Cool One',
-        addrLines: ['SuperMan Inc0', '987654321 Krypton Avenue', 'Extra Info on the Block 1234', 'Some $#!+3'],  // new Array<string>(), //
-        postalCode: '65431',
-        state: 'Stateless',
+        city: 'New Village',
+        country: 'US',
+        addrLines: ['SuperMan Inc0', 
+                    '987654321 Krypton Avenue', 
+                    'Extra Info on the Block 1234', 
+                    'Some More Info'],  // new Array<string>(), //
+        postalCode: '74547',
+        state: 'OK',
         type: 'Special Type',
         };
         */

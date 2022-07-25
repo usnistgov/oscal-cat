@@ -1,4 +1,3 @@
-import { SessionData } from './../../../providers/app-state/state-nav-cat/state-session-data.service';
 // import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 
 import {
@@ -17,7 +16,6 @@ import { ArrayLinksComponent } from '../action-commons/action-array-links/action
 import { LocationsArrayComponent } from '../action-commons/action-array-locations/action-array-locations.component';
 import { LocationInfoComponent } from '../action-commons/action-location-info/action-location-info.component';
 import { ActionArrayRolesComponent } from '../action-commons/action-array-roles/action-array-roles.component';
-import { format, parseISO } from 'date-fns';
 
 // import { AppDbInProgressService } from '../../info-providers/app-state/app-db-sqlite/app-db-in-progress.service';
 // import { PartyExternalIdentifier, } from './../../../interfaces/oscal-types/oscal-catalog.types';
@@ -27,8 +25,10 @@ import {
   Link, TelephoneNumber, ResponsibleParty, Property,
   DocumentIdentifier, Location, Role
 } from './../../../interfaces/oscal-types/oscal-catalog.types';
-import { CurrentSessionData, NamedSessionNodes } from 'src/app/providers/app-state/state-nav-cat/state-session-data.service';
-
+import {
+  CurrentSessionData, NamedSessionNodes, SessionData
+} from './../../../providers/app-state/state-nav-cat/state-session-data.service';
+import { format, parseISO, getDate, getMonth, getYear } from 'date-fns';
 
 export interface CloseAddEdit {
   closeAddEditPOoP: (controlKey: string, isValid: boolean, returnObject: PartyOrganizationOrPerson) => any;
@@ -75,13 +75,14 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
   @ViewChild('locationsTab') locationsTab: LocationsArrayComponent;
   @ViewChild('locationTab') locationTab: LocationInfoComponent;
   @ViewChild('propertyTab') propertyTab: LocationsArrayComponent;
-  @ViewChild('lastModifiedDate', { static: true }) lastModifiedDate: IonDatetime;
+  @ViewChild('popoverDatetime', { static: true }) popoverDatetimeValue: IonDatetime;
 
   private formBuilder: FormBuilder;
   public autoUpdateDates = false;
   // private db: AppDbInProgressService;
 
-  /*
+  /* 
+    // The overall structure of the metadata in TypeScript form
     documentIDS?: DocumentIdentifier[];
     +!!! lastModified: Date;
     links?: Link[];
@@ -123,18 +124,10 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     private session: CurrentSessionData,
     public modalController: ModalController,
     public LMS: LogManagerService,
-    private CFR: ComponentFactoryResolver,
+    // private CFR: ComponentFactoryResolver,
     // private db: AppDbInProgressService,
   ) {
-    if (this.session.isKeyValue(NamedSessionNodes.ACTIVE_SESSION)) {
-      this.activeSession = this.session.getActiveSession();
-      if (this.activeSession && this.activeSession.meta) {
-        this.metaInfo = this.activeSession.meta;
-      }
-      if (this.activeSession && this.activeSession.uuid) {
-        console.log(`Active-Session ID: [${this.activeSession.uuid}]`);
-      }
-    }
+
     // this.db = new AppDbInProgressService(new Platform(), new SQLite(), new HttpClient(new HttpHandler()), new SQLitePorter());
 
     // console.log(`x-x-x: EL = ${db.entitiesList}`);
@@ -163,6 +156,16 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
 
 
   initMetaInfo() {
+
+    if (this.session.isKeyValue(NamedSessionNodes.ACTIVE_SESSION)) {
+      this.activeSession = this.session.getActiveSession();
+      if (this.activeSession && this.activeSession.meta) {
+        this.metaInfo = this.activeSession.meta;
+      }
+      if (this.activeSession && this.activeSession.uuid) {
+        console.log(`Active-Session ID: [${this.activeSession.uuid}]`);
+      }
+    }
 
     if (!!this.metaInfo) {
       this.updateMetaFromSession();
@@ -224,7 +227,8 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
 
   ngAfterViewInit() {
     // console.log(`@ngAfterViewInit.VCR: ${this.VCR}`);
-
+    const a = 5;
+    console.log(`A = ${a}`)
   }
 
   getPartiesControlsArray(theData: Array<PartyOrganizationOrPerson> = null): FormArray {
@@ -272,7 +276,11 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
 
   patchFormatDate(dtv: string): void {
     console.log(`THe Picked Date: ${dtv}`);
-    this.metaForm.patchValue({ last_modified: dtv });
+    const dtValue = this.formatDateLabel(parseISO(dtv));
+    this.metaForm.patchValue({ last_modified: dtValue });
+  }
+  confirm() {
+    this.popoverDatetimeValue.confirm(true);
   }
 
   onUpdateLastModified() {
@@ -939,4 +947,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
   closeAddEditLink(controlKey: string, isValid: boolean, returnObject: Link) { }
   closeAddEditLocation(controlKey: string, isValid: boolean, returnObject: Location) { }
   closeAddEditRole(controlKey: string, isValid: boolean, returnObject: Role) { }
+
+
+
 }
