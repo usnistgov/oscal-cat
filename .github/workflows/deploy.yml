@@ -3,9 +3,9 @@ env:
   DEPLOY_AUTOCOMMIT_PATHSPEC: "demos/cat"
   DEPLOY_BASE_HREF: "/demos/cat/"
   DEPLOY_CONFIGURATION: production
-  DEPLOY_REPO: aj-stein-nist/oscal-tools
+  DEPLOY_REPO: usnistgov/oscal-tools
   DEPLOY_REPO_CHECKOUT_PATH: deploy
-  DEPLOY_REPO_GIT_REF: nist-pages
+  DEPLOY_REPO_GIT_REF: nist-pages-cat-deploy-test
   MAIN_REPO_CHECKOUT_PATH: main
 on:
   pull_request:
