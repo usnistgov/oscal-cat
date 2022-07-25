@@ -1,0 +1,31 @@
+name: OSCAL CAT CI/CD
+on:
+  push:
+    branches:
+    - main
+    - develop
+    - "release-*"
+  pull_request:
+    branches:
+    - main
+    - develop
+    - "release-*"
+jobs:
+  ci:
+    uses: ./.github/workflows/build.yml
+  cd-pr-only:
+    if: github.event_name == 'pull_request'
+    needs: ci
+    uses: ./.github/workflows/deploy.yml
+    with:
+      commit_resources: false
+      commit_id: ${{ needs.ci.outputs.commit_id }}
+  cd-full:
+    if: github.event_name == 'push'
+    needs: ci
+    uses: ./.github/workflows/deploy.yml
+    with:
+      commit_resources: true
+      commit_id: ${{ needs.ci.outputs.commit_id }}
+    secrets:
+      access_token: ${{ secrets.COMMIT_TOKEN }}
