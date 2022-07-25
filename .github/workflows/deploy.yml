@@ -1,0 +1,131 @@
+name: OSCAL CAT CD
+env:
+  DEPLOY_AUTOCOMMIT_PATHSPEC: "demos/cat"
+  DEPLOY_BASE_HREF: "/demos/cat/"
+  DEPLOY_CONFIGURATION: production
+  DEPLOY_REPO: usnistgov/oscal-tools
+  DEPLOY_REPO_CHECKOUT_PATH: deploy
+  DEPLOY_REPO_GIT_REF: nist-pages-cat-deploy-test
+  MAIN_REPO_CHECKOUT_PATH: main
+on:
+  pull_request:
+    branches:
+    - main
+    - develop
+    - "release-*"
+  push:
+    branches:
+    - main
+    - develop
+    - "release-*"
+  workflow_call:
+    inputs:
+      commit_resources:
+        description: 'commit the resources after generating them. Requires the access_token to be passed'
+        required: false
+        default: false
+        type: boolean
+      commit_id:
+        description: 'the git commit ID (SHA1) used to uniquely idenity the bundled app build in cache from build job'
+        required: true
+        type: string
+    secrets:
+      access_token:
+        description: 'the access token to use for commits'
+        required: false
+  workflow_dispatch:
+    inputs:
+      commit_resources:
+        description: 'commit the resources after generating them. Requires the access_token to be passed'
+        required: false
+        default: false
+        type: boolean
+      commit_id:
+        description: 'the git commit ID (SHA1) used to uniquely idenity the bundled app build in cache from build job'
+        required: true
+        type: string
+      access_token:
+        description: 'the access token to use for commits'
+        required: false
+        type: string
+jobs:
+  build-test-app:
+    name: Deploy Demo Site
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout App Repo
+      uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+      with:
+        path: ${{ github.workspace }}/${{ env.MAIN_REPO_CHECKOUT_PATH }}
+        fetch-depth: 0
+      id: checkout-main-repo
+    - name: Checkout Target Deployment Repo (using commit_token)
+      uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+      if: github.event_name == 'push' && inputs.commit_resources == true
+      with:
+        repository: ${{ env.DEPLOY_REPO }}
+        fetch-depth: 0
+        ref: ${{ env.DEPLOY_REPO_GIT_REF }}
+        path: ${{ github.workspace }}/${{ env.DEPLOY_REPO_CHECKOUT_PATH }}
+        token: ${{ secrets.access_token || inputs.access_token }}
+      id: checkout-deploy-repo-commit-token
+    - name: Checkout Target Deployment Repo
+      uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+      # If not commiting resources, like above, checkout deploy repo w/o token
+      # as we are not committing and push back updated changes.
+      if: steps.checkout-deploy-repo-commit-token.conclusion == 'skipped'
+      with:
+        repository: ${{ env.DEPLOY_REPO }}
+        fetch-depth: 0
+        ref: ${{ env.DEPLOY_REPO_GIT_REF }}
+        path: ${{ github.workspace }}/${{ env.DEPLOY_REPO_CHECKOUT_PATH }}
+      id: checkout-deploy-repo-no-commit-token
+    - name: Set up NodeJS
+      uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561
+      with:
+        node-version-file: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/.nvmrc'
+        cache: 'npm'
+        cache-dependency-path: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/package-lock.json'
+      id: setup
+    - name: Restore Build Cache
+      uses: actions/cache@0865c47f36e68161719c5b124609996bb5c40129
+      with:
+        path: ${{ github.workspace }}/${{ env.MAIN_REPO_CHECKOUT_PATH }}//OSCAL-CAT-App/www
+        key: cat-${{ runner.os }}-${{ inputs.commit_id }}
+      id: restore-cache-build
+    - name: Copy Build to Deploy Repo
+      run: |
+        pwd
+        pushd "${DEPLOY_REPO_CHECKOUT_PATH}"
+        mkdir -p "${DEPLOY_AUTOCOMMIT_PATHSPEC}"
+        popd
+        pushd "${MAIN_REPO_CHECKOUT_PATH}"
+        ls -lha
+        cp -r OSCAL-CAT-App/www/. "../${DEPLOY_REPO_CHECKOUT_PATH}/${DEPLOY_AUTOCOMMIT_PATHSPEC}"
+        popd
+      id: copy-build-deploy-target
+    - name: Zip Website Build for Upload
+      run: |
+        pushd "${GITHUB_WORKSPACE}"
+        zip ${{ runner.temp }}/oscal-tools_website.zip -r "${DEPLOY_REPO_CHECKOUT_PATH}"
+        popd
+      id: zip-website-build
+    - name: Upload Website Snapshot for Debugging
+      uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+      with:
+        name: website
+        path: |
+          ${{ runner.temp }}/oscal-tools_website.zip
+        retention-days: 5
+      id: upload-website-build
+    - name: Publish Generated Pages
+      uses: stefanzweifel/git-auto-commit-action@be7095c202abcf573b09f20541e0ee2f6a3a9d9b
+      # Only push if commit_resources flag is true and on main branch, ignore PRs until merged.
+      if: inputs.commit_resources == true && github.ref_name == 'main'
+      with:
+        repository: ${{ env.DEPLOY_REPO_CHECKOUT_PATH }}
+        branch: ${{ env.DEPLOY_REPO_GIT_REF }}
+        file_pattern: '${{ env.DEPLOY_AUTOCOMMIT_PATHSPEC }}'
+        skip_dirty_check: false
+        commit_message: Pushing generated oscal-tool website pages [ci skip]
+      id: finalize-deployment

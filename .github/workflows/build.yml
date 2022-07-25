@@ -1,0 +1,63 @@
+name: OSCAL CAT CI
+env:
+  DEPLOY_BASE_HREF: "/demos/cat/"
+  DEPLOY_CONFIGURATION: production
+  MAIN_REPO_CHECKOUT_PATH: main
+on:
+  pull_request:
+    branches:
+    - main
+    - develop
+    - "release-*"
+  push:
+    branches:
+    - main
+    - develop
+    - "release-*"
+  workflow_call:
+    outputs:
+      commit_id:
+        description: "The git commit ID (SHA1) used to form the cache key for the bundled app build"
+        value: ${{ jobs.build-test-app.commit_id }}
+  workflow_dispatch:
+jobs:
+  build-test-app:
+    name: Deploy Demo Site
+    runs-on: ubuntu-20.04
+    outputs:
+      commit_id: ${{ steps.store-commit-metadata.id }}
+    steps:
+    - name: Checkout App Repo
+      uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+      with:
+        path: ${{ github.workspace }}/${{ env.MAIN_REPO_CHECKOUT_PATH }}
+        fetch-depth: 0
+      id: checkout-main-repo
+    - name: Set up NodeJS
+      uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561
+      with:
+        node-version-file: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/.nvmrc'
+        cache: 'npm'
+        cache-dependency-path: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/package-lock.json'
+      id: setup
+    - name: Store git commit ID for cache key
+      run: |
+        pushd "${MAIN_REPO_CHECKOUT_PATH}/OSCAL-CAT-App"
+        echo "::set-output name=id::$(git rev-parse HEAD)"
+        popd
+      id: store-commit-metadata
+    - name: Build
+      run: |
+        cd "${MAIN_REPO_CHECKOUT_PATH}/OSCAL-CAT-App"
+        npm ci --loglevel verbose
+        echo "$PWD/node_modules/.bin/" >> $GITHUB_PATH
+        npm run build -- \
+          --configuration $DEPLOY_CONFIGURATION \
+          --base-href $DEPLOY_BASE_HREF
+      id: build
+    - name: Store Build Cache
+      uses: actions/cache@0865c47f36e68161719c5b124609996bb5c40129
+      with:
+        path: ${{ github.workspace }}/${{ env.MAIN_REPO_CHECKOUT_PATH }}//OSCAL-CAT-App/www
+        key: cat-${{ runner.os }}-${{ steps.store-commit-metadata.outputs.id }}
+      id: store-cache-build
