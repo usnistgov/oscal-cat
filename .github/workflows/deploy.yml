@@ -80,13 +80,6 @@ jobs:
         ref: ${{ env.DEPLOY_REPO_GIT_REF }}
         path: ${{ github.workspace }}/${{ env.DEPLOY_REPO_CHECKOUT_PATH }}
       id: checkout-deploy-repo-no-commit-token
-    - name: Set up NodeJS
-      uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
-      with:
-        node-version-file: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/.nvmrc'
-        cache: 'npm'
-        cache-dependency-path: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/package-lock.json'
-      id: setup
     - name: Restore Build Cache
       uses: actions/cache@0865c47f36e68161719c5b124609996bb5c40129
       with:
