@@ -14,6 +14,9 @@
         "header/header": [
             "error",
             "./meta/license_header.txt"
+        ],
+        "no-extra-boolean-cast": [
+            "off"
         ]
     }
 }
