@@ -1,0 +1,12 @@
+name: Delete GitHub Artifacts
+on:
+  workflow_dispatch:
+jobs:
+  delete-old-artifacts:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 10
+    steps:
+    - name: Delete old artifacts
+      uses: c-hive/gha-remove-artifacts@24dc23384a1fa6a058b79c73727ae0cb2200ca4c
+      with:
+        age: '1 hour'
