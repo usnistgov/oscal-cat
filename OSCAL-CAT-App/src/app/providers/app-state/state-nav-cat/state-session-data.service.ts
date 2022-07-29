@@ -40,7 +40,7 @@ import { KnownOscalFileLocation } from "src/app/interfaces/known-locations";
 
 
 export enum NamedSessionNodes {
-    SAVED_SESSIONS = 'OSCAL-SAVED-SESSIONS',
+    SAVED_SESSIONS = 'ALL-OSCAL-SESSIONS',
     ACTIVE_SESSION = 'OSCAL-CURRENT-SESSION',
     SAVED_META = 'OSCAL-SAVED-META',
     SAVED_INCLUDE = 'OSCAL-SAVED-INCLUDES',
@@ -48,30 +48,39 @@ export enum NamedSessionNodes {
     SAVED_GROUPS = 'OSCAL-SAVED_GROUPS',
 }
 
-export class SessionData {
+export class SessionEntry {
     public uuid: string;
     public name: string;
+
+    constructor(uuid: string, name: string) {
+        this.uuid = uuid;
+        this.name = name;
+    }
+}
+export class SessionData extends SessionEntry {
+
+    constructor(uuid: string, name: string) {
+        super(uuid, name);
+    }
+
+
     public fullName?: string;
 
     public knownCat?: KnownOscalFileLocation;
     public catalog?: Catalog;
     public meta?: PublicationMetadata;
+
     public catTree?: TreeNodeType;
     public proTree?: TreeNodeType;
     public regroupTree?: TreeNodeType;
-
 }
-
-
-
-
-
 
 @Injectable({
     providedIn: 'root'
 })
 export class CurrentSessionData extends KvServiceBase {
     static currentActiveSession: SessionData;
+    static currentSessionUUID: string;
     session_id: string;
     savedSessions: string[] = [];
     storage: Storage;
@@ -90,8 +99,15 @@ export class CurrentSessionData extends KvServiceBase {
         this.storage = store;
     }
 
-    initNewSession(): string {
-        this.session_id = UUIDv4();
+    getNewSessionUUID() {
+        return UUIDv4();
+    }
+
+    activateNewSession(name: string): string {
+
+        const uuid = this.getNewSessionUUID();
+        const newSession = new SessionData(uuid, name);
+        this.saveActiveSession(newSession)
         return this.session_id
     }
 
@@ -122,9 +138,11 @@ export class CurrentSessionData extends KvServiceBase {
         return undefined;
     }
 
-    saveActiveSession(session: SessionData) {
+    saveActiveSession(session: SessionData): SessionData {
         this.setKeyValueObject<SessionData>(
             NamedSessionNodes.ACTIVE_SESSION, session);
+
+        return this.getActiveSession();
     }
 
     getActiveSession(): SessionData {
@@ -134,9 +152,6 @@ export class CurrentSessionData extends KvServiceBase {
             return this.readActiveSession();
         }
     }
-
-
-
 
 }
 

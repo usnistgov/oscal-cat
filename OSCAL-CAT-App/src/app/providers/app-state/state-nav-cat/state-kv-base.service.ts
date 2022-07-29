@@ -32,7 +32,7 @@ import { Storage } from '@ionic/storage';
     providedIn: 'root'
 })
 export class KvServiceBase {
-
+    isReady: boolean = false;
     constructor(
         public storage: Storage,
         public platform: Platform,
@@ -40,7 +40,18 @@ export class KvServiceBase {
     ) {
         // console.log(`Platform: ${this.platform}; Ready: ${this.platform.ready()}`);
         this.platform.ready().then(
-            () => { }).then();
+            () => {
+                this.createStorage();
+            }).then(
+                () => this.isReady = true);
+    }
+
+
+    async createStorage() {
+        // Must make sure that database is created
+        const store = await this.storage.create();
+        this.storage = store;
+        return store
     }
 
     /**
