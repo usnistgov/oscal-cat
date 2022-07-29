@@ -29,3 +29,8 @@ jobs:
       commit_id: ${{ needs.ci.outputs.commit_id }}
     secrets:
       access_token: ${{ secrets.COMMIT_TOKEN }}
+  sbom-license-analysis:
+    needs: ci
+    uses: ./.github/workflows/generate-license-reports.yml
+    with:
+      commit_id: ${{ needs.ci.outputs.commit_id }}
