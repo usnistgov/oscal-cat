@@ -38,7 +38,10 @@ import { ActionAncestorSimpleArrayComponent } from '../action-ancestor-base/acti
     '../../action-all-common/div-scroll.scss'],
 })
 export class LocationsArrayComponent extends ActionAncestorSimpleArrayComponent implements OnInit {
-
+  /* 
+    The Locations array editor was not needed so far 
+    as location was a top-level metadata entity and not part of "thingies".
+  */
   @Input() locationsArray: Array<Location>;
 
   constructor(

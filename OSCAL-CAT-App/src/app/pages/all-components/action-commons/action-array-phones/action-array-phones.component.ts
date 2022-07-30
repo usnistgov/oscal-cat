@@ -38,6 +38,7 @@ import { OscalCatalogEmpties } from '../../../../interfaces/oscal-types/oscal-ca
 export class ArrayPhonesComponent extends ActionAncestorSimpleArrayComponent implements OnInit {
 
   @Input() phonesArray: Array<TelephoneNumber>;
+  @Input() phoneName: string;
 
   constructor(
     public formBuilder: FormBuilder,
@@ -49,7 +50,7 @@ export class ArrayPhonesComponent extends ActionAncestorSimpleArrayComponent imp
       {
         fieldToMap: 'number',
         labelName: 'Phone Number',
-        inputTip: ''.concat('Telephone number.'),
+        inputTip: `${this.phoneName + ' ' || ''}`.concat('Telephone number.'),
         validateAs: [Validators.required],
         requiredField: true,
       });
@@ -65,7 +66,6 @@ export class ArrayPhonesComponent extends ActionAncestorSimpleArrayComponent imp
 
   ngOnInit() {
     super.ngOnInit();
-
     // for (const [key, value] of this.inputsMap) {
     //   console.log(`Key=${key}, Val=${value}`);
     // }

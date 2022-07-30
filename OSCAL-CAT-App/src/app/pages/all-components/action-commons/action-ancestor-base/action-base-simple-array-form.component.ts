@@ -124,6 +124,18 @@ export abstract class ActionAncestorSimpleArrayComponent extends ActionAncestorB
     return this.subArray;
   }
 
+  /**
+   * The older style of implementing UI 
+   * Use for the inherited forms where order of the controls in UI does not matter
+   * KEY would define the mapping&order in each UI and data object - and that's IT!
+   *
+   * @template Type - the type of the Cat or Pro UI is supposed to work on 
+   * E.g. Control|Part|Link ... etc
+   * @param {() => Type} emptyTypeMaker An empty object creation method
+   * Usually it is from OscalCatalogEmpties class, but can also be local (may lead to inconsistencies)
+   * @returns {Array<Type>} The array of the objects CRUD-ed in UI
+   * @memberof ActionAncestorSimpleArrayComponent
+   */
   getResultArrayByKey<Type>(emptyTypeMaker: () => Type): Array<Type> {
     const updatedArray = new Array<Type>();
     this.subArray.controls.forEach(
@@ -142,6 +154,19 @@ export abstract class ActionAncestorSimpleArrayComponent extends ActionAncestorB
     }
   }
 
+  /**
+   * The newer much more flexible style of implementing UI. 
+   * Use for the any inherited 
+   * The fieldToMap defines the mapping, while KEY defines order 
+   * in each UI and data object - and that's decouples UI order from field name
+   *
+   * @template Type the type of the Cat or Pro UI is supposed to work on 
+   * E.g. Control|Part|Link ... etc
+   * @param {() => Type} emptyTypeMaker An empty object creation method
+   * Usually it is from OscalCatalogEmpties class, but can also be local (may lead to inconsistencies)
+   * @returns {Array<Type>} The array of the objects CRUD-ed in UI
+   * @memberof ActionAncestorSimpleArrayComponent
+   */
   getResultArrayByFieldToMap<Type>(emptyTypeMaker: () => Type): Array<Type> {
     const updatedArray = new Array<Type>();
     this.subArray.controls.forEach(
@@ -162,7 +187,7 @@ export abstract class ActionAncestorSimpleArrayComponent extends ActionAncestorB
 
   /**
    * Generic LOOSE-ALL data close for the cases 
-   * when the close method was provided
+   * when the close method was not provided in child
    * @memberof ActionAncestorSimpleArrayComponent
    */
   onCloseAnyTab() {
