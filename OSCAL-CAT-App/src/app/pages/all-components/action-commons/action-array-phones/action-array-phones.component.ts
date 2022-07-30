@@ -29,13 +29,14 @@ import { ActionAncestorSimpleArrayComponent } from '../action-ancestor-base/acti
 
 import { TelephoneNumber } from './../../../../interfaces/oscal-types/oscal-catalog.types';
 import { OscalCatalogEmpties } from '../../../../interfaces/oscal-types/oscal-catalog-factory';
+import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancestor-base.component';
 
 @Component({
   selector: 'oscal-array-phones',
   templateUrl: './action-array-phones.component.html',
   styleUrls: ['./action-array-phones.component.scss'],
 })
-export class ArrayPhonesComponent extends ActionAncestorSimpleArrayComponent implements OnInit {
+export class ArrayPhonesComponent extends ActionAncestorSimpleArrayComponent implements OnInit, IMustCommitFormDataArray {
 
   @Input() phonesArray: Array<TelephoneNumber>;
   @Input() phoneName: string;
@@ -85,6 +86,13 @@ export class ArrayPhonesComponent extends ActionAncestorSimpleArrayComponent imp
     return this.getNewFormGroupByFieldToMap<TelephoneNumber>();
   }
 
+  formCommitArray(): Array<TelephoneNumber> {
+    // Returns the edited Array of TelephoneNumber Back
+    // With the fieldToMap mapping -use this method of the parent object
+    const editedLinks = this.getResultArrayByFieldToMap<TelephoneNumber>(OscalCatalogEmpties.getEmptyPhoneNumber);
+    return editedLinks
+  }
+
   /**
    * Saves the form data in the object of Document ID Type and pushes it out
    * through the delegate to the parent page to assemble the big JSON data-pile
@@ -108,8 +116,6 @@ export class ArrayPhonesComponent extends ActionAncestorSimpleArrayComponent imp
   onSubmitData() {
     this.onSave();
   }
-
-
 
 
 }

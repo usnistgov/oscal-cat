@@ -224,7 +224,7 @@
           </ion-toolbar>
         </ion-col>
       </ion-row>
-      <!-- The place for the ADDING controls -->
+      <!-- The place for the ADDING UI-controls -->
       <ion-row class="tab-cell-row">
         <ion-col class="tab-cell-row">
           <!-- Hidden the dynamic UI Pop-Up-->
@@ -547,21 +547,24 @@
           </ion-toolbar>
         </ion-col>
       </ion-row>
-      <!-- The controls for editing separate entries (second row) -->
+      <!-- UI-controls for EDITING separate entry of Link OR Location (second row in this layout) -->
       <ion-row class="tab-cell-row">
         <ion-col class="tab-cell-row">
           <div *ngIf="'Link' === activeEntityAddTabName" class="tab-cell-row-framed">
             <!--  formArrayName="Links" -->
-            <oscal-array-links #linkTab [ID]="'metaLinks'" [linksArray]="[undefined]" listTitle="Link" actionName="Add"
-              iconName="link-outline" parentEntity="Meta-Information" parentName="Meta-Information" inputName="Link"
-              [singleMode]="true" hideAddButton="true" [hideAddElementButton]="true" [showAddCancelButtons]="true"
-              (closeTab)="cancelAddTab($event)" (saveTab)="this.addEditLink($event, false)">
+            <!-- UI-controls for EDITING separate entry of Link (first column/second row in this layout) -->
+            <oscal-array-links #linkTab [ID]="'metaLinks'" [linksArray]="this.metaInfo.links" listTitle="Link"
+              actionName="Add" iconName="link-outline" parentEntity="Meta-Information" parentName="Meta-Information"
+              inputName="Link" [singleMode]="true" hideAddButton="true" [hideAddElementButton]="true"
+              [showAddCancelButtons]="true" (closeTab)="cancelAddTab($event)"
+              (saveTab)="this.addEditLink($event, false)">
             </oscal-array-links>
           </div>
+          <!-- UI-controls for EDITING separate entry of Location (second column/second row in this layout) -->
           <div *ngIf="'Location' === activeEntityAddTabName" class="tab-cell-row-framed">
-            <oscal-location-info #locationTab [ID]="'metaLocation'" [locationInfo]="undefined" actionName="Add"
-              iconName="location-outline" parentName="Meta-Information" inputName="Location" [singleMode]="true"
-              hideAddButton="true" [hideAddElementButton]="true" [showAddCancelButtons]="true"
+            <oscal-location-info #locationTab [ID]="'metaLocation'" [locationInfo]="this.metaInfo.locations"
+              actionName="Add" iconName="location-outline" parentName="Meta-Information" inputName="Location"
+              [singleMode]="true" hideAddButton="true" [hideAddElementButton]="true" [showAddCancelButtons]="true"
               (closeTab)="cancelAddTab($event)" (saveTab)="this.addEditLocation($event, false)">
             </oscal-location-info>
           </div>
@@ -569,17 +572,5 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-
-
   </form>
-  <div>
-    <ng-template #addEditData2 appAddEditInfo></ng-template>
-  </div>
-  <ion-grid fixed>
-    <ion-row>
-      <ion-col size="6"></ion-col>
-      <ion-col size="6"></ion-col>
-    </ion-row>
-  </ion-grid>
-  <br />
 </div>

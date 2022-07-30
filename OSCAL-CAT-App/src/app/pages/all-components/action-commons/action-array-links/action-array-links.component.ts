@@ -25,7 +25,7 @@
  */
 import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormGroupDirective, Validators, FormControl } from '@angular/forms';
-import { ActionAncestorBaseComponent } from '../action-ancestor-base/action-ancestor-base.component';
+import { ActionAncestorBaseComponent, IMustCommitFormDataArray } from '../action-ancestor-base/action-ancestor-base.component';
 import { ActionAncestorSimpleArrayComponent } from '../action-ancestor-base/action-base-simple-array-form.component';
 
 import { OscalCatalogEmpties } from '../../../../interfaces/oscal-types/oscal-catalog-factory';
@@ -39,7 +39,7 @@ import { Link } from './../../../../interfaces/oscal-types/oscal-catalog.types';
     '../../action-all-common/ion-tabs-buttons.scss',
     '../../action-all-common/div-scroll.scss'],
 })
-export class ArrayLinksComponent extends ActionAncestorSimpleArrayComponent implements OnInit {
+export class ArrayLinksComponent extends ActionAncestorSimpleArrayComponent implements OnInit, IMustCommitFormDataArray {
 
   @Input() linksArray: Array<Link>;
 
@@ -80,6 +80,14 @@ export class ArrayLinksComponent extends ActionAncestorSimpleArrayComponent impl
     this.defaultSingleTitle = 'Link';
   }
 
+
+  formCommitArray(): Array<Link> {
+    // Returns the edited Array of Links Back
+    // With the fieldToMap mapping -use this method of the parent object
+    const editedLinks = this.getResultArrayByFieldToMap<Link>(OscalCatalogEmpties.getEmptyLink);
+    return editedLinks
+  }
+
   ngOnInit() {
     super.ngOnInit();
 
@@ -94,33 +102,6 @@ export class ArrayLinksComponent extends ActionAncestorSimpleArrayComponent impl
     this.localForm.addControl(this.ID, this.subForm);
   }
 
-  /*
-    getControlsArray(): FormArray {
-      const controls = new Array<FormGroup>();
-      if (this.linksArray && this.linksArray.length > 0) {
-        this.linksArray.forEach(
-          (dataEntry: Link, idx: number) => {
-            controls.push(this.getNewFormGroup(dataEntry));
-          });
-      }
-      this.subArray = new FormArray(controls);
-      return this.subArray;
-    }
-
-
-    getNewFormGroup(data?: Link): FormGroup {
-      const group = {};
-      for (const [key, value] of this.inputsMap) {
-        console.log(`Key=${key}, Val=${value}`);
-        group[key] = new FormControl(
-          (data ? data[key] : ''),
-          (value.validateAs ? value.validateAs : [])
-        );
-      }
-      return new FormGroup(group);
-    } */
-
-
   getControlsArray() {
     return this.getControlsArrayByFieldToMap<Link>(this.linksArray);
   }
@@ -132,12 +113,12 @@ export class ArrayLinksComponent extends ActionAncestorSimpleArrayComponent impl
   onSave() {
     const emptyLink = OscalCatalogEmpties.getEmptyLink();
     const savedLink = this.getUpdatedElementByFieldToMap<Link>(emptyLink);
-
     this.saveTab.emit(savedLink);
     this.closeTab.emit();
   }
 
   onCancel() {
+    this.closeTab.emit();
   }
 
   onCancelButton() {

@@ -29,15 +29,25 @@ import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular
 
 import { PartyExternalIdentifier } from './../../../../interfaces/oscal-types/oscal-catalog.types';
 import { OscalCatalogEmpties } from '../../../../interfaces/oscal-types/oscal-catalog-factory';
+import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancestor-base.component';
 
 @Component({
-  selector: 'app-action-array-external-ids',
+  selector: 'oscal-external-ids',
   templateUrl: './action-array-external-ids.component.html',
   styleUrls: ['./action-array-external-ids.component.scss'],
 })
-export class ArrayExternalIDsComponent extends ActionAncestorSimpleArrayComponent implements OnInit {
+export class ArrayExternalIDsComponent extends ActionAncestorSimpleArrayComponent implements OnInit, IMustCommitFormDataArray {
 
   @Input() externalIDsArray: Array<PartyExternalIdentifier>;
+
+
+  formCommitArray(): Array<PartyExternalIdentifier> {
+    // Returns the edited Array of Links Back
+    // With the fieldToMap mapping -use this method of the parent object
+    const editedExternalIds = this.getResultArrayByFieldToMap<PartyExternalIdentifier>(
+      OscalCatalogEmpties.getEmptyPartyExternalIdentifier);
+    return editedExternalIds
+  }
 
   constructor(
     public formBuilder: FormBuilder,

@@ -126,6 +126,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
   @Input() metaInfo: PublicationMetadata;
 
   activeSession: SessionData;
+
   activeEntityAddTabName = '';
   activeEditState: EditingState = EditingState.Off;
   activeEditIndex: number;
@@ -247,6 +248,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     this.initMetaInfo();
     this.updateMetaFromSession();
     // this.db = new AppDbInProgressService(Platform, );
+
   }
 
   ngAfterViewInit() {
@@ -526,6 +528,8 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
   }
 
   addTestParties() {
+    // TODO: Even though it saves time testing - 
+    // this functionality has to be commented out for release
     if (!this.metaInfo.parties) {
       this.metaInfo.parties = new Array<PartyOrganizationOrPerson>();
     }

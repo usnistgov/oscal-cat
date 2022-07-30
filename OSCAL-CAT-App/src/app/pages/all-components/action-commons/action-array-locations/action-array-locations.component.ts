@@ -26,7 +26,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroupDirective } from '@angular/forms';
 
-import { ActionAncestorBaseComponent } from '../action-ancestor-base/action-ancestor-base.component';
+import { ActionAncestorBaseComponent, IMustCommitFormDataArray } from '../action-ancestor-base/action-ancestor-base.component';
 import { ActionAncestorSimpleArrayComponent } from '../action-ancestor-base/action-base-simple-array-form.component';
 
 @Component({
@@ -50,6 +50,7 @@ export class LocationsArrayComponent extends ActionAncestorSimpleArrayComponent 
 
     super(formBuilder, parentFormDirect);
   }
+
 
   ngOnInit() {
     //this.addFormGroup

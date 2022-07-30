@@ -30,6 +30,7 @@ import { IonTextarea } from '@ionic/angular';
 import { OscalCatalogEmpties } from '../../../../interfaces/oscal-types/oscal-catalog-factory';
 import { Property } from './../../../../interfaces/oscal-types/oscal-catalog.types';
 import { ActionAncestorSimpleArrayComponent } from '../action-ancestor-base/action-base-simple-array-form.component';
+import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancestor-base.component';
 
 @Component({
   selector: 'oscal-array-properties',
@@ -39,9 +40,16 @@ import { ActionAncestorSimpleArrayComponent } from '../action-ancestor-base/acti
     '../../action-all-common/ion-tabs-buttons.scss',
     '../../action-all-common/div-scroll.scss'],
 })
-export class PropertiesArrayComponent extends ActionAncestorSimpleArrayComponent implements OnInit {
+export class PropertiesArrayComponent extends ActionAncestorSimpleArrayComponent implements OnInit, IMustCommitFormDataArray {
 
   @Input() propertiesArray: Array<Property>;
+
+  formCommitArray(): Array<Property> {
+    // Returns the edited Array of Links Back
+    // With the fieldToMap mapping -use this method of the parent object
+    const editedLinks = this.getResultArrayByFieldToMap<Property>(OscalCatalogEmpties.getEmptyProperty);
+    return editedLinks
+  }
 
   constructor(
     public formBuilder: FormBuilder,

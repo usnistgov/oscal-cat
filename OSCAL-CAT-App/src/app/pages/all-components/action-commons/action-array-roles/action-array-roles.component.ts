@@ -29,6 +29,7 @@ import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular
 
 import { Role } from './../../../../interfaces/oscal-types/oscal-catalog.types';
 import { OscalCatalogEmpties } from '../../../../interfaces/oscal-types/oscal-catalog-factory';
+import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancestor-base.component';
 
 @Component({
   selector: 'oscal-array-roles',
@@ -38,7 +39,7 @@ import { OscalCatalogEmpties } from '../../../../interfaces/oscal-types/oscal-ca
     '../../action-all-common/ion-tabs-buttons.scss',
     '../../action-all-common/div-scroll.scss'],
 })
-export class ActionArrayRolesComponent extends ActionAncestorSimpleArrayComponent implements OnInit {
+export class ActionArrayRolesComponent extends ActionAncestorSimpleArrayComponent implements OnInit, IMustCommitFormDataArray {
 
   @Input() rolesArray: Array<Role>;
   @Input() isPresetRole: boolean;
@@ -166,6 +167,12 @@ export class ActionArrayRolesComponent extends ActionAncestorSimpleArrayComponen
 
   closeLinks() {
 
+  }
+
+  formCommitArray(): Array<Role> {
+    // Returns the edited Array of Roles back
+    const editedLinks = this.getResultArrayByFieldToMap<Role>(OscalCatalogEmpties.getEmptyRole);
+    return editedLinks
   }
 
 }

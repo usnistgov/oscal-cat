@@ -29,6 +29,7 @@ import { ActionAncestorSimpleArrayComponent } from '../action-ancestor-base/acti
 
 import { OscalCatalogEmpties } from '../../../../interfaces/oscal-types/oscal-catalog-factory';
 import { DocumentIdentifier } from './../../../../interfaces/oscal-types/oscal-catalog.types';
+import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancestor-base.component';
 
 @Component({
   selector: 'oscal-array-document-ids',
@@ -38,7 +39,7 @@ import { DocumentIdentifier } from './../../../../interfaces/oscal-types/oscal-c
     '../../action-all-common/ion-tabs-buttons.scss',
     '../../action-all-common/div-scroll.scss'],
 })
-export class DocumentIDArrayComponent extends ActionAncestorSimpleArrayComponent implements OnInit {
+export class DocumentIDArrayComponent extends ActionAncestorSimpleArrayComponent implements OnInit, IMustCommitFormDataArray {
 
   @Input() idArray: Array<DocumentIdentifier>;
 
@@ -65,6 +66,14 @@ export class DocumentIDArrayComponent extends ActionAncestorSimpleArrayComponent
         requiredField: true,
       });
 
+  }
+
+
+  formCommitArray(): Array<DocumentIdentifier> {
+    // Returns the edited Array of Links Back
+    // With the fieldToMap mapping -use this method of the parent object
+    const edDocIds = this.getResultArrayByFieldToMap<DocumentIdentifier>(OscalCatalogEmpties.getEmptyDocID);
+    return edDocIds
   }
 
   ngOnInit() {

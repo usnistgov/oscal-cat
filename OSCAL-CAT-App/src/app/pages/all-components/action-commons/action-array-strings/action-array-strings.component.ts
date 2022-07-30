@@ -25,13 +25,14 @@
  */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
+import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancestor-base.component';
 
 @Component({
   selector: 'oscal-array-string',
   templateUrl: './action-array-strings.component.html',
   styleUrls: ['./action-array-strings.component.scss'],
 })
-export class ArrayStringsComponent implements OnInit {
+export class ArrayStringsComponent implements OnInit, IMustCommitFormDataArray {
 
   @Input() ID: string;
   @Input() listTitle: string;
@@ -49,6 +50,14 @@ export class ArrayStringsComponent implements OnInit {
 
   localForm: FormGroup;
   subForm: FormGroup;
+
+
+  formCommitArray(): Array<string> {
+    // Returns the edited Array of strings Back
+    // unfortunately this component was done before unified model
+    const editedStrings = this.getStringArrayData();
+    return editedStrings
+  }
 
   constructor(
     private formBuilder: FormBuilder,
