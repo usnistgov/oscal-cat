@@ -30,6 +30,15 @@ import { v4 as UUIDv4 } from 'uuid';
 // import { DocumentIdentifier } from './../../../../interfaces/oscal-types/oscal-catalog.types';
 import { OscalCatalogEmpties } from '../../../../interfaces/oscal-types/oscal-catalog-factory';
 
+
+export interface IMustCommitFormDataArray {
+  formCommitArray(): Array<any>;
+}
+export interface IMustCommitFormData {
+  formCommit(): any;
+}
+
+
 export interface FieldInfo {
   fieldToMap: string;
   labelName: string;
@@ -253,7 +262,8 @@ export class ActionAncestorBaseComponent implements OnInit {
       if (!!theValue) {
         nonEmptyCounter++;
       }
-      console.log(`oKey:${oKey}\t Form:${theValue}`);
+      // TODO: Figure out debugging strategy later
+      // console.log(`oKey:${oKey}\t Form:${theValue}`);
       originalData[oKey] = theValue;
     }
 
@@ -277,7 +287,8 @@ export class ActionAncestorBaseComponent implements OnInit {
     for (const [key, value] of this.inputsMap) {
       const oKey: keyof Type = value.fieldToMap as keyof Type;
       const theValue = formData.get(key).value;
-      console.log(`oKey:${oKey}\t Form:${theValue}`);
+      // TODO: Figure out debugging strategy later
+      // console.log(`oKey:${oKey}\t Form:${theValue}`);
       if (!!theValue) {
         nonEmptyCounter++;
       }
@@ -290,5 +301,4 @@ export class ActionAncestorBaseComponent implements OnInit {
       return undefined;
     }
   }
-
 }

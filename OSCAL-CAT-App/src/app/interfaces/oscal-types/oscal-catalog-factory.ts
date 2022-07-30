@@ -26,7 +26,7 @@
 import {
     ResponsibleParty, Address, DocumentIdentifier, PartyExternalIdentifier,
     PartyOrganizationOrPerson, PartyType, Property, Link, Location, Role,
-    TelephoneNumber, Control, Part, Parameter,
+    TelephoneNumber, Control, Part, Parameter, ControlGroup, Guideline, Constraint, Selection, ParameterCardinality,
 } from './oscal-catalog.types';
 
 
@@ -45,6 +45,67 @@ export class OscalCatalogEmpties {
         }
         return emptyControl;
     }
+
+    static getEmptyControlGroup(): ControlGroup {
+        const emptyControlGroup: ControlGroup = {
+            title: '',
+            id: '',
+            class: '',
+            controls: new Array<Control>(),
+            links: new Array<Link>(),
+            params: new Array<Parameter>(),
+            parts: new Array<Part>(),
+            props: new Array<Property>(),
+            groups: new Array<ControlGroup>(),
+        }
+        return emptyControlGroup;
+    }
+
+    static getEmptyPart(): Part {
+        const emptyPart: Part = {
+            id: '',
+            ns: '',
+            name: '',
+
+            class: '',
+            prose: '',
+            title: '',
+
+            links: new Array<Link>(),
+            parts: new Array<Part>(),
+            props: new Array<Property>(),
+        }
+        return emptyPart;
+    }
+
+    static getEmptyParameter(): Parameter {
+        const emptyPart: Parameter = {
+            class: '',
+            dependsOn: '',
+            id: '',
+            label: '',
+            remarks: '',
+            usage: '',
+
+            values: Array<string>(),
+            guidelines: new Array<Guideline>(),
+            constraints: new Array<Constraint>(),
+
+            links: new Array<Link>(),
+            props: new Array<Property>(),
+            select: OscalCatalogEmpties.getEmptySelection(),
+        }
+        return emptyPart;
+    }
+
+    static getEmptySelection(): Selection {
+        const emptySelection: Selection = {
+            choice: Array<string>(),
+            howMany: ParameterCardinality.One
+        }
+        return emptySelection;
+    }
+
 
 
     public static getEmptyResponsibleParty(): ResponsibleParty {
