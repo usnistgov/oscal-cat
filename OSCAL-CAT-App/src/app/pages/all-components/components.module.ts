@@ -51,6 +51,8 @@ import { ArrayExternalIDsComponent } from './action-commons/action-array-externa
 import { ActionMapRolesComponent } from './action-commons/action-map-roles/action-map-roles.component';
 import { AuthorBeginComponent } from './author-begin/author-begin.component';
 import { SelectBaselineComponent } from './action-commons/action-select-baseline/action-select-baseline.component';
+import { CatParamsComponent } from './action-commons/action-cat-params/action-cat-params.component';
+import { CatControlsComponent } from './action-commons/action-cat-controls/action-cat-controls.component';
 
 
 
@@ -60,12 +62,14 @@ import { SelectBaselineComponent } from './action-commons/action-select-baseline
     BackMatterComponent, ControlComponent, MetaInfoComponent, AuthoringModeComponent, ActionPartyInfoComponent,
     PropertiesArrayComponent, DocumentIDArrayComponent, ActionArrayRolesComponent, ArrayPhonesComponent,
     ArrayExternalIDsComponent, ActionMapRolesComponent, AuthorBeginComponent, SelectBaselineComponent,
+    CatParamsComponent, CatControlsComponent,
   ],
   exports: [SelectFamiliesComponent, NavCatComponent, ActionWaitComponent, ActionAncestorBaseComponent,
     ArrayAddressesComponent, ArrayStringsComponent, ArrayLinksComponent, LocationInfoComponent, LocationsArrayComponent,
     BackMatterComponent, ControlComponent, MetaInfoComponent, AuthoringModeComponent, ActionPartyInfoComponent,
     PropertiesArrayComponent, DocumentIDArrayComponent, ActionArrayRolesComponent, ArrayPhonesComponent,
     ArrayExternalIDsComponent, ActionMapRolesComponent, AuthorBeginComponent, SelectBaselineComponent,
+    CatParamsComponent, CatControlsComponent,
   ],
 
   imports: [IonicModule, ReactiveFormsModule, FormsModule, CommonModule,
