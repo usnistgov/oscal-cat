@@ -23,6 +23,7 @@
 
         <ion-grid>
 
+          <!-- Entity Type for Person/Organization/Party -->
           <ion-row class="justify-content-between topless ">
             <ion-col class="justify-content-between topless ">
               <ion-item style="text-align: center;" class="justify-content-between topless bottomless spaceless">
@@ -43,16 +44,6 @@
                     </ion-item>
                   </ion-col>
 
-                  <!-- 
-                    <ion-col class="justify-content-between topless bottomless spaceless">
-                    <ion-item>
-                      <ion-icon icon="beer-outline"></ion-icon>&nbsp;&nbsp;&nbsp;
-                      <ion-label>Party</ion-label>
-                      <ion-radio slot="start" value="Party"></ion-radio>
-                    </ion-item>
-                  </ion-col 
-                -->
-
                   <ion-col style="text-align: center;" class="justify-content-between topless bottomless spaceless">
                     <ion-item>
                       <ion-radio class="spaceless" value="organization" (onChange)="typeChanged('organization')">
@@ -63,11 +54,10 @@
                   </ion-col>
                 </ion-row>
               </ion-radio-group>
-
-
             </ion-col>
           </ion-row>
 
+          <!-- Person/Organization/Party Name -->
           <ion-row>
             <ion-col>
               <ion-item>
@@ -78,6 +68,7 @@
             </ion-col>
           </ion-row>
 
+          <!-- UUID -->
           <ion-row>
             <ion-col>
               <ion-item>
@@ -96,6 +87,7 @@
             </ion-col>
           </ion-row>
 
+          <!-- Short Name -->
           <ion-row>
             <ion-col>
               <ion-item>
@@ -109,7 +101,7 @@
 
           <ion-row>
             <ion-col>
-              <!-- placeholder="Enter any remarks here..." -->
+              <!-- Remarks -->
               <ion-item>
                 <ion-label position="floating">Remarks for {{getActualPartyName()}} (Optional)</ion-label>
                 <ion-textarea rows="6" formControlName="remarks" title="Remarks for the {{entryName}} goes here"
@@ -121,19 +113,19 @@
 
           <ion-row>
             <ion-col>
-              <!--  phonesArray="Phones" [stringData]="['AA@a.com']" -->
-              <oscal-array-phones [ID]="'phoneNumbers'" [phonesArray]="[]" listTitle="Phone Numbers"
-                [parentEntity]="entryName" [parentName]="getActualPartyName()" inputName="Phone"
-                [isArrayOptionalText]="'(Optional)'">
+              <!--  Telephone Numbers  -->
+              <oscal-array-phones #phonesList [ID]="'phoneNumbers'" [phonesArray]="this.partyInfo.telephoneNumbers"
+                listTitle="Phone Numbers" [parentEntity]="entryName" [parentName]="getActualPartyName()"
+                inputName="Phone" [isArrayOptionalText]="'(Optional)'">
               </oscal-array-phones>
             </ion-col>
           </ion-row>
 
           <ion-row>
             <ion-col>
-              <!--  formArrayName="Emails" [stringData]="['AA@a.com']" -->
-              <oscal-array-string [ID]="'emailAddresses'" [stringData]="[]" listTitle="Emails"
-                [parentEntity]="entryName" [parentName]="getActualPartyName()" inputName="Email"
+              <!--  "Emails" [stringData]="['AA@a.com']" -->
+              <oscal-array-string #emailsList [ID]="'emailAddresses'" [stringData]="this.partyInfo.emailAddresses"
+                listTitle="Emails" [parentEntity]="entryName" [parentName]="getActualPartyName()" inputName="Email"
                 [validateAs]="getEmailValidator()" [isArrayOptionalText]="'(Optional)'">
               </oscal-array-string>
             </ion-col>
@@ -142,8 +134,9 @@
 
           <ion-row>
             <ion-col>
-              <!--  formArrayName="addresses" -->
-              <oscal-address-list [addressList]="addressList" [entryName]="entryName" [partyName]="getActualPartyName()"
+              <!--  Addresses -->
+              <oscal-address-list #addressList [addressList]="this.partyInfo.addresses"
+                [entryName]="this.partyInfo.addresses" [partyName]="getActualPartyName()"
                 [isArrayOptionalText]="'(Optional)'">
               </oscal-address-list>
             </ion-col>
@@ -151,8 +144,9 @@
 
           <ion-row>
             <ion-col>
-              <!--  formArrayName="memberOfOrganizations" [stringData]="['AA', 'AAA', 'BBB']" -->
-              <oscal-array-string [ID]="'topOrgs'" [stringData]="[]" listTitle="Organizations Memberships"
+              <!--  Organization memberships [stringData]="['AAA', 'BBB', 'AA']" -->
+              <oscal-array-string #organizationsList [ID]="'topOrgs'"
+                [stringData]="this.partyInfo.memberOfOrganizations" listTitle="Organizations Memberships"
                 [isArrayOptionalText]="'(Optional)'" [parentEntity]="entryName" [parentName]="getActualPartyName()"
                 inputName="Membership">
               </oscal-array-string>
@@ -161,20 +155,43 @@
 
           <ion-row>
             <ion-col>
-              <!--  formArrayName="Links" -->
-              <oscal-array-links [ID]="'topLinks'" [linksArray]="[]" listTitle="Links" [parentEntity]="entryName"
-                [parentName]="getActualPartyName()" inputName="Link" [isArrayOptionalText]="'(Optional)'">
+              <!--  Links -->
+              <oscal-array-links #linksList [ID]="'topLinks'" [linksArray]="this.partyInfo.links" listTitle="Links"
+                [parentEntity]="entryName" [parentName]="getActualPartyName()" inputName="Link"
+                [isArrayOptionalText]="'(Optional)'">
               </oscal-array-links>
+            </ion-col>
+          </ion-row>
+
+
+          <ion-row>
+            <ion-col>
+              <!--  Properties -->
+              <oscal-array-properties #propsList [ID]="'propsList'" [stringData]="this.partyInfo.externalIDS"
+                listTitle="External IDs" [parentEntity]="entryName" [parentName]="getActualPartyName()"
+                inputName="External ID" [isArrayOptionalText]="'(Optional)'">
+                </oscal-external-ids>
+            </ion-col>
+          </ion-row>
+
+
+          <ion-row>
+            <ion-col>
+              <!--  Location UUIDs -->
+              <oscal-array-string #uuidsList [ID]="'topUUIDs'" [stringData]="this.partyInfo.locationUuids"
+                listTitle="Location UUIDs" [parentEntity]="entryName" [parentName]="getActualPartyName()"
+                inputName="UUID" [isArrayOptionalText]="'(Optional)'">
+              </oscal-array-string>
             </ion-col>
           </ion-row>
 
           <ion-row>
             <ion-col>
-              <!--  formArrayName="location UUID" -->
-              <oscal-array-string [ID]="'topUUIDs'" [stringData]="[]" listTitle="Location UUIDs"
-                [parentEntity]="entryName" [parentName]="getActualPartyName()" inputName="UUID"
-                [isArrayOptionalText]="'(Optional)'">
-              </oscal-array-string>
+              <!--  External IDs -->
+              <oscal-external-ids #extIdsList [ID]="'extIds'" [stringData]="this.partyInfo.externalIDS"
+                listTitle="External IDs" [parentEntity]="entryName" [parentName]="getActualPartyName()"
+                inputName="External ID" [isArrayOptionalText]="'(Optional)'">
+              </oscal-external-ids>
             </ion-col>
           </ion-row>
 

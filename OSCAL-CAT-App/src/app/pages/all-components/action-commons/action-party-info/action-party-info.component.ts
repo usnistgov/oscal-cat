@@ -27,7 +27,7 @@ import { ArrayPhonesComponent } from './../action-array-phones/action-array-phon
 import { ArrayAddressesComponent } from '../action-array-addresses/action-array-addresses.component';
 import {
   AfterViewInit, Component, EventEmitter,
-  Input, OnInit, Output, ViewChild, ViewContainerRef,
+  Input, OnInit, Output, ViewChild, ViewChildren, ViewContainerRef,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray, ReactiveFormsModule, FormGroupDirective } from '@angular/forms';
 import { ModalController, NavParams } from '@ionic/angular';
@@ -37,6 +37,8 @@ import { v4 as UUIDv4 } from 'uuid';
 import { CloseAddEdit } from '../../meta-info/meta-info.component';
 import { LogManagerService } from './../../../../providers/logging/log-manager.service';
 import { PartyOrganizationOrPerson, PartyType, Address } from './../../../../interfaces/oscal-types/oscal-catalog.types';
+import { ArrayStringsComponent } from '../action-array-strings/action-array-strings.component';
+import { ArrayLinksComponent } from '../action-array-links/action-array-links.component';
 export enum EntityTypeIcons {
   Person = 'body-outline',
   Party = 'beer-outline',
@@ -69,10 +71,18 @@ export class ActionPartyInfoComponent implements OnInit, AfterViewInit {
   @Output() public closeTab: EventEmitter<PartyOrganizationOrPerson> = new EventEmitter<PartyOrganizationOrPerson>();
   @Output() public saveTab: EventEmitter<PartyOrganizationOrPerson> = new EventEmitter<PartyOrganizationOrPerson>();
 
+
+  @ViewChild('phonesList') phonesListUI: ArrayPhonesComponent;
+  @ViewChild('emailsList') emailsListUI: ArrayStringsComponent;
+  @ViewChild('addressList') addressListUI: ArrayAddressesComponent;
+  @ViewChild('organizationsList') organizationsListUI: ArrayStringsComponent;
+  @ViewChild('linksList') linksListUI: ArrayLinksComponent;
+  @ViewChild('uuidsList') uuidsListUI: ArrayStringsComponent;
+
   rootForm: FormGroup;
   localForm: FormGroup;
   saveIcon: string;
-  addressList: Array<Address>;
+  x_addressList: Array<Address>;
 
 
   // @ViewChild('addEditAddress', { static: true, read: ViewContainerRef }) public AddressVCR: ViewContainerRef;
@@ -88,7 +98,11 @@ export class ActionPartyInfoComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-
+    // this.partyInfo.addresses
+    // this.partyInfo.emailAddresses
+    // this.partyInfo.memberOfOrganizations
+    // this.partyInfo.links
+    // this.partyInfo.locationUuids
   }
 
 
@@ -99,7 +113,7 @@ export class ActionPartyInfoComponent implements OnInit, AfterViewInit {
     console.log(`Party Info = ${this.partyInfo}`);
     console.log(`Entity-Type=${this.partyInfo.type}`);
 
-    this.addressList = !!this.partyInfo ? this.partyInfo.addresses : new Array<Address>();
+    this.x_addressList = !!this.partyInfo ? this.partyInfo.addresses : new Array<Address>();
 
     console.log(`Done with onInit`);
     // this.LMS.logData(this.formFields.get('emailAddresses').value);
@@ -255,7 +269,17 @@ export class ActionPartyInfoComponent implements OnInit, AfterViewInit {
       uuid: this.localForm.get('uuid').value,
       remarks: this.localForm.get('remarks').value,
     };
-
+    // this.partyInfo.addresses
+    // this.addressListUI.formCommit();
+    data.addresses = this.addressListUI.formCommitArray();
+    data.links = this.linksListUI.formCommitArray();
+    data.emailAddresses = this.emailsListUI.formCommitArray();
+    // data.externalIDS = this.external
+    // data.locationUuids = this
+    data.memberOfOrganizations = this.organizationsListUI.formCommitArray();
+    data.telephoneNumbers = this.phonesListUI.formCommitArray();
+    // data.props = this.p
+    // data.externalIDS = this.
     this.saveTab.emit(data);
 
     /*
