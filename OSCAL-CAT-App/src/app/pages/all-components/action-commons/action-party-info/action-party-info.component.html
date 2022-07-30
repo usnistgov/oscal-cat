@@ -167,10 +167,10 @@
           <ion-row>
             <ion-col>
               <!--  Properties -->
-              <oscal-array-properties #propsList [ID]="'propsList'" [stringData]="this.partyInfo.externalIDS"
+              <oscal-external-ids #propsList [ID]="'propsList'" [stringData]="this.partyInfo.externalIDS"
                 listTitle="External IDs" [parentEntity]="entryName" [parentName]="getActualPartyName()"
                 inputName="External ID" [isArrayOptionalText]="'(Optional)'">
-                </oscal-external-ids>
+              </oscal-external-ids>
             </ion-col>
           </ion-row>
 
