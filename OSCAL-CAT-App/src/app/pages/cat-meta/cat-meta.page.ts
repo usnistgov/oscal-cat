@@ -38,6 +38,8 @@ export class CatMetaPage implements OnInit, AfterViewInit {
   constructor() { }
 
   ngOnInit() {
+    const a = 1;
+    console.log(`A=${a}`);
   }
 
   processInputs() {

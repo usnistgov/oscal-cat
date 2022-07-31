@@ -88,21 +88,25 @@ export class PagesService {
       toolTip: 'Regroup Catalog Entities Selected Earlier',
       url: '/pro-group',
       icon: 'list-circle' // funnel
-    }, {
-      pageGroup: PageGroup.navCatSection,
-      sequence: 5,
-      title: 'Back Matter',
-      toolTip: 'Edit Back Matter ',
-      url: '/pro-back',
-      icon: 'attach'
-    }, {
-      pageGroup: PageGroup.navProFileSection,
-      sequence: 0,
-      title: 'Review',
-      toolTip: 'Select a Catalog or Pick Saved Work',
-      url: '/review',
-      icon: 'glasses'
     },
+
+    //  {
+    //   pageGroup: PageGroup.navCatSection,
+    //   sequence: 5,
+    //   title: 'Back Matter',
+    //   toolTip: 'Edit Back Matter ',
+    //   url: '/pro-back',
+    //   icon: 'attach'
+    // },
+
+    // {
+    //   pageGroup: PageGroup.navProFileSection,
+    //   sequence: 0,
+    //   title: 'Review',
+    //   toolTip: 'Select a Catalog or Pick Saved Work',
+    //   url: '/review',
+    //   icon: 'glasses'
+    // },
     {
       pageGroup: PageGroup.navProFileSection,
       sequence: 1,

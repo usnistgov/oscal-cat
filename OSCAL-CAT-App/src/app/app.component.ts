@@ -32,9 +32,8 @@ import { Storage } from '@ionic/storage';
 // import { SwUpdate } from '@angular/service-worker';
 // import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 // import { StatusBar } from '@ionic-native/status-bar/ngx';
-
-
 // import { CatalogData } from './info-providers/catalog-data';
+
 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 const theme_dark = 'dark';
 @Component({
@@ -72,17 +71,19 @@ export class AppComponent implements OnInit {
       title: 'Regroup Controls',
       url: '/pro-group',
       icon: 'list-circle' // funnel
-    }, {
-      sequence: 1,
-      title: 'Back Matter',
-      url: '/pro-back',
-      icon: 'attach'
-    }, {
-      sequence: 2,
-      title: 'Review',
-      url: '/review',
-      icon: 'glasses'
     },
+    // {
+    //   sequence: 1,
+    //   title: 'Back Matter',
+    //   url: '/pro-back',
+    //   icon: 'attach'
+    // }, 
+    // {
+    //   sequence: 2,
+    //   title: 'Review',
+    //   url: '/review',
+    //   icon: 'glasses'
+    // },
     {
       sequence: 2,
       title: 'Download File',
@@ -118,7 +119,7 @@ export class AppComponent implements OnInit {
       prefersDark.addEventListener(
         'change',
         (e) => {
-          console.log(`Toggling1 {this.dark?'ON':'OFF'}`);
+          // console.log(`Toggling1 {this.dark?'ON':'OFF'}`);
           document.body.classList.toggle(theme_dark, this.dark)
         });
     } catch (e1) {
@@ -127,7 +128,7 @@ export class AppComponent implements OnInit {
         prefersDark.addEventListener(
           'change',
           (e) => {
-            console.log(`Toggling2 {this.dark?'ON':'OFF'}`);
+            // console.log(`Toggling2 {this.dark?'ON':'OFF'}`);
             document.body.classList.toggle(theme_dark, this.dark)
           });
       } catch (e2) {
@@ -155,7 +156,7 @@ export class AppComponent implements OnInit {
   }
 
   flipDarkMode() {
-    console.log(`Dark=${this.dark}`)
+    // console.log(`Dark=${this.dark}`)
     this.toggleDarkTheme();
   }
 }

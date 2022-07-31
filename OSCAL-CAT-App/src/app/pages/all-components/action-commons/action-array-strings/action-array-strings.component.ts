@@ -121,7 +121,7 @@ export class ArrayStringsComponent implements OnInit, IMustCommitFormDataArray {
     const prefix = ((count > 0) ? `` : `No`);
     const sufSuf = (count === 1) ? '' : 's'; // Plural Suffix
     const suffix = ((count > 0) ? `[${count} ${this.inputName}${sufSuf}]` : '');
-    const endingOpt = (!this.isArrayOptional) ? '' : this.isArrayOptional;
+    const endingOpt = (!this.isArrayOptionalText) ? '' : this.isArrayOptionalText;
     const title = (!!this.parentName ?
       `${prefix} ${this.listTitle} for ${this.parentName} ${suffix}  ${endingOpt}` :
       `${prefix} ${this.listTitle} for ${this.parentEntity} ${suffix}  ${endingOpt}`);

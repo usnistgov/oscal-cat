@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { ActionArrayAddressOpsComponent } from './action-array-address-ops.component';
+import { OscalCatAddressesComponent } from './action-cat-addresses.component';
 
 describe('ActionArrayAddressOpsComponent', () => {
-  let component: ActionArrayAddressOpsComponent;
-  let fixture: ComponentFixture<ActionArrayAddressOpsComponent>;
+  let component: OscalCatAddressesComponent;
+  let fixture: ComponentFixture<OscalCatAddressesComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ActionArrayAddressOpsComponent ],
+      declarations: [OscalCatAddressesComponent],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ActionArrayAddressOpsComponent);
+    fixture = TestBed.createComponent(OscalCatAddressesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

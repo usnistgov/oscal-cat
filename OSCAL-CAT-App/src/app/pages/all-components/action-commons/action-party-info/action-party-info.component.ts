@@ -39,6 +39,8 @@ import { LogManagerService } from './../../../../providers/logging/log-manager.s
 import { PartyOrganizationOrPerson, PartyType, Address } from './../../../../interfaces/oscal-types/oscal-catalog.types';
 import { ArrayStringsComponent } from '../action-array-strings/action-array-strings.component';
 import { ArrayLinksComponent } from '../action-array-links/action-array-links.component';
+import { ArrayExternalIDsComponent } from '../action-array-external-ids/action-array-external-ids.component';
+import { PropertiesArrayComponent } from '../action-array-properties/action-array-properties.component';
 export enum EntityTypeIcons {
   Person = 'body-outline',
   Party = 'beer-outline',
@@ -78,6 +80,8 @@ export class ActionPartyInfoComponent implements OnInit, AfterViewInit {
   @ViewChild('organizationsList') organizationsListUI: ArrayStringsComponent;
   @ViewChild('linksList') linksListUI: ArrayLinksComponent;
   @ViewChild('uuidsList') uuidsListUI: ArrayStringsComponent;
+  @ViewChild('extIdsList') externalListUI: ArrayExternalIDsComponent;
+  @ViewChild('propsList') propsListUI: PropertiesArrayComponent;
 
   rootForm: FormGroup;
   localForm: FormGroup;
@@ -96,6 +100,11 @@ export class ActionPartyInfoComponent implements OnInit, AfterViewInit {
     // Hook up to the parent control's Form
     this.rootForm = this.parentFormDirect.form;
   }
+
+  isSaveAllowed(): boolean {
+    return this.createNew ? this.localForm.valid : true;
+  }
+
 
   ngAfterViewInit() {
     // this.partyInfo.addresses
@@ -269,26 +278,25 @@ export class ActionPartyInfoComponent implements OnInit, AfterViewInit {
       uuid: this.localForm.get('uuid').value,
       remarks: this.localForm.get('remarks').value,
     };
-    // this.partyInfo.addresses
-    // this.addressListUI.formCommit();
     data.addresses = this.addressListUI.formCommitArray();
     data.links = this.linksListUI.formCommitArray();
     data.emailAddresses = this.emailsListUI.formCommitArray();
-    // data.externalIDS = this.external
-    // data.locationUuids = this
+    data.externalIDS = this.externalListUI.formCommitArray();
+    data.locationUuids = this.uuidsListUI.formCommitArray();
     data.memberOfOrganizations = this.organizationsListUI.formCommitArray();
     data.telephoneNumbers = this.phonesListUI.formCommitArray();
-    // data.props = this.p
-    // data.externalIDS = this.
+    data.props = this.propsListUI.formCommitArray();
     this.saveTab.emit(data);
 
     /*
+    // Remote chance to use it in modal for ad-on edits
     if (this.isModal) {
       this.modalController.dismiss(data);
     } else {
       this.theParent.closeAddEditPOoP(this.controlID, true, data);
     }
     */
+
   }
 
 }

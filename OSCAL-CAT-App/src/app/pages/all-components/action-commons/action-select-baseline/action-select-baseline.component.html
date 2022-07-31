@@ -1,44 +1,94 @@
 <div>
   <div style="border: 1px; width: 100%;">
-    <ion-button (click)="flipShowBAselineOptions()" color="">
-      Baselines
-      <ion-icon icon="options-outline"></ion-icon>
-    </ion-button>
-    <ion-grid class="baseline-grid" *ngIf="this.showBaselinesOptions">
-      <ion-row class="baseline-grid">
-        <ion-col class="baseline-grid">
-          <ion-toolbar class="topless, bottomless">
-            <ion-buttons class="" style="display: flex;justify-content: space-evenly;">
 
-              <!-- Mark baselines -->
-              <ion-tab-button [ngClass]="'tab-selected'">
-                <ion-icon icon="options-outline"></ion-icon>
-                <ion-label>Mark Baselines</ion-label>
-                <ion-badge *ngIf="false">Baselines Marked</ion-badge>
-              </ion-tab-button>
+    <ion-item>
 
-              <!-- (click)="showTab4POoP($event,'Person', 'body-outline')"-->
-              <ion-tab-button [ngClass]="'tab-selected'">
-                <ion-icon icon="checkmark-outline"></ion-icon>
-                <ion-label>Pre-Select Baseline...</ion-label>
-                <ion-badge *ngIf="false">Adding Entity</ion-badge>
-              </ion-tab-button>
-              <!-- 
-                [ngClass]="{'tab-selected' : activeEntityAddTabName=='Role'}"
-                (click)="showTab4AddRole($event,'Role', 'people-outline')"
-                *ngIf="activeEntityAddTabName=='Role'"
-              -->
-              <ion-tab-button>
-                <ion-icon icon="cut-outline"></ion-icon>
-                <ion-label>Tailor Out Baseline...</ion-label>
-                <ion-badge *ngIf="false">Adding Role</ion-badge>
-              </ion-tab-button>
 
-            </ion-buttons>
-          </ion-toolbar>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+
+      <ion-grid>
+
+        <ion-row style="display: flex;justify-content: space-evenly;">
+          <ion-col>
+            <!-- <ion-item> </ion-item> -->
+
+            <ion-button (click)="flipShowBaselineOptions()">
+              Baselines
+              <ion-icon icon="options-outline"></ion-icon>
+            </ion-button>
+          </ion-col>
+
+          <ion-col class="topless, bottomless">
+
+            <ion-item *ngIf="this.showBaselinesOptions" style="display: flex;justify-content: space-evenly;">
+
+              <ion-buttons class="" style="display: flex;justify-content: space-evenly;" slot="start">
+                <!-- Mark baselines -->
+                <ion-tab-button [ngClass]="'tab-selected'" class="topless, bottomless" (click)="this.setState(1)">
+                  <ion-icon icon="options-outline" [color]="this.stateColor(1)"></ion-icon>
+                  <ion-label class="topless, bottomless" [color]="this.stateColor(1)">Mark All Baselines</ion-label>
+                  <ion-badge *ngIf="this.isActive(1)">Activate</ion-badge>
+                </ion-tab-button>
+
+                <!-- Pre-Check baseline -->
+                <ion-tab-button [ngClass]="'tab-selected'" class="topless, bottomless" (click)="this.setState(2)">
+                  <ion-icon icon="checkmark-outline" [color]="this.stateColor(2)"></ion-icon>
+                  <ion-label class="topless, bottomless" [color]="this.stateColor(2)">Pre-Check Baseline...</ion-label>
+                  <ion-badge *ngIf="this.isActive(2)">Activate</ion-badge>
+                </ion-tab-button>
+
+                <!-- Cut-Out baseline -->
+                <ion-tab-button [ngClass]="'tab-selected'" class="topless, bottomless" (click)="this.setState(4)">
+                  <ion-icon icon="cut-outline" [color]="this.stateColor(4)"></ion-icon>
+                  <ion-label class="topless, bottomless" [color]="this.stateColor(4)">Cut Out Baseline...</ion-label>
+                  <ion-badge *ngIf="this.isActive(4)">Activate</ion-badge>
+                </ion-tab-button>
+              </ion-buttons>
+
+            </ion-item>
+
+          </ion-col>
+        </ion-row>
+
+        <ion-row *ngIf="this.showBaselines() && this.showBaselinesOptions">
+          <ion-col>
+            <ion-item>
+              <ion-list>
+                <ion-radio-group name="level" value="low">
+                  <!--             
+                  <ion-list-header>
+                    <ion-label>Risk Tolerance</ion-label>
+                  </ion-list-header>
+                  -->
+                  <ion-row>
+                    <ion-col>
+                      <ion-item>
+                        <ion-label>Low</ion-label>&nbsp;
+                        <ion-radio value="low"></ion-radio>
+                      </ion-item>
+                    </ion-col>
+                    <ion-col>
+                      <ion-item>
+                        <ion-label>Medium</ion-label>&nbsp;
+                        <ion-radio value="medium"></ion-radio>
+                      </ion-item>
+                    </ion-col>
+                    <ion-col>
+                      <ion-item>
+                        <ion-label>High</ion-label>&nbsp;
+                        <ion-radio value="heigh"></ion-radio>
+                      </ion-item>
+                    </ion-col>
+                  </ion-row>
+
+                </ion-radio-group>
+              </ion-list>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+      </ion-grid>
+
+    </ion-item>
+
   </div>
-
 </div>

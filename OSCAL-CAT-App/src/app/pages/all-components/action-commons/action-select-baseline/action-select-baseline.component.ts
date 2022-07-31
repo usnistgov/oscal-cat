@@ -25,6 +25,13 @@
  */
 import { Component, OnInit } from '@angular/core';
 
+enum StateMark {
+  noState = 0,
+  markAll = 1,
+  preCheck = 2,
+  cutOut = 4,
+}
+
 @Component({
   selector: 'oscal-select-baseline',
   templateUrl: './action-select-baseline.component.html',
@@ -35,20 +42,45 @@ export class SelectBaselineComponent implements OnInit {
 
   // Baselines Handling
   showBaselinesOptions = false;
+  showBaselinesRadio = false;
   baselinesMarked = false;
   baselinesSelected = false;
   baselinesTailored = false;
-
+  formState: StateMark = StateMark.noState;
 
   constructor() { }
 
   ngOnInit() { }
 
-
-  // BAselines implementation
-  flipShowBAselineOptions() {
+  // Baselines implementation
+  flipShowBaselineOptions() {
     console.log(`Flipping show to ${!this.showBaselinesOptions}`)
     this.showBaselinesOptions = !this.showBaselinesOptions;
+  }
+
+  setState(value: StateMark) {
+    this.formState = value;
+  }
+
+  stateColor(value: StateMark) {
+    if (value == this.formState) {
+      return 'success';
+    } else {
+      return '';
+    }
+  }
+
+  isActive(value: StateMark) {
+    return value == this.formState;
+  }
+
+  markAllBaselines() {
+    this.formState = StateMark.markAll;
+  }
+
+  showBaselines(): boolean {
+    this.showBaselinesRadio = (this.formState == StateMark.cutOut || this.formState == StateMark.preCheck);
+    return this.showBaselinesRadio;
   }
 
 }

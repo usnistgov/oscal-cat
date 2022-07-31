@@ -14,8 +14,8 @@
             title="Press to cancel changes to {{getActionEntityTitle()}}">
             <ion-icon slot="start" icon="close-circle-outline"></ion-icon>Cancel
           </ion-button>
-          <ion-button [disabled]="!localForm.valid" (click)="onSubmitData()" [color]="!localForm.valid?'dark':'success'"
-            title="Press to {{actionName}} {{entryName}}">
+          <ion-button [disabled]="!this.isSaveAllowed()" (click)="onSubmitData()"
+            [color]="!localForm.valid?'dark':'success'" title="Press to {{actionName}} {{entryName}}">
             <ion-icon slot="start" icon="{{iconName}}"></ion-icon>Save {{getActualPartyName()}}
             <!-- [color]="!localForm.valid?'dark':'success'" color="success" [class.button-crossR]="!localForm.valid"-->
           </ion-button>
@@ -167,10 +167,10 @@
           <ion-row>
             <ion-col>
               <!--  Properties -->
-              <oscal-external-ids #propsList [ID]="'propsList'" [stringData]="this.partyInfo.externalIDS"
-                listTitle="External IDs" [parentEntity]="entryName" [parentName]="getActualPartyName()"
-                inputName="External ID" [isArrayOptionalText]="'(Optional)'">
-              </oscal-external-ids>
+              <oscal-array-properties #propsList [ID]="'propsList'" [stringData]="this.partyInfo.props"
+                listTitle="Properties" [parentEntity]="entryName" [parentName]="getActualPartyName()"
+                inputName="Property" [isArrayOptionalText]="'(Optional)'">
+              </oscal-array-properties>
             </ion-col>
           </ion-row>
 
@@ -189,7 +189,7 @@
             <ion-col>
               <!--  External IDs -->
               <oscal-external-ids #extIdsList [ID]="'extIds'" [stringData]="this.partyInfo.externalIDS"
-                listTitle="External IDs" [parentEntity]="entryName" [parentName]="getActualPartyName()"
+                listTitle="Party External IDs" [parentEntity]="entryName" [parentName]="getActualPartyName()"
                 inputName="External ID" [isArrayOptionalText]="'(Optional)'">
               </oscal-external-ids>
             </ion-col>
