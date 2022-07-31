@@ -70,7 +70,7 @@ export class ArrayStringsComponent implements OnInit, IMustCommitFormDataArray {
   }
 
   ngOnInit() {
-    this.stringData = !!this.stringData ? this.stringData : [''];
+    this.stringData = !!this.stringData ? this.stringData : new Array<string>();
     this.localForm = this.parentFormDirect.form;
 
     // this.localForm.addControl(this.ID, this.formBuilder.array(this.getControlsArray(this.stringData)));
@@ -89,7 +89,7 @@ export class ArrayStringsComponent implements OnInit, IMustCommitFormDataArray {
       (element: string, index: number) => {
         // groupObject['email_' + index.toString()] = [element, Validators.email];
         controlArray.push(this.getNewFormControl(element));
-        console.log(`Element[${index}]: ${element}`);
+        // console.log(`Element[${index}]: ${element}`);
       });
     return controlArray;
   }
@@ -146,7 +146,7 @@ export class ArrayStringsComponent implements OnInit, IMustCommitFormDataArray {
     const returnData = new Array<string>();
     currentEntries.controls.forEach(
       (element, index) => {
-        const strVal = element.value.toString();
+        const strVal = element.get('entry').value.toString();
         if (!!strVal && !!strVal.length) {
           returnData.push(strVal);
         }
