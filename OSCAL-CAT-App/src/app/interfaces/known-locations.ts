@@ -64,6 +64,8 @@ export interface KnownOscalFileLocation {
 }
 
 export enum KnownCatalogNames {
+    UNDEFINED_CAT = 0x00,
+
     NIST_800_53_Rev4 = 0x01,
     NIST_Low_Rev4 = 0x02,
     NIST_Moderate_Rev4 = 0x03,
@@ -74,4 +76,6 @@ export enum KnownCatalogNames {
     NIST_Moderate_Rev5 = 0x0B,
     NIST_High_Rev5 = 0x0C,
     NIST_Privacy_Rev5 = 0x0D,
+
+    CUSTOM_CAT = 0x10,
 }

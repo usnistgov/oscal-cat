@@ -34,14 +34,18 @@ import { TreeNodeType } from './../app-tree/tree-elements';
 
 import {
     Catalog,
-    PublicationMetadata
+    PublicationMetadata,
+    Profile
 } from "src/app/interfaces/oscal-types/oscal-catalog.types";
-import { KnownOscalFileLocation } from "src/app/interfaces/known-locations";
+import { KnownCatalogNames, KnownOscalFileLocation } from "src/app/interfaces/known-locations";
 
 
 export enum NamedSessionNodes {
     SAVED_SESSIONS = 'ALL-OSCAL-SESSIONS',
     ACTIVE_SESSION = 'OSCAL-CURRENT-SESSION',
+    SAVED_ENTRIES = 'ALL-OSCAL-ENTRY-SESSION',
+    ACTIVE_ENTIRE = 'OSCAL-CURRENT-ENTIRE-SESSION',
+    // Suffixes for other
     SAVED_META = 'OSCAL-SAVED-META',
     SAVED_INCLUDE = 'OSCAL-SAVED-INCLUDES',
     SAVED_MODS = 'OSCAL-SAVED-MODS',
@@ -51,6 +55,8 @@ export enum NamedSessionNodes {
 export class SessionEntry {
     public uuid: string;
     public name: string;
+    public fullName?: string;
+    public catType?: KnownCatalogNames;
 
     constructor(uuid: string, name: string) {
         this.uuid = uuid;
@@ -64,23 +70,30 @@ export class SessionData extends SessionEntry {
     }
 
 
-    public fullName?: string;
-
     public knownCat?: KnownOscalFileLocation;
     public catalog?: Catalog;
+    public profile?: Profile;
+
     public meta?: PublicationMetadata;
 
     public catTree?: TreeNodeType;
     public proTree?: TreeNodeType;
     public regroupTree?: TreeNodeType;
+
+
 }
 
 @Injectable({
     providedIn: 'root'
 })
 export class CurrentSessionData extends KvServiceBase {
-    static currentActiveSession: SessionData;
-    static currentSessionUUID: string;
+
+    private static currentActiveEntry: SessionEntry;    // The shallow init object to pull out session uuids
+    private static currentActiveSession: SessionData;   // The deeper version of the session with actual objects in it 
+    private static currentSessionUUID: string;
+
+    static sessionEntries: Array<SessionEntry>;
+
     session_id: string;
     savedSessions: string[] = [];
     storage: Storage;
@@ -103,13 +116,6 @@ export class CurrentSessionData extends KvServiceBase {
         return UUIDv4();
     }
 
-    activateNewSession(name: string): string {
-
-        const uuid = this.getNewSessionUUID();
-        const newSession = new SessionData(uuid, name);
-        this.saveActiveSession(newSession)
-        return this.session_id
-    }
 
     getSavedSessions(): Array<string> {
         this.getKeyValueObject<Array<SessionData>>(NamedSessionNodes.SAVED_SESSIONS)
@@ -138,19 +144,62 @@ export class CurrentSessionData extends KvServiceBase {
         return undefined;
     }
 
-    saveActiveSession(session: SessionData): SessionData {
+    public set ActiveSession(session: SessionData) {
         this.setKeyValueObject<SessionData>(
-            NamedSessionNodes.ACTIVE_SESSION, session);
-
-        return this.getActiveSession();
+            this.getStoreEntryName(session.uuid, NamedSessionNodes.ACTIVE_SESSION),
+            session);
+        CurrentSessionData.currentActiveSession = session;
+        CurrentSessionData.currentSessionUUID = session.uuid;
     }
 
-    getActiveSession(): SessionData {
+    public get ActiveSession(): SessionData {
         if (CurrentSessionData.currentActiveSession) {
             return CurrentSessionData.currentActiveSession;
         } else {
-            return this.readActiveSession();
+            var id;
+            if (CurrentSessionData.currentSessionUUID) {
+                id = this.getStoreEntryName(CurrentSessionData.currentSessionUUID, NamedSessionNodes.ACTIVE_SESSION)
+            } else if (CurrentSessionData.currentActiveSession && CurrentSessionData.currentActiveSession.uuid) {
+                id = this.getStoreEntryName(CurrentSessionData.currentActiveSession.uuid, NamedSessionNodes.ACTIVE_SESSION)
+            }
+            this.getKeyValueObject<SessionData>(id).then(
+                (X: SessionData) => { CurrentSessionData.currentActiveSession = X; }
+            ).catch(
+                () => { console.log(`Could not read Session-Value ${id}`) }
+            );
         }
+    }
+
+
+    setEntry<Type>(nodeName: NamedSessionNodes, value: Type): void {
+
+    }
+
+    getStoreEntryName(uuid: string, namedNode: NamedSessionNodes) {
+        return `${uuid}--${namedNode}`
+    }
+
+    getEntry<Type>(uuid: string, namedNode: NamedSessionNodes): Type {
+        const storeEntryName = this.getStoreEntryName(uuid, namedNode)
+        this.getKeyValueObject<Type>(storeEntryName)
+            .then((data: Type) => {
+                return data;
+            })
+            .catch((error) => {
+                console.log(
+                    `Promise of the ` +
+                    ` ${storeEntryName}:` +
+                    ` is not complete ${JSON.stringify(error)}`);
+            })
+        return undefined;
+    }
+
+    activateNewSession(name: string): string {
+
+        const uuid = this.getNewSessionUUID();
+        const newSession = new SessionData(uuid, name);
+        this.ActiveSession = newSession
+        return this.session_id
     }
 
 }

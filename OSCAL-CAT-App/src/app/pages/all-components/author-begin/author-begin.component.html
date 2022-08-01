@@ -32,6 +32,17 @@
                             <ion-radio value="{{itemIndex}}">
                             </ion-radio>&nbsp;&nbsp;&nbsp;&nbsp;
                             <ion-label>{{oscalFile.cat_label}}</ion-label>
+                            <ion-item>
+                                <ion-label>Add</ion-label>
+                                <ion-item>
+                                    <ion-label icon="newspaper-outline">Cat </ion-label>
+                                    <ion-checkbox slot="end"></ion-checkbox>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-label icon="newspaper-outline">Profile </ion-label>
+                                    <ion-checkbox slot="end"></ion-checkbox>
+                                </ion-item>
+                            </ion-item>
                             <div>
                             </div>
                         </ion-item>
@@ -42,7 +53,7 @@
         <br />
         <div *ngIf="!this.newDraft && this.hasSavedWork()">
 
-            <ion-grid *ngIf="this.savedWork">
+            <ion-grid *ngIf="this.savedWork && this.savedWork.length>0">
                 <ion-row>
                     <ion-col>
                         <ion-title>&nbsp;&nbsp;Continue with the Previously Saved Work</ion-title>
@@ -72,4 +83,16 @@
             </ion-grid>
         </div>
     </ion-radio-group>
+    <!--
+
+    <oscal-cat-controls #catControlsTab [ID]="'catControls'" [controls]="[undefined]" actionName="Add"
+        iconName="location-outline" parentName="Meta-Information" inputName="Location" [singleMode]="true"
+        hideAddButton="true" [hideAddElementButton]="true" [showAddCancelButtons]="true"
+        (closeTab)="cancelAddTab($event)" (saveTab)="this.addEditLocation($event, false)">
+    </oscal-cat-controls>
+    <oscal-cat-params></oscal-cat-params>
+
+
+
+ -->
 </div>

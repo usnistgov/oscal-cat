@@ -167,7 +167,7 @@
           <ion-row>
             <ion-col>
               <!--  Properties -->
-              <oscal-array-properties #propsList [ID]="'propsList'" [stringData]="this.partyInfo.props"
+              <oscal-array-properties #propsList [ID]="'propsList'" [propertiesArray]="this.partyInfo.props"
                 listTitle="Properties" [parentEntity]="entryName" [parentName]="getActualPartyName()"
                 inputName="Property" [isArrayOptionalText]="'(Optional)'">
               </oscal-array-properties>
@@ -188,7 +188,7 @@
           <ion-row>
             <ion-col>
               <!--  External IDs -->
-              <oscal-external-ids #extIdsList [ID]="'extIds'" [stringData]="this.partyInfo.externalIDS"
+              <oscal-external-ids #extIdsList [ID]="'extIds'" [externalIDsArray]="this.partyInfo.externalIDS"
                 listTitle="Party External IDs" [parentEntity]="entryName" [parentName]="getActualPartyName()"
                 inputName="External ID" [isArrayOptionalText]="'(Optional)'">
               </oscal-external-ids>

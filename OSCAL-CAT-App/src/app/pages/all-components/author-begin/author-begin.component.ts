@@ -60,31 +60,35 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
 
   readSavedWork() {
     if (this.session.isKeyValue(NamedSessionNodes.SAVED_SESSIONS)) {
-      this.session.getKeyValueObject<Array<SessionData>>(NamedSessionNodes.SAVED_SESSIONS).then(
-        (value: Array<SessionData>) => {
-          if (value && Array.isArray(value) && value.length > 0) {
-            this.savedWork = value;
+      this.session.getKeyValueObject<Array<SessionData>>(NamedSessionNodes.SAVED_SESSIONS)
+        .then(
+          (value: Array<SessionData>) => {
+            if (value && Array.isArray(value) && value.length > 0) {
+              this.savedWork = value;
 
-          }
-          /*        // Helps to save time when debugging session initialization   
-                    else {
-                      this.savedWork = undefined;
-                      // [];
-                      const emptyWork: Array<SessionData> =
-                        [
-                          {
-                            name: 'Work item 1',
-                            uuid: UUIDv4(),
-                          },
-                          {
-                            name: 'Work Item 1001',
-                            uuid: UUIDv4(),
-                          }];
-                      this.session.setKeyValueObject<Array<SessionData>>(
-                        NamedSessionNodes.SAVED_SESSIONS, emptyWork);
-                    } 
-          */
-        });
+            } else {
+              this.savedWork = Array<SessionData>();
+            }
+
+            /*        // Helps to save time when debugging session initialization   
+                      else {
+                        this.savedWork = undefined;
+                        // [];
+                        const emptyWork: Array<SessionData> =
+                          [
+                            {
+                              name: 'Work item 1',
+                              uuid: UUIDv4(),
+                            },
+                            {
+                              name: 'Work Item 1001',
+                              uuid: UUIDv4(),
+                            }];
+                        this.session.setKeyValueObject<Array<SessionData>>(
+                          NamedSessionNodes.SAVED_SESSIONS, emptyWork);
+                      } 
+            */
+          });
     }
   }
 
@@ -149,14 +153,15 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
         }
         this.savedWork.push(newSession);
         console.log(`savedWork Array has Length:${this.savedWork.length}`);
-        this.session.setKeyValueObject<Array<SessionData>>(NamedSessionNodes.SAVED_SESSIONS, this.savedWork);
         console.log(`Saved work Array ${this.savedWork}`);
         console.log(this.savedWork);
+        // TODO: Fix the below with better wrapper
+        this.session.setKeyValueObject<Array<SessionData>>(NamedSessionNodes.SAVED_SESSIONS, this.savedWork)
       }
-      this.session.saveActiveSession(newSession);
+      this.session.ActiveSession = newSession;
     } else if (!this.chosenOscalCat && this.chosenSession) {
       // Session was already persisted
-      this.session.saveActiveSession(this.chosenSession);
+      this.session.ActiveSession = this.chosenSession;
     }
   }
 
@@ -164,9 +169,6 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     console.log('Begin-Page Will Destroy!!!!!!');
     this.activateSession();
   }
-
-
-
 
   private removeWorkItem($event: Event, theItemIndex: number) {
     // TODO: before killing existing work, it would be nice 

@@ -35,11 +35,11 @@ export class CatMetaPage implements OnInit, AfterViewInit {
 
   @ViewChild(AuthorBeginComponent, { static: false }) private metaInfo: AuthorBeginComponent;
 
-  constructor() { }
+  constructor() {
+
+  }
 
   ngOnInit() {
-    const a = 1;
-    console.log(`A=${a}`);
   }
 
   processInputs() {
@@ -54,6 +54,7 @@ export class CatMetaPage implements OnInit, AfterViewInit {
 
   ionViewWillLeave(): void {
     // About to leave tha page - MUST update the session object
+    console.log(`Updating the Session with Meta-Data`)
 
   }
 

@@ -32,13 +32,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { Address, Role } from '../../../../interfaces/oscal-types/oscal-catalog.types';
 import { OscalCatalogEmpties } from '../../../../interfaces/oscal-types/oscal-catalog-factory';
 import { LogManagerService } from '../../../../providers/logging/log-manager.service';
+import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancestor-base.component';
 
 @Component({
   selector: 'oscal-address-list',
   templateUrl: './action-array-addresses.component.html',
   styleUrls: ['./action-array-addresses.component.scss'],
 })
-export class ArrayAddressesComponent implements OnInit, AfterViewInit {
+export class ArrayAddressesComponent implements OnInit, AfterViewInit, IMustCommitFormDataArray {
 
   @Input() public localForm: FormGroup;
   @Input() public partyName: string;
@@ -50,7 +51,7 @@ export class ArrayAddressesComponent implements OnInit, AfterViewInit {
   @Input() public isSingleMode?: boolean;
 
   @Input() public isArrayOptionalText?: string;
-  @Input() public isArrayOptional?: boolean;
+  @Input() public isElementOptional?: string;
 
 
   roleAddress: Address;
@@ -160,15 +161,15 @@ export class ArrayAddressesComponent implements OnInit, AfterViewInit {
     lines.forEach((theLine: string, index: number) => {
       // groupObject['email_' + index.toString()] = [element, Validators.email];
       controlArray.push(this.formBuilder.group({ extraLine: [theLine, Validators.required] }));
-      console.log(`Extra-Line #${index}: ${theLine}`);
+      // console.log(`Extra-Line #${index}: ${theLine}`);
     });
     return controlArray;
   }
 
-  onAddExtraLine(addressIndex: number, itemIndex = -10) {
+  onAddExtraLine(addressIndex: number, itemIndex = 0) {
     // this.addressData.addrLines.push(theValue);
     // const topItems = this.addressFormList as FormArray; // Dig
-    console.log(`A-Index:${addressIndex}; L-Index:${itemIndex};`);
+    // console.log(`A-Index:${addressIndex}; L-Index:${itemIndex};`);
     const currentAddress = this.addressFormList.at(addressIndex);
     const items = currentAddress.get('extraLines') as FormArray;
     // console.log(`Array Len: ${items.length}`);
@@ -191,7 +192,7 @@ export class ArrayAddressesComponent implements OnInit, AfterViewInit {
     const prefix = ((count > 0) ? '' : `No`); // `>>Name/Entity::${parentName}/${parentEntity}<<`
     const sufSuf = (count === 1) ? '' : 'es'; // Plural Suffix
     const suffix = ((count > 0) ? `[${count} ${inputName}${sufSuf}]` : '');
-    const endingOpt = (!this.isArrayOptional) ? '' : this.isArrayOptional;
+    const endingOpt = (!this.isArrayOptionalText) ? '' : this.isArrayOptionalText;
     const title = (!!entityName ?
       `${prefix} ${listTitle} for ${entityName} ${suffix} ${endingOpt}` :
       `${prefix} ${listTitle} for ${parentEntity} ${suffix} ${endingOpt}`);
@@ -199,6 +200,7 @@ export class ArrayAddressesComponent implements OnInit, AfterViewInit {
   }
 
   getAddressTitle(): string {
+    const endingOpt = (!this.isElementOptional) ? '' : this.isElementOptional;
     const parentEntity = (this.partyName ? `for ${this.partyName}`
       : (this.entryName ? `for ${this.entryName}` : ''));
     return `Address ${parentEntity} `
@@ -216,7 +218,7 @@ export class ArrayAddressesComponent implements OnInit, AfterViewInit {
 
   onRemoveAddress(i: number) {
     const list: FormArray = this.addressesGroup.get('addressArray') as FormArray;
-    list.controls.splice(i, 1); // Remove array element i
+    list.controls.splice(i, 1); // Remove array element i    
   }
 
   nameChanged() {
@@ -230,6 +232,44 @@ export class ArrayAddressesComponent implements OnInit, AfterViewInit {
 
   getEmptyAddress() {
     return OscalCatalogEmpties.getEmptyAddress();
+  }
+
+  formCommitArray(): Array<Address> {
+    const addressList = new Array<Address>()
+    // for (let i = 0; i < 3; i++) {
+    //   const addr = this.getEmptyAddress();
+    //   addr.addrLines = [`Line #1`, 'Line2', "Line 3"];
+    //   addr.city = `City #${i}`
+    //   this.addressList.push(addr);
+    // }
+    const addressFormList = this.addressesGroup.get('addressArray')['controls'] as FormArray;
+    console.log(addressFormList);
+
+    for (let index = 0; index < addressFormList.length; index++) {
+      const address = addressFormList[index];
+      console.log(address);
+      console.log(address.get('type').value);
+      console.log(address.get('addressTo').value);
+      console.log(address.get('streetAddress').value);
+
+      const addr = this.getEmptyAddress();
+
+      addr.type = address.get('type').value;
+      addr.state = address.get('state').value;
+      addr.country = address.get('country').value;
+      addr.postalCode = address.get('postalCode').value;
+      addr.addrLines = [address.get('addressTo').value, address.get('streetAddress').value];
+
+      const currentAddress = this.addressFormList.at(index);
+      const lines = currentAddress.get('extraLines')['controls'] as FormArray;
+      // const lines = address.get('extraLines') as FormArray;
+      for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+        const line = lines[lineIndex];
+        addr.addrLines.push(line.get('extraLine').value)
+      }
+      addressList.push(addr);
+    }
+    return addressList;
   }
 
 }
