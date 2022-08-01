@@ -5,7 +5,7 @@ env:
   DEPLOY_CONFIGURATION: production
   DEPLOY_REPO: usnistgov/oscal-tools
   DEPLOY_REPO_CHECKOUT_PATH: deploy
-  DEPLOY_REPO_GIT_REF: nist-pages-cat-deploy-test
+  DEPLOY_REPO_GIT_REF: nist-pages
   MAIN_REPO_CHECKOUT_PATH: main
 on:
   pull_request:
@@ -88,16 +88,18 @@ jobs:
       id: restore-cache-build
     - name: Copy Build to Deploy Repo
       run: |
-        pwd
         pushd "${DEPLOY_REPO_CHECKOUT_PATH}"
         mkdir -p "${DEPLOY_AUTOCOMMIT_PATHSPEC}"
         # If existing content, delete existing content from previous commit and
         # keep nist-pages branch clean in the deploy subdirectory.
-        rm -rf "${DEPLOY_AUTOCOMMIT_PATHSPEC}/*"
+        git rm -rf "${DEPLOY_AUTOCOMMIT_PATHSPEC}/*"
         popd
         pushd "${MAIN_REPO_CHECKOUT_PATH}"
         ls -lha
         cp -r OSCAL-CAT-App/www/. "../${DEPLOY_REPO_CHECKOUT_PATH}/${DEPLOY_AUTOCOMMIT_PATHSPEC}"
+        popd
+        pushd "${DEPLOY_REPO_CHECKOUT_PATH}"
+        git add "${DEPLOY_AUTOCOMMIT_PATHSPEC}"
         popd
       id: copy-build-deploy-target
     - name: Zip Website Build for Upload
