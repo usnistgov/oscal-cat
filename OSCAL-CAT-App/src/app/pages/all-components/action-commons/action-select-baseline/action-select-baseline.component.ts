@@ -24,12 +24,14 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 import { Component, OnInit } from '@angular/core';
+import { BaselineCatComponent } from '../../baseline-cat/baseline-cat.component';
 
 enum StateMark {
   noState = 0,
   markAll = 1,
   preCheck = 2,
-  cutOut = 4,
+  cutOut = 3,
+  rollBack = 4,
 }
 
 @Component({
@@ -47,15 +49,42 @@ export class SelectBaselineComponent implements OnInit {
   baselinesSelected = false;
   baselinesTailored = false;
   formState: StateMark = StateMark.noState;
-
+  actionNames = ['No-State',
+    'Mark All Baselines',
+    'Pre-Check Baseline ...',
+    'Cut-Out Baseline ...',
+    'Roll Back Changes'];
   constructor() { }
 
   ngOnInit() { }
 
   // Baselines implementation
-  flipShowBaselineOptions() {
+  flipShowBaselineOptions(): void {
     console.log(`Flipping show to ${!this.showBaselinesOptions}`)
     this.showBaselinesOptions = !this.showBaselinesOptions;
+  }
+
+  getIconForSelect(): string {
+    if (this.formState == StateMark.markAll) {
+      return 'brush';
+    } if (this.formState == StateMark.rollBack) {
+      return 'list';
+    } if (this.formState == StateMark.preCheck) {
+      return 'checkmark';
+    } if (this.formState == StateMark.cutOut) {
+      return 'cut-outline';
+    }
+  }
+
+  getTitle(index: number): string {
+    return this.actionNames[index];
+  }
+
+  processBaseline() {
+  }
+
+  optionChosen(): boolean {
+    return (StateMark.noState != this.formState);
   }
 
   setState(value: StateMark) {

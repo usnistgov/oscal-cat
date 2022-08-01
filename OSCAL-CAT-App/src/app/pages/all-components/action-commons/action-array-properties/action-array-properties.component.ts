@@ -43,12 +43,12 @@ import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancesto
 export class PropertiesArrayComponent extends ActionAncestorSimpleArrayComponent implements OnInit, IMustCommitFormDataArray {
 
   @Input() propertiesArray: Array<Property>;
+  @Input() inputDataArray: Array<Property>;
 
   formCommitArray(): Array<Property> {
-    // Returns the edited Array of Links Back
-    // With the fieldToMap mapping -use this method of the parent object
-    const editedLinks = this.getResultArrayByFieldToMap<Property>(OscalCatalogEmpties.getEmptyProperty);
-    return editedLinks
+    // Returns the edited Array of Props Back
+    const editedProps = this.getResultArrayByFieldToMap<Property>(OscalCatalogEmpties.getEmptyProperty);
+    return editedProps
   }
 
   constructor(
@@ -124,33 +124,7 @@ export class PropertiesArrayComponent extends ActionAncestorSimpleArrayComponent
     });
     this.localForm.addControl(this.ID, this.subForm);
   }
-  /*
 
-    getControlsArray(): FormArray {
-      const controls = new Array<FormGroup>();
-      if (this.propertiesArray && this.propertiesArray.length > 0) {
-        this.propertiesArray.forEach(
-          (dataEntry: Property, idx: number) => {
-            controls.push(this.getNewFormGroup(dataEntry));
-          });
-      }
-      this.subArray = new FormArray(controls);
-      return this.subArray;
-    }
-
-    getNewFormGroup(data?: Property): FormGroup {
-      const group = {};
-      for (const [key, value] of this.inputsMap) {
-        console.log(`Key=${key}, Val=${value}`);
-        group[value.fieldToMap] = new FormControl(
-          (data ? data[value.fieldToMap] : ''),
-          (value.validateAs ? value.validateAs : [])
-        );
-      }
-      return new FormGroup(group);
-    }
-
-   */
   getControlsArray() {
     return this.getControlsArrayByFieldToMap<Property>(this.propertiesArray);
   }

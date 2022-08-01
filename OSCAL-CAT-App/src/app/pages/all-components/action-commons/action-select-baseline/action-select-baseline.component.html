@@ -7,7 +7,7 @@
 
       <ion-grid>
 
-        <ion-row style="display: flex;justify-content: space-evenly;">
+        <ion-row style="display: flex;justify-content: space-evenly;" class="topless, bottomless">
           <ion-col>
             <!-- <ion-item> </ion-item> -->
 
@@ -24,48 +24,66 @@
               <ion-buttons class="" style="display: flex;justify-content: space-evenly;" slot="start">
                 <!-- Mark baselines -->
                 <ion-tab-button [ngClass]="'tab-selected'" class="topless, bottomless" (click)="this.setState(1)">
-                  <ion-icon icon="options-outline" [color]="this.stateColor(1)"></ion-icon>
-                  <ion-label class="topless, bottomless" [color]="this.stateColor(1)">Mark All Baselines</ion-label>
+                  <ion-icon icon="brush-outline" [color]="this.stateColor(1)"></ion-icon>
+                  <ion-label class="topless, bottomless" [color]="this.stateColor(1)">{{ this.getTitle(1) }}</ion-label>
                   <ion-badge *ngIf="this.isActive(1)">Activate</ion-badge>
                 </ion-tab-button>
 
                 <!-- Pre-Check baseline -->
                 <ion-tab-button [ngClass]="'tab-selected'" class="topless, bottomless" (click)="this.setState(2)">
-                  <ion-icon icon="checkmark-outline" [color]="this.stateColor(2)"></ion-icon>
-                  <ion-label class="topless, bottomless" [color]="this.stateColor(2)">Pre-Check Baseline...</ion-label>
+                  <ion-icon icon="checkmark" [color]="this.stateColor(2)"></ion-icon>
+                  <ion-label class="topless, bottomless" [color]="this.stateColor(2)">{{ this.getTitle(2) }}</ion-label>
                   <ion-badge *ngIf="this.isActive(2)">Activate</ion-badge>
                 </ion-tab-button>
 
                 <!-- Cut-Out baseline -->
+                <ion-tab-button [ngClass]="'tab-selected'" class="topless, bottomless" (click)="this.setState(3)">
+                  <ion-icon icon="cut-outline" [color]="this.stateColor(3)"></ion-icon>
+                  <ion-label class="topless, bottomless" [color]="this.stateColor(3)">{{ this.getTitle(3) }}</ion-label>
+                  <ion-badge *ngIf="this.isActive(3)">Activate</ion-badge>
+                </ion-tab-button>
+
+                <!-- Back to Cat -->
                 <ion-tab-button [ngClass]="'tab-selected'" class="topless, bottomless" (click)="this.setState(4)">
-                  <ion-icon icon="cut-outline" [color]="this.stateColor(4)"></ion-icon>
-                  <ion-label class="topless, bottomless" [color]="this.stateColor(4)">Cut Out Baseline...</ion-label>
+                  <ion-icon icon="list" [color]="this.stateColor(4)"></ion-icon>
+                  <ion-label class="topless, bottomless" [color]="this.stateColor(4)">{{ this.getTitle(4) }}</ion-label>
                   <ion-badge *ngIf="this.isActive(4)">Activate</ion-badge>
                 </ion-tab-button>
               </ion-buttons>
-
+              <!-- <ion-item> </ion-item> -->
+              <ion-button (click)="processBaseline()" color="warning"
+                *ngIf="this.optionChosen() && this.showBaselinesOptions">
+                {{ this.getTitle(this.formState) }}&nbsp;
+                <ion-icon [icon]="this.getIconForSelect()"></ion-icon>
+              </ion-button>
             </ion-item>
-
           </ion-col>
         </ion-row>
 
-        <ion-row *ngIf="this.showBaselines() && this.showBaselinesOptions">
-          <ion-col>
+        <ion-row *ngIf="this.showBaselines() && this.showBaselinesOptions" class="topless, bottomless">
+
+
+
+          <ion-col class="topless, bottomless">
             <ion-item>
               <ion-list>
-                <ion-radio-group name="level" value="low">
-                  <!--             
-                  <ion-list-header>
-                    <ion-label>Risk Tolerance</ion-label>
-                  </ion-list-header>
-                  -->
+                <ion-radio-group name="level" value="low" class="topless, bottomless">
                   <ion-row>
+                    <!--        
+                      <ion-col>     
+                        <ion-list-header>
+                          <ion-label>Risk Tolerance</ion-label>
+                        </ion-list-header>
+                      </ion-col>
+                    -->
+
                     <ion-col>
                       <ion-item>
                         <ion-label>Low</ion-label>&nbsp;
                         <ion-radio value="low"></ion-radio>
                       </ion-item>
                     </ion-col>
+
                     <ion-col>
                       <ion-item>
                         <ion-label>Medium</ion-label>&nbsp;

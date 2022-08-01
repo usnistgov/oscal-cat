@@ -34,15 +34,19 @@ import { Control } from '../../../../interfaces/oscal-types/oscal-catalog.types'
 import { ActionAncestorSimpleArrayComponent } from '../action-ancestor-base/action-base-simple-array-form.component';
 import { PropertiesArrayComponent } from '../action-array-properties/action-array-properties.component';
 import { CatParamsComponent } from '../action-cat-params/action-cat-params.component';
+import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancestor-base.component';
 
 
 
 @Component({
   selector: 'oscal-cat-controls',
   templateUrl: './action-cat-controls.component.html',
-  styleUrls: ['./action-cat-controls.component.css']
+  styleUrls: [
+    './action-cat-controls.component.css',
+    '../../action-all-common/ion-tabs-buttons.scss',
+    '../../action-all-common/div-scroll.scss']
 })
-export class CatControlsComponent extends ActionAncestorSimpleArrayComponent implements OnInit {
+export class CatControlsComponent extends ActionAncestorSimpleArrayComponent implements OnInit, IMustCommitFormDataArray {
   // @Input() control: Control;
   @Input() controls: Array<Control>;
 
@@ -60,19 +64,22 @@ export class CatControlsComponent extends ActionAncestorSimpleArrayComponent imp
   }
 
   buildInputsMap() {
-    this.inputsMap.set('1-Title',
+    this.inputsMap.set('1-Id',
+      {
+        fieldToMap: 'id',
+        labelName: 'Control ID',
+        inputTip: ''.concat(
+          'A unique identifier for a specific control instance that can be used to reference the',
+          ' control in other OSCAL documents.This identifier\'s uniqueness is document scoped and is',
+          ' intended to be consistent for the same control across minor revisions of the document.'),
+        requiredField: true,
+        validateAs: [Validators.required],
+      });
+    this.inputsMap.set('2-Title',
       {
         fieldToMap: 'title',
         labelName: 'Control Title',
         inputTip: 'Control Title [REQUIRED]',
-        requiredField: true,
-        validateAs: [Validators.required],
-      });
-    this.inputsMap.set('2-Id',
-      {
-        fieldToMap: 'id',
-        labelName: 'Control ID',
-        inputTip: 'Control ID [REQUIRED]',
         requiredField: true,
         validateAs: [Validators.required],
       });
@@ -83,6 +90,24 @@ export class CatControlsComponent extends ActionAncestorSimpleArrayComponent imp
         inputTip: 'A textual label that provides a sub-type or characterization of the property\'s name.'
           + ' This can be used to further distinguish or discriminate between the semantics of multiple'
           + ' properties of the same object with the same name and namespace.',
+      });
+    this.inputsMap.set('4-params',
+      {
+        fieldToMap: 'params',
+        labelName: 'Parameters',
+        inputTip: 'Parameters that can be repeated inside of the control with consistency',
+        complexInputType: true,
+        inputAs: 'oscal-cat-params',
+      });
+
+    this.inputsMap.set('5-text',
+      {
+        fieldToMap: 'text',
+        labelName: 'Description',
+        inputTip: 'A text to describe the link fully, which may be used for presentation in a tool',
+        validateAs: [],
+        complexInputType: true,
+        inputAs: 'textarea',
       });
   }
 
@@ -109,5 +134,16 @@ export class CatControlsComponent extends ActionAncestorSimpleArrayComponent imp
   getNewFormGroup<Type>(data?: Type): FormGroup {
     return this.getNewFormGroupByFieldToMap<Type>();
   }
+
+  onSave(): void {
+
+  }
+
+  formCommitArray(): Array<Control> {
+    // Returns the edited Array of Controls Back
+    const editedControls = this.getResultArrayByFieldToMap<Control>(OscalCatalogEmpties.getEmptyControl);
+    return editedControls
+  }
+
 
 }

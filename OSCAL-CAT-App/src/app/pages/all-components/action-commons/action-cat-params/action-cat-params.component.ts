@@ -23,16 +23,32 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroupDirective, Validators } from '@angular/forms';
+import { OscalCatalogEmpties } from 'src/app/interfaces/oscal-types/oscal-catalog-factory';
+import { Parameter } from 'src/app/interfaces/oscal-types/oscal-catalog.types';
+import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancestor-base.component';
 import { ActionAncestorSimpleArrayComponent } from '../action-ancestor-base/action-base-simple-array-form.component';
+import { ArrayLinksComponent } from '../action-array-links/action-array-links.component';
+import { PropertiesArrayComponent } from '../action-array-properties/action-array-properties.component';
+import { ArrayStringsComponent } from '../action-array-strings/action-array-strings.component';
 
 @Component({
   selector: 'oscal-cat-params',
   templateUrl: './action-cat-params.component.html',
   styleUrls: ['./action-cat-params.component.css']
 })
-export class CatParamsComponent extends ActionAncestorSimpleArrayComponent implements OnInit {
+export class CatParamsComponent extends ActionAncestorSimpleArrayComponent implements OnInit, IMustCommitFormDataArray {
+
+  @Input() params: Array<Parameter>;
+
+
+  @ViewChild('valuesArray') valuesArray: ArrayStringsComponent;
+  @ViewChild('linksArray') linksArray: ArrayLinksComponent;
+  @ViewChild('propsArray') propsArray: PropertiesArrayComponent;
+  // @ViewChild('guideArray') guideArray: CatParamsComponent;
+  // @ViewChild('constraintArray') constraintArray: CatParamsComponent; 
+
 
 
   constructor(public formBuilder: FormBuilder,
@@ -81,5 +97,13 @@ export class CatParamsComponent extends ActionAncestorSimpleArrayComponent imple
   getControlsArray<Type>() {
     throw new Error('Method not implemented.');
   }
+
+
+  formCommitArray(): Array<Parameter> {
+    // Returns the edited Array of Controls Back
+    const editedParams = this.getResultArrayByFieldToMap<Parameter>(OscalCatalogEmpties.getEmptyParameter);
+    return editedParams
+  }
+
 
 }
