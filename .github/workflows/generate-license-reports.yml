@@ -1,0 +1,113 @@
+name: Generate 3rd Party Deps License Report
+env:
+  MAIN_REPO_CHECKOUT_PATH: main
+on:
+  pull_request:
+    branches:
+    - main
+    - develop
+    - "release-*"
+  push:
+    branches:
+    - main
+    - develop
+    - "release-*"
+  workflow_call:
+    inputs:
+      commit_id:
+        description: 'the git commit ID (SHA1) used to uniquely idenity the bundled app build in cache from build job'
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      commit_id:
+        description: 'the git commit ID (SHA1) used to uniquely idenity the bundled app build in cache from build job'
+        required: true
+        type: string
+jobs:
+  generate-license-sbom-reports:
+    name: Use SBOM Tools to Generate 3rd Party Deps Licensing Report
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout App Repo
+      uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+      with:
+        path: ${{ github.workspace }}/${{ env.MAIN_REPO_CHECKOUT_PATH }}
+        fetch-depth: 0
+      id: checkout-main-repo
+    - name: Restore Build Cache
+      uses: actions/cache@0865c47f36e68161719c5b124609996bb5c40129
+      with:
+        path: ${{ github.workspace }}/${{ env.MAIN_REPO_CHECKOUT_PATH }}//OSCAL-CAT-App/www
+        key: cat-${{ runner.os }}-${{ inputs.commit_id }}
+      id: restore-cache-build
+    - name: Set up NodeJS
+      uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
+      with:
+        node-version-file: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/.nvmrc'
+        cache: 'npm'
+        cache-dependency-path: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/package-lock.json'
+    - name: Reload NPM Packages from Global Cache
+      # This is necessary after cache reload
+      # https://github.com/actions/setup-node/blob/2a814b57e1a920a0c910a1007b50142423386ff0/docs/advanced-usage.md#caching-packages-data
+      run: |
+        npm ci
+      working-directory: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App'
+      id: reload-packages-npm-command
+    - name: SBOM License Analysis - CycloneDX XML
+      uses: CycloneDX/gh-node-module-generatebom@d5fab752c787cefffe85b64455c3636bd00b93c6
+      with:
+        path: ${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App
+        output: ${{ runner.temp }}/oscal-cat-sbom.cyclonedx.xml
+      id: generate-sbom-licensing-cdx-xml
+    - name: SBOM License Analysis - CycloneDX JSON
+      uses: CycloneDX/gh-node-module-generatebom@d5fab752c787cefffe85b64455c3636bd00b93c6
+      with:
+        path: ${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App
+        output: ${{ runner.temp }}/oscal-cat-sbom.cyclonedx.json
+      id: generate-sbom-licensing-cdx-json
+    - name: Store BOM Executable in Cache
+      uses: actions/cache@0865c47f36e68161719c5b124609996bb5c40129
+      with:
+        path: /home/runner/go/bin/bom
+        key: ${{ runner.os }}-bom-${{ hashFiles(format('{0}/go.sum', env.BUILD_PATH)) }}
+      id: cache-bom
+    - name: Add Cached BOM Executable to PATH
+      if: steps.cache-bom.outputs.cache-hit == 'true'
+      run: |
+        echo "/home/runner/go/bin" >> $GITHUB_PATH
+    - name: Setup Golang for SPDX Tool BOM
+      if: steps.cache-bom.outputs.cache-hit != 'true'
+      uses: actions/setup-go@84cbf8094393cdc5fe1fe1671ff2647332956b1a
+      with:
+        go-version-file: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/go.mod'
+        cache: true
+        cache-dependency-path: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/go.sum'
+    - name: Install SPDX Tool BOM
+      if: steps.cache-bom.outputs.cache-hit != 'true'
+      run: |
+        go install sigs.k8s.io/bom/cmd/bom
+      working-directory: ${{ env.MAIN_REPO_CHECKOUT_PATH }}
+      id: setup-go-bom-install
+    - name: SBOM License Analysis - SPDX
+      run: |
+        bom generate \
+          --dirs OSCAL-CAT-App \
+          --format json \
+          --output ${RUNNER_TEMP}/oscal-cat-sbom.spdx.json
+      working-directory: ${{ env.MAIN_REPO_CHECKOUT_PATH }}
+      id: generate-sbom-licensing-spdx
+    - name: Zip SBOM License Reports
+      run: |
+        pushd "${GITHUB_WORKSPACE}"
+        zip ${{ runner.temp }}/oscal-cat_sbom.zip -r ${{ runner.temp }}/*.cyclonedx.* ${{ runner.temp }}/*.spdx.*
+        popd
+      id: zip-sbom-licenses-report
+    - name: Upload SBOM License Reports
+      uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+      with:
+        name: oscal-cat_sbom_${{ inputs.commit_id }}
+        path: |
+          ${{ runner.temp }}/oscal-cat_sbom.zip
+        retention-days: 5
+      id: upload-sbom-licenses-report
