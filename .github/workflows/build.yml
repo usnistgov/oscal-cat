@@ -52,7 +52,6 @@ jobs:
         npm ci --loglevel verbose
         echo "$PWD/node_modules/.bin/" >> $GITHUB_PATH
         npm run build -- \
-          --configuration $DEPLOY_CONFIGURATION \
           --base-href $DEPLOY_BASE_HREF
       id: build
     - name: Store Build Cache
