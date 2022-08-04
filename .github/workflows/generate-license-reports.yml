@@ -13,17 +13,7 @@ on:
     - develop
     - "release-*"
   workflow_call:
-    inputs:
-      commit_id:
-        description: 'the git commit ID (SHA1) used to uniquely idenity the bundled app build in cache from build job'
-        required: true
-        type: string
   workflow_dispatch:
-    inputs:
-      commit_id:
-        description: 'the git commit ID (SHA1) used to uniquely idenity the bundled app build in cache from build job'
-        required: true
-        type: string
 jobs:
   generate-license-sbom-reports:
     name: Use SBOM Tools to Generate 3rd Party Deps Licensing Report
@@ -35,11 +25,16 @@ jobs:
         path: ${{ github.workspace }}/${{ env.MAIN_REPO_CHECKOUT_PATH }}
         fetch-depth: 0
       id: checkout-main-repo
+    - name: Store git commit ID for cache key
+      run: |
+        echo "::set-output name=commit_id::$(git rev-parse HEAD)"
+      working-directory: ${{ env.MAIN_REPO_CHECKOUT_PATH }}
+      id: store-git-metadata
     - name: Restore Build Cache
       uses: actions/cache@f4278025ab0f432ce369118909e46deec636f50c
       with:
         path: ${{ github.workspace }}/${{ env.MAIN_REPO_CHECKOUT_PATH }}//OSCAL-CAT-App/www
-        key: cat-${{ runner.os }}-${{ inputs.commit_id }}
+        key: cat-${{ runner.os }}-${{ steps.store-git-metadata.outputs.commit_id }}
       id: restore-cache-build
     - name: Set up NodeJS
       uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
@@ -106,7 +101,7 @@ jobs:
     - name: Upload SBOM License Reports
       uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
       with:
-        name: oscal-cat_sbom_${{ inputs.commit_id }}
+        name: oscal-cat_sbom_${{ steps.store-git-metadata.outputs.commit_id }}
         path: |
           ${{ runner.temp }}/oscal-cat_sbom.zip
         retention-days: 5

@@ -19,18 +19,14 @@ jobs:
     uses: ./.github/workflows/deploy.yml
     with:
       commit_resources: false
-      commit_id: ${{ needs.ci.outputs.commit_id }}
   cd-full:
     if: github.event_name == 'push'
     needs: ci
     uses: ./.github/workflows/deploy.yml
     with:
       commit_resources: true
-      commit_id: ${{ needs.ci.outputs.commit_id }}
     secrets:
       access_token: ${{ secrets.COMMIT_TOKEN }}
   sbom-license-analysis:
     needs: ci
     uses: ./.github/workflows/generate-license-reports.yml
-    with:
-      commit_id: ${{ needs.ci.outputs.commit_id }}
