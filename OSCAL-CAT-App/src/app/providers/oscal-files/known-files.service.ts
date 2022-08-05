@@ -39,8 +39,8 @@ export class KnownOscalFilesService {
     private static catsPath = './../../assets/oscal-cats/';
     private static proPath = './../../assets/oscal-cats/baselines/';
     private static catsBase4NIST = 'https://raw.githubusercontent.com/usnistgov/oscal-content/master/nist.gov/';
-    private static catsUrl4NIST80053r4 = 'https://raw.githubusercontent.com/usnistgov/oscal-content/master/nist.gov/SP800-53/rev4/json/';
-    private static catsUrl4NIST80053r5 = 'https://https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev5/json/';
+    private static catsUrl4NIST80053r4 = 'https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev4/json/';
+    private static catsUrl4NIST80053r5 = 'https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev5/json/';
     private static proPath80053r4 = './../../assets/oscal-profiles/baselines-800-53-rev4/';
     private static proPath80053r5 = './../../assets/oscal-profiles/baselines-800-53-rev5/';
     private static knownFiles: Array<KnownOscalFileLocation> = [
