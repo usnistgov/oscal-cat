@@ -81,7 +81,7 @@ jobs:
         path: ${{ github.workspace }}/${{ env.DEPLOY_REPO_CHECKOUT_PATH }}
       id: checkout-deploy-repo-no-commit-token
     - name: Restore Build Cache
-      uses: actions/cache@0865c47f36e68161719c5b124609996bb5c40129
+      uses: actions/cache@f4278025ab0f432ce369118909e46deec636f50c
       with:
         path: ${{ github.workspace }}/${{ env.MAIN_REPO_CHECKOUT_PATH }}//OSCAL-CAT-App/www
         key: cat-${{ runner.os }}-${{ inputs.commit_id }}
