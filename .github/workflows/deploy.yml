@@ -1,8 +1,6 @@
 name: OSCAL CAT CD
 env:
   DEPLOY_AUTOCOMMIT_PATHSPEC: "demos/cat"
-  DEPLOY_BASE_HREF: "/demos/cat/"
-  DEPLOY_CONFIGURATION: production
   DEPLOY_REPO: usnistgov/oscal-tools
   DEPLOY_REPO_CHECKOUT_PATH: deploy
   DEPLOY_REPO_GIT_REF: nist-pages
@@ -25,10 +23,6 @@ on:
         required: false
         default: false
         type: boolean
-      commit_id:
-        description: 'the git commit ID (SHA1) used to uniquely idenity the bundled app build in cache from build job'
-        required: true
-        type: string
     secrets:
       access_token:
         description: 'the access token to use for commits'
@@ -40,10 +34,6 @@ on:
         required: false
         default: false
         type: boolean
-      commit_id:
-        description: 'the git commit ID (SHA1) used to uniquely idenity the bundled app build in cache from build job'
-        required: true
-        type: string
       access_token:
         description: 'the access token to use for commits'
         required: false
@@ -80,28 +70,40 @@ jobs:
         ref: ${{ env.DEPLOY_REPO_GIT_REF }}
         path: ${{ github.workspace }}/${{ env.DEPLOY_REPO_CHECKOUT_PATH }}
       id: checkout-deploy-repo-no-commit-token
-    - name: Restore Build Cache
-      uses: actions/cache@f4278025ab0f432ce369118909e46deec636f50c
+    - name: Set up NodeJS
+      uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
       with:
-        path: ${{ github.workspace }}/${{ env.MAIN_REPO_CHECKOUT_PATH }}//OSCAL-CAT-App/www
-        key: cat-${{ runner.os }}-${{ inputs.commit_id }}
-      id: restore-cache-build
+        node-version-file: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/.nvmrc'
+        cache: 'npm'
+        cache-dependency-path: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/package-lock.json'
+      id: setup
+    - name: Build
+      run: |
+        cd "${MAIN_REPO_CHECKOUT_PATH}/OSCAL-CAT-App"
+        npm ci
+        echo "$PWD/node_modules/.bin/" >> $GITHUB_PATH
+        npm run build -- \
+          --base-href $BASE_HREF \
+          --deploy-url $DEPLOY_URL
+      id: build
+    - name: Delete Old Deployment Files
+      run: |
+        # In case this is a fresh first-time build, recreate dir
+        mkdir -p "${DEPLOY_AUTOCOMMIT_PATHSPEC}"
+        git rm -rf "${DEPLOY_AUTOCOMMIT_PATHSPEC}"
+      working-directory: ${{ env.DEPLOY_REPO_CHECKOUT_PATH }}
+      id: clean-delete-old-build-target
     - name: Copy Build to Deploy Repo
       run: |
-        pushd "${DEPLOY_REPO_CHECKOUT_PATH}"
-        mkdir -p "${DEPLOY_AUTOCOMMIT_PATHSPEC}"
-        # If existing content, delete existing content from previous commit and
-        # keep nist-pages branch clean in the deploy subdirectory.
-        git rm -rf "${DEPLOY_AUTOCOMMIT_PATHSPEC}/*"
-        popd
-        pushd "${MAIN_REPO_CHECKOUT_PATH}"
-        ls -lha
-        cp -r OSCAL-CAT-App/www/. "../${DEPLOY_REPO_CHECKOUT_PATH}/${DEPLOY_AUTOCOMMIT_PATHSPEC}"
-        popd
-        pushd "${DEPLOY_REPO_CHECKOUT_PATH}"
-        git add "${DEPLOY_AUTOCOMMIT_PATHSPEC}"
-        popd
+        cp -r . "../../../${DEPLOY_REPO_CHECKOUT_PATH}/${DEPLOY_AUTOCOMMIT_PATHSPEC}"
+      working-directory: ${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/www
       id: copy-build-deploy-target
+    - name: Stage Updated Files for git
+      run: |
+        git add "${DEPLOY_AUTOCOMMIT_PATHSPEC}"
+        git status
+      working-directory: ${{ env.DEPLOY_REPO_CHECKOUT_PATH }}
+      id: stage-files-deploy-target
     - name: Zip Website Build for Upload
       run: |
         pushd "${GITHUB_WORKSPACE}"
