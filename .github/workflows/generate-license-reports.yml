@@ -101,7 +101,7 @@ jobs:
     - name: Upload SBOM License Reports
       uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
       with:
-        name: oscal-cat_sbom_${{ steps.store-git-metadata.outputs.commit_id }}
+        name: oscal-cat_sbom
         path: |
           ${{ runner.temp }}/oscal-cat_sbom.zip
         retention-days: 5
