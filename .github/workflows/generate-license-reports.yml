@@ -23,6 +23,7 @@ jobs:
       uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
       with:
         path: ${{ github.workspace }}/${{ env.MAIN_REPO_CHECKOUT_PATH }}
+        submodules: recursive
         fetch-depth: 0
       id: checkout-main-repo
     - name: Store git commit ID for cache key
