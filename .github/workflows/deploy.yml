@@ -9,13 +9,9 @@ on:
   pull_request:
     branches:
     - main
-    - develop
-    - "release-*"
   push:
     branches:
     - main
-    - develop
-    - "release-*"
   workflow_call:
     inputs:
       commit_resources:
