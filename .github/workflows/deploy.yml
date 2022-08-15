@@ -76,7 +76,7 @@ jobs:
         node-version-file: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/.nvmrc'
         cache: 'npm'
         cache-dependency-path: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/package-lock.json'
-      id: setup
+      id: setup-nodejs
     - name: Build
       run: |
         cd "${MAIN_REPO_CHECKOUT_PATH}/OSCAL-CAT-App"

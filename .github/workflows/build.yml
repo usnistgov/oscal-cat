@@ -18,7 +18,7 @@ on:
   workflow_dispatch:
 jobs:
   build-test-app:
-    name: Deploy Demo Site
+    name: Build and Test App
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout App Repo
@@ -38,7 +38,7 @@ jobs:
         node-version-file: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/.nvmrc'
         cache: 'npm'
         cache-dependency-path: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/package-lock.json'
-      id: setup
+      id: setup-nodejs
     - name: Build
       run: |
         pushd "${MAIN_REPO_CHECKOUT_PATH}/OSCAL-CAT-App"
