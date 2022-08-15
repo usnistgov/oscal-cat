@@ -1,30 +1,13 @@
-/*
- * Portions of this software was developed by employees of the National Institute
- * of Standards and Technology (NIST), an agency of the Federal Government and is
- * being made available as a public service. Pursuant to title 17 United States
- * Code Section 105, works of NIST employees are not subject to copyright
- * protection in the United States. This software may be subject to foreign
- * copyright. Permission in the United States and in foreign countries, to the
- * extent that NIST may hold copyright, to use, copy, modify, create derivative
- * works, and distribute this software and its documentation without fee is hereby
- * granted on a non-exclusive basis, provided that this notice and disclaimer
- * of warranty appears in all copies.
- *
- * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
- * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
- * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
- * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
- * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
- * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
- * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
- * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
- * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
- * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
- */
+// To parse this data:
+//
+//   import { Convert, Result } from "./file";
+//
+//   const result = Convert.toResult(json);
+//
+// These functions will throw an error if the JSON doesn't
+// match the expected interface, even if the JSON is valid.
 
-export interface NewSchema {
+export interface Result {
     catalog?: Catalog;
     profile?: Profile;
     componentDefinition?: ComponentDefinition;
@@ -56,8 +39,12 @@ export interface SecurityAssessmentPlanSAP {
      */
     termsAndConditions?: AssessmentPlanTermsAndConditions;
     /**
-     * Uniquely identifies this assessment plan. This UUID must be changed each time the content
-     * of the plan changes.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this assessment plan in this or other OSCAL instances. The locally defined
+     * UUID of the assessment plan can be used to reference the data item locally or globally
+     * (e.g., in an imported OSCAL instance). This UUID should be assigned per-subject, which
+     * means it should be consistently used to identify the same subject across revisions of the
+     * document.
      */
     uuid: string;
 }
@@ -84,7 +71,12 @@ export interface AssessmentPlatform {
     title?: string;
     usesComponents?: UsesComponent[];
     /**
-     * Uniquely identifies this assessment Platform.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this assessment platform elsewhere in this or other OSCAL instances. The
+     * locally defined UUID of the assessment platform can be used to reference the data item
+     * locally or globally (e.g., in an imported OSCAL instance). This UUID should be assigned
+     * per-subject, which means it should be consistently used to identify the same subject
+     * across revisions of the document.
      */
     uuid: string;
 }
@@ -137,9 +129,10 @@ export interface Property {
     ns?: string;
     remarks?: string;
     /**
-     * A unique identifier that can be used to reference this property elsewhere in an OSCAL
-     * document. A UUID should be consistently used for a given location across revisions of the
-     * document.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this defined property elsewhere in this or other OSCAL instances. This UUID
+     * should be assigned per-subject, which means it should be consistently used to identify
+     * the same subject across revisions of the document.
      */
     uuid?: string;
     /**
@@ -153,7 +146,8 @@ export interface Property {
  */
 export interface UsesComponent {
     /**
-     * A reference to a component that is implemented as part of an inventory item.
+     * A machine-oriented identifier reference to a component that is implemented as part of an
+     * inventory item.
      */
     componentUUID: string;
     links?: Link[];
@@ -172,7 +166,7 @@ export interface ResponsibleParty {
     props?: Property[];
     remarks?: string;
     /**
-     * The role that the party is responsible for.
+     * A human-oriented identifier reference to roles served by the user.
      */
     roleID: string;
 }
@@ -207,7 +201,12 @@ export interface AssessmentAssetsComponent {
      */
     type: string;
     /**
-     * The unique identifier for the component.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this component elsewhere in this or other OSCAL instances. The locally
+     * defined UUID of the component can be used to reference the data item locally or globally
+     * (e.g., in an imported OSCAL instance). This UUID should be assigned per-subject, which
+     * means it should be consistently used to identify the same subject across revisions of the
+     * document.
      */
     uuid: string;
 }
@@ -227,9 +226,12 @@ export interface ServiceProtocolInformation {
      */
     title?: string;
     /**
-     * A globally unique identifier that can be used to reference this service protocol entry
-     * elsewhere in an OSCAL document. A UUID should be consistently used for a given resource
-     * across revisions of the document.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this service protocol information elsewhere in this or other OSCAL
+     * instances. The locally defined UUID of the service protocol can be used to reference the
+     * data item locally or globally (e.g., in an imported OSCAL instance). This UUID should be
+     * assigned per-subject, which means it should be consistently used to identify the same
+     * subject across revisions of the document.
      */
     uuid?: string;
 }
@@ -256,8 +258,8 @@ export interface PortRange {
  * Indicates the transport type.
  */
 export enum Transport {
-    TCP = 'TCP',
-    UDP = 'UDP',
+    TCP = "TCP",
+    UDP = "UDP",
 }
 
 /**
@@ -270,7 +272,7 @@ export interface ResponsibleRole {
     props?: Property[];
     remarks?: string;
     /**
-     * The role that is responsible for the business function.
+     * A human-oriented identifier reference to roles responsible for the business function.
      */
     roleID: string;
 }
@@ -290,10 +292,10 @@ export interface ComponentStatus {
  * The operational status.
  */
 export enum PurpleState {
-    Disposition = 'disposition',
-    Operational = 'operational',
-    Other = 'other',
-    UnderDevelopment = 'under-development',
+    Disposition = "disposition",
+    Operational = "operational",
+    Other = "other",
+    UnderDevelopment = "under-development",
 }
 
 /**
@@ -310,10 +312,7 @@ export interface SubjectOfAssessment {
      */
     description?: string;
     excludeSubjects?: SelectAssessmentSubject[];
-    /**
-     * A key word to indicate all.
-     */
-    includeAll?: AssessmentSubjectIncludeAll;
+    includeAll?: IncludeAll;
     includeSubjects?: SelectAssessmentSubject[];
     links?: Link[];
     props?: Property[];
@@ -333,8 +332,8 @@ export interface SelectAssessmentSubject {
     props?: Property[];
     remarks?: string;
     /**
-     * A pointer to a component, inventory-item, location, party, user, or resource using it's
-     * UUID.
+     * A machine-oriented identifier reference to a component, inventory-item, location, party,
+     * user, or resource using it's UUID.
      */
     subjectUUID: string;
     /**
@@ -344,9 +343,9 @@ export interface SelectAssessmentSubject {
 }
 
 /**
- * A key word to indicate all.
+ * Include all controls from the imported catalog or profile resources.
  */
-export interface AssessmentSubjectIncludeAll {
+export interface IncludeAll {
 }
 
 /**
@@ -383,9 +382,10 @@ export interface Resource {
      */
     title?: string;
     /**
-     * A globally unique identifier that can be used to reference this defined resource
-     * elsewhere in an OSCAL document. A UUID should be consistently used for a given resource
-     * across revisions of the document.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this defined resource elsewhere in this or other OSCAL instances. This UUID
+     * should be assigned per-subject, which means it should be consistently used to identify
+     * the same subject across revisions of the document.
      */
     uuid: string;
 }
@@ -421,10 +421,10 @@ export interface Citation {
 
 /**
  * A document identifier qualified by an identifier scheme. A document identifier provides a
- * globally unique identifier for a group of documents that are to be treated as different
- * versions of the same document. If this element does not appear, or if the value of this
- * element is empty, the value of "document-id" is equal to the value of the "uuid" flag of
- * the top-level root element.
+ * globally unique identifier with a cross-instance scope that is used for a group of
+ * documents that are to be treated as different versions of the same document. If this
+ * element does not appear, or if the value of this element is empty, the value of
+ * "document-id" is equal to the value of the "uuid" flag of the top-level root element.
  */
 export interface DocumentIdentifier {
     identifier: string;
@@ -469,7 +469,7 @@ export interface Hash {
  */
 export interface ImportSystemSecurityPlan {
     /**
-     * >A resolvable URL reference to the system security plan for the system being assessed.
+     * A resolvable URL reference to the system security plan for the system being assessed.
      */
     href: string;
     remarks?: string;
@@ -510,9 +510,12 @@ export interface Activity {
      */
     title?: string;
     /**
-     * Uniquely identifies this assessment activity. This UUID may be referenced elsewhere in an
-     * OSCAL document when referring to this information. A UUID should be consistently used for
-     * a given included activity across revisions of the document.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this assessment activity elsewhere in this or other OSCAL instances. The
+     * locally defined UUID of the activity can be used to reference the data item locally or
+     * globally (e.g., in an imported OSCAL instance). This UUID should be assigned per-subject,
+     * which means it should be consistently used to identify the same subject across revisions
+     * of the document.
      */
     uuid: string;
 }
@@ -543,10 +546,7 @@ export interface ReferencedControlObjectives {
      */
     description?: string;
     excludeObjectives?: SelectObjective[];
-    /**
-     * A key word to indicate all.
-     */
-    includeAll?: ControlObjectiveSelectionIncludeAll;
+    includeAll?: IncludeAll;
     includeObjectives?: SelectObjective[];
     links?: Link[];
     props?: Property[];
@@ -565,12 +565,6 @@ export interface SelectObjective {
 }
 
 /**
- * A key word to indicate all.
- */
-export interface ControlObjectiveSelectionIncludeAll {
-}
-
-/**
  * Identifies the controls being assessed. In the assessment plan, these are the planned
  * controls. In the assessment results, these are the actual controls, and reflects any
  * changes from the plan.
@@ -581,10 +575,7 @@ export interface AssessedControls {
      */
     description?: string;
     excludeControls?: SelectControl[];
-    /**
-     * A key word to indicate all.
-     */
-    includeAll?: ControlSelectionIncludeAll;
+    includeAll?: IncludeAll;
     includeControls?: SelectControl[];
     links?: Link[];
     props?: Property[];
@@ -599,16 +590,12 @@ export interface AssessedControls {
  */
 export interface SelectControl {
     /**
-     * A reference to a control with a corresponding id value.
+     * A human-oriented identifier reference to a control with a corresponding id value. When
+     * referencing an externally defined control, the Control Identifier Reference must be used
+     * in the context of the external / imported OSCAL instance (e.g., uri-reference).
      */
     controlID: string;
     statementIDS?: string[];
-}
-
-/**
- * A key word to indicate all.
- */
-export interface ControlSelectionIncludeAll {
 }
 
 /**
@@ -630,9 +617,12 @@ export interface Step {
      */
     title?: string;
     /**
-     * Uniquely identifies a step. This UUID may be referenced elsewhere in an OSCAL document
-     * when referring to this step. A UUID should be consistently used for a given test step
-     * across revisions of the document.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this step elsewhere in this or other OSCAL instances. The locally defined
+     * UUID of the step (in a series of steps) can be used to reference the data item locally or
+     * globally (e.g., in an imported OSCAL instance). This UUID should be assigned per-subject,
+     * which means it should be consistently used to identify the same subject across revisions
+     * of the document.
      */
     uuid: string;
 }
@@ -651,9 +641,12 @@ export interface InventoryItem {
     remarks?: string;
     responsibleParties?: ResponsibleParty[];
     /**
-     * A globally unique identifier that can be used to reference this inventory item entry
-     * elsewhere in an OSCAL document. A UUID should be consistently used for a given resource
-     * across revisions of the document.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this inventory item elsewhere in this or other OSCAL instances. The locally
+     * defined UUID of the inventory item can be used to reference the data item locally or
+     * globally (e.g., in an imported OSCAL instance). This UUID should be assigned per-subject,
+     * which means it should be consistently used to identify the same subject across revisions
+     * of the document.
      */
     uuid: string;
 }
@@ -663,7 +656,8 @@ export interface InventoryItem {
  */
 export interface ImplementedComponent {
     /**
-     * A reference to a component that is implemented as part of an inventory item.
+     * A machine-oriented identifier reference to a component that is implemented as part of an
+     * inventory item.
      */
     componentUUID: string;
     links?: Link[];
@@ -678,7 +672,9 @@ export interface ImplementedComponent {
  */
 export interface AssessmentSpecificControlObjective {
     /**
-     * A reference to a control with a corresponding id value.
+     * A human-oriented identifier reference to a control with a corresponding id value. When
+     * referencing an externally defined control, the Control Identifier Reference must be used
+     * in the context of the external / imported OSCAL instance (e.g., uri-reference).
      */
     controlID: string;
     /**
@@ -702,9 +698,12 @@ export interface Part {
      */
     class?: string;
     /**
-     * A unique identifier for a specific part instance. This identifier's uniqueness is
-     * document scoped and is intended to be consistent for the same part across minor revisions
-     * of the document.
+     * A human-oriented, locally unique identifier with cross-instance scope that can be used to
+     * reference this defined part elsewhere in this or other OSCAL instances. When referenced
+     * from another OSCAL instance, this identifier must be referenced in the context of the
+     * containing resource (e.g., import-profile). This id should be assigned per-subject, which
+     * means it should be consistently used to identify the same subject across revisions of the
+     * document.
      */
     id?: string;
     links?: Link[];
@@ -751,7 +750,12 @@ export interface SystemUser {
      */
     title?: string;
     /**
-     * The unique identifier for the user class.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this user class elsewhere in this or other OSCAL instances. The locally
+     * defined UUID of the system user can be used to reference the data item locally or
+     * globally (e.g., in an imported OSCAL instance). This UUID should be assigned per-subject,
+     * which means it should be consistently used to identify the same subject across revisions
+     * of the document.
      */
     uuid: string;
 }
@@ -811,9 +815,12 @@ export interface Location {
     title?: string;
     urls?: string[];
     /**
-     * A unique identifier that can be used to reference this defined location elsewhere in an
-     * OSCAL document. A UUID should be consistently used for a given location across revisions
-     * of the document.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this defined location elsewhere in this or other OSCAL instances. The
+     * locally defined UUID of the location can be used to reference the data item locally or
+     * globally (e.g., from an importing OSCAL instance). This UUID should be assigned
+     * per-subject, which means it should be consistently used to identify the same subject
+     * across revisions of the document.
      */
     uuid: string;
 }
@@ -882,9 +889,12 @@ export interface PartyOrganizationOrPerson {
      */
     type: PartyType;
     /**
-     * A unique identifier that can be used to reference this defined location elsewhere in an
-     * OSCAL document. A UUID should be consistently used for a given party across revisions of
-     * the document.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this defined party elsewhere in this or other OSCAL instances. The locally
+     * defined UUID of the party can be used to reference the data item locally or globally
+     * (e.g., from an importing OSCAL instance). This UUID should be assigned per-subject, which
+     * means it should be consistently used to identify the same subject across revisions of the
+     * document.
      */
     uuid: string;
 }
@@ -905,8 +915,8 @@ export interface PartyExternalIdentifier {
  * A category describing the kind of party the object describes.
  */
 export enum PartyType {
-    Organization = 'organization',
-    Person = 'person',
+    Organization = "organization",
+    Person = "person",
 }
 
 /**
@@ -925,7 +935,7 @@ export interface RevisionHistoryEntry {
      * navigation.
      */
     title?: string;
-    version?: string;
+    version: string;
 }
 
 /**
@@ -937,9 +947,13 @@ export interface Role {
      */
     description?: string;
     /**
-     * A unique identifier for a specific role instance. This identifier's uniqueness is
-     * document scoped and is intended to be consistent for the same role across minor revisions
-     * of the document.
+     * A human-oriented, locally unique identifier with cross-instance scope that can be used to
+     * reference this defined role elsewhere in this or other OSCAL instances. When referenced
+     * from another OSCAL instance, the locally defined ID of the Role from the imported OSCAL
+     * instance must be referenced in the context of the containing resource (e.g., import,
+     * import-component-definition, import-profile, import-ssp or import-ap). This ID should be
+     * assigned per-subject, which means it should be consistently used to identify the same
+     * subject across revisions of the document.
      */
     id: string;
     links?: Link[];
@@ -985,7 +999,11 @@ export interface Task {
      */
     type: string;
     /**
-     * Uniquely identifies this assessment task.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this task elsewhere in this or other OSCAL instances. The locally defined
+     * UUID of the task can be used to reference the data item locally or globally (e.g., in an
+     * imported OSCAL instance). This UUID should be assigned per-subject, which means it should
+     * be consistently used to identify the same subject across revisions of the document.
      */
     uuid: string;
 }
@@ -995,7 +1013,7 @@ export interface Task {
  */
 export interface AssociatedActivity {
     /**
-     * References an activity defined in the list of activities.
+     * A machine-oriented identifier reference to an activity defined in the list of activities.
      */
     activityUUID: string;
     links?: Link[];
@@ -1011,7 +1029,7 @@ export interface AssociatedActivity {
 export interface TaskDependency {
     remarks?: string;
     /**
-     * References a unique task by UUID.
+     * A machine-oriented identifier reference to a unique task.
      */
     taskUUID: string;
 }
@@ -1052,12 +1070,12 @@ export interface FrequencyCondition {
  * The unit of time for the period.
  */
 export enum TimeUnit {
-    Days = 'days',
-    Hours = 'hours',
-    Minutes = 'minutes',
-    Months = 'months',
-    Seconds = 'seconds',
-    Years = 'years',
+    Days = "days",
+    Hours = "hours",
+    Minutes = "minutes",
+    Months = "months",
+    Seconds = "seconds",
+    Years = "years",
 }
 
 /**
@@ -1123,9 +1141,11 @@ export interface AssessmentPart {
      */
     title?: string;
     /**
-     * A unique identifier for a specific part instance. This identifier's uniqueness is
-     * document scoped and is intended to be consistent for the same part across minor revisions
-     * of the document.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this part elsewhere in this or other OSCAL instances. The locally defined
+     * UUID of the part can be used to reference the data item locally or globally (e.g., in an
+     * ported OSCAL instance). This UUID should be assigned per-subject, which means it should
+     * be consistently used to identify the same subject across revisions of the document.
      */
     uuid?: string;
 }
@@ -1145,8 +1165,12 @@ export interface SecurityAssessmentResultsSAR {
     metadata: PublicationMetadata;
     results: AssessmentResult[];
     /**
-     * Uniquely identifies this assessment results file. This UUID must be changed each time the
-     * content of the results changes.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this assessment results instance in this or other OSCAL instances. The
+     * locally defined UUID of the assessment result can be used to reference the data item
+     * locally or globally (e.g., in an imported OSCAL instance). This UUID should be assigned
+     * per-subject, which means it should be consistently used to identify the same subject
+     * across revisions of the document.
      */
     uuid: string;
 }
@@ -1157,7 +1181,7 @@ export interface SecurityAssessmentResultsSAR {
  */
 export interface ImportAssessmentPlan {
     /**
-     * >A resolvable URL reference to the assessment plan governing the assessment activities.
+     * A resolvable URL reference to the assessment plan governing the assessment activities.
      */
     href: string;
     remarks?: string;
@@ -1203,7 +1227,7 @@ export interface AssessmentResult {
      */
     localDefinitions?: ResultLocalDefinitions;
     observations?: Observation[];
-    prop?: Property[];
+    props?: Property[];
     remarks?: string;
     reviewedControls: ReviewedControlsAndControlObjectives;
     risks?: IdentifiedRisk[];
@@ -1217,9 +1241,12 @@ export interface AssessmentResult {
      */
     title: string;
     /**
-     * Uniquely identifies this set of results. This UUID may be referenced elsewhere in an
-     * OSCAL document when referring to this information. Once assigned, a UUID should be
-     * consistently used for a given set of results across revisions.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this set of results in this or other OSCAL instances. The locally defined
+     * UUID of the assessment result can be used to reference the data item locally or globally
+     * (e.g., in an imported OSCAL instance). This UUID should be assigned per-subject, which
+     * means it should be consistently used to identify the same subject across revisions of the
+     * document.
      */
     uuid: string;
 }
@@ -1259,9 +1286,12 @@ export interface AssessmentLogEntry {
      */
     title?: string;
     /**
-     * Uniquely identifies an assessment event. This UUID may be referenced elsewhere in an
-     * OSCAL document when referring to this information. A UUID should be consistently used for
-     * this schedule across revisions of the document.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference an assessment event in this or other OSCAL instances. The locally defined
+     * UUID of the assessment log entry can be used to reference the data item locally or
+     * globally (e.g., in an imported OSCAL instance). This UUID should be assigned per-subject,
+     * which means it should be consistently used to identify the same subject across revisions
+     * of the document.
      */
     uuid: string;
 }
@@ -1271,7 +1301,7 @@ export interface AssessmentLogEntry {
  */
 export interface LoggedBy {
     /**
-     * A pointer to the party who is making the log entry.
+     * A machine-oriented identifier reference to the party who is making the log entry.
      */
     partyUUID: string;
     /**
@@ -1294,7 +1324,7 @@ export interface TaskReference {
     responsibleParties?: ResponsibleParty[];
     subjects?: SubjectOfAssessment[];
     /**
-     * References a unique task by UUID.
+     * A machine-oriented identifier reference to a unique task.
      */
     taskUUID: string;
 }
@@ -1304,7 +1334,8 @@ export interface TaskReference {
  */
 export interface IdentifiedSubject {
     /**
-     * References a unique assessment subject placeholder defined by this task.
+     * A machine-oriented identifier reference to a unique assessment subject placeholder
+     * defined by this task.
      */
     subjectPlaceholderUUID: string;
     subjects: SubjectOfAssessment[];
@@ -1327,7 +1358,8 @@ export interface Finding {
      */
     description: string;
     /**
-     * Identifies the implementation statement in the SSP to which this finding is related.
+     * A machine-oriented identifier reference to the implementation statement in the SSP to
+     * which this finding is related.
      */
     implementationStatementUUID?: string;
     links?: Link[];
@@ -1342,9 +1374,11 @@ export interface Finding {
      */
     title: string;
     /**
-     * Uniquely identifies this finding. This UUID may be referenced elsewhere in an OSCAL
-     * document when referring to this information. Once assigned, a UUID should be consistently
-     * used for a given finding across revisions.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this finding in this or other OSCAL instances. The locally defined UUID of
+     * the finding can be used to reference the data item locally or globally (e.g., in an
+     * imported OSCAL instance). This UUID should be assigned per-subject, which means it should
+     * be consistently used to identify the same subject across revisions of the document.
      */
     uuid: string;
 }
@@ -1363,7 +1397,8 @@ export interface FindingOrigin {
  */
 export interface OriginatingActor {
     /**
-     * A pointer to the tool or person based on the associated type.
+     * A machine-oriented identifier reference to the tool or person based on the associated
+     * type.
      */
     actorUUID: string;
     links?: Link[];
@@ -1382,9 +1417,9 @@ export interface OriginatingActor {
  * The kind of actor.
  */
 export enum ActorType {
-    AssessmentPlatform = 'assessment-platform',
-    Party = 'party',
-    Tool = 'tool',
+    AssessmentPlatform = "assessment-platform",
+    Party = "party",
+    Tool = "tool",
 }
 
 /**
@@ -1393,7 +1428,8 @@ export enum ActorType {
  */
 export interface FindingRelatedObservation {
     /**
-     * References an observation defined in the list of observations.
+     * A machine-oriented identifier reference to an observation defined in the list of
+     * observations.
      */
     observationUUID: string;
 }
@@ -1403,7 +1439,7 @@ export interface FindingRelatedObservation {
  */
 export interface FindingRelatedRisk {
     /**
-     * References an risk defined in the list of risks.
+     * A machine-oriented identifier reference to a risk defined in the list of risks.
      */
     riskUUID: string;
 }
@@ -1427,7 +1463,7 @@ export interface TargetClass {
      */
     status: StatusClass;
     /**
-     * Identifies the specific target qualified by the type.
+     * A machine-oriented identifier reference for a specific target qualified by the type.
      */
     targetID: string;
     /**
@@ -1470,16 +1506,16 @@ export interface StatusClass {
  * An indication as to whether the objective is satisfied or not.
  */
 export enum ObjectiveStatusState {
-    NotSatisfied = 'not-satisfied',
-    Satisfied = 'satisfied',
+    NotSatisfied = "not-satisfied",
+    Satisfied = "satisfied",
 }
 
 /**
  * Identifies the type of the target.
  */
 export enum FindingTargetType {
-    ObjectiveID = 'objective-id',
-    StatementID = 'statement-id',
+    ObjectiveID = "objective-id",
+    StatementID = "statement-id",
 }
 
 /**
@@ -1524,9 +1560,12 @@ export interface Observation {
     title?: string;
     types?: string[];
     /**
-     * Uniquely identifies this observation. This UUID may be referenced elsewhere in an OSCAL
-     * document when referring to this information. Once assigned, a UUID should be consistently
-     * used for a given observation across revisions.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this observation elsewhere in this or other OSCAL instances. The locally
+     * defined UUID of the observation can be used to reference the data item locally or
+     * globally (e.g., in an imorted OSCAL instance). This UUID should be assigned per-subject,
+     * which means it should be consistently used to identify the same subject across revisions
+     * of the document.
      */
     uuid: string;
 }
@@ -1540,7 +1579,7 @@ export interface RelevantEvidence {
      */
     description: string;
     /**
-     * >A resolvable URL reference to relevant evidence.
+     * A resolvable URL reference to relevant evidence.
      */
     href?: string;
     links?: Link[];
@@ -1549,17 +1588,16 @@ export interface RelevantEvidence {
 }
 
 /**
- * A pointer to a resource based on its universally unique identifier (UUID). Use type to
- * indicate whether the identified resource is a component, inventory item, location, user,
- * or something else.
+ * A human-oriented identifier reference to a resource. Use type to indicate whether the
+ * identified resource is a component, inventory item, location, user, or something else.
  */
 export interface IdentifiesTheSubject {
     links?: Link[];
     props?: Property[];
     remarks?: string;
     /**
-     * A pointer to a component, inventory-item, location, party, user, or resource using it's
-     * UUID.
+     * A machine-oriented identifier reference to a component, inventory-item, location, party,
+     * user, or resource using it's UUID.
      */
     subjectUUID: string;
     /**
@@ -1600,9 +1638,6 @@ export interface IdentifiedRisk {
      * An summary of impact for how the risk affects the system.
      */
     statement: string;
-    /**
-     * Describes the status of the associated risk.
-     */
     status: string;
     threatIDS?: ThreatID[];
     /**
@@ -1610,9 +1645,11 @@ export interface IdentifiedRisk {
      */
     title: string;
     /**
-     * Uniquely identifies this risk. This UUID may be referenced elsewhere in an OSCAL document
-     * when referring to this information. Once assigned, a UUID should be consistently used for
-     * a given risk across revisions.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this risk elsewhere in this or other OSCAL instances. The locally defined
+     * UUID of the risk can be used to reference the data item locally or globally (e.g., in an
+     * imported OSCAL instance). This UUID should be assigned per-subject, which means it should
+     * be consistently used to identify the same subject across revisions of the document.
      */
     uuid: string;
 }
@@ -1660,16 +1697,24 @@ export interface MitigatingFactor {
      */
     description: string;
     /**
-     * Points to an implementation statement in the SSP.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this implementation statement elsewhere in this or other OSCAL instancess.
+     * The locally defined UUID of the implementation statement can be used to reference the
+     * data item locally or globally (e.g., in an imported OSCAL instance). This UUID should be
+     * assigned per-subject, which means it should be consistently used to identify the same
+     * subject across revisions of the document.
      */
     implementationUUID?: string;
     links?: Link[];
     props?: Property[];
     subjects?: IdentifiesTheSubject[];
     /**
-     * Uniquely identifies this mitigating factor. This UUID may be referenced elsewhere in an
-     * OSCAL document when referring to this information. Once assigned, a UUID should be
-     * consistently used for a given mitigating factor across revisions.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this mitigating factor elsewhere in this or other OSCAL instances. The
+     * locally defined UUID of the mitigating factor can be used to reference the data item
+     * locally or globally (e.g., in an imported OSCAL instance). This UUID should be assigned
+     * per-subject, which means it should be consistently used to identify the same subject
+     * across revisions of the document.
      */
     uuid: string;
 }
@@ -1680,7 +1725,8 @@ export interface MitigatingFactor {
  */
 export interface RiskRelatedObservation {
     /**
-     * References an observation defined in the list of observations.
+     * A machine-oriented identifier reference to an observation defined in the list of
+     * observations.
      */
     observationUUID: string;
 }
@@ -1709,9 +1755,12 @@ export interface RiskResponse {
      */
     title: string;
     /**
-     * Uniquely identifies this remediation. This UUID may be referenced elsewhere in an OSCAL
-     * document when referring to this information. Once assigned, a UUID should be consistently
-     * used for a given remediation across revisions.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this remediation elsewhere in this or other OSCAL instances. The locally
+     * defined UUID of the risk response can be used to reference the data item locally or
+     * globally (e.g., in an imported OSCAL instance). This UUID should be assigned per-subject,
+     * which means it should be consistently used to identify the same subject across revisions
+     * of the document.
      */
     uuid: string;
 }
@@ -1733,9 +1782,12 @@ export interface RequiredAsset {
      */
     title?: string;
     /**
-     * Uniquely identifies this required asset. This UUID may be referenced elsewhere in an
-     * OSCAL document when referring to this information. Once assigned, a UUID should be
-     * consistently used for a given required asset across revisions.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this required asset elsewhere in this or other OSCAL instances. The locally
+     * defined UUID of the asset can be used to reference the data item locally or globally
+     * (e.g., in an imported OSCAL instance). This UUID should be assigned per-subject, which
+     * means it should be consistently used to identify the same subject across revisions of the
+     * document.
      */
     uuid: string;
 }
@@ -1776,9 +1828,12 @@ export interface RiskLogEntry {
      */
     title?: string;
     /**
-     * Uniquely identifies a risk log entry. This UUID may be referenced elsewhere in an OSCAL
-     * document when referring to this information. A UUID should be consistently used for this
-     * schedule across revisions of the document.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this risk log entry elsewhere in this or other OSCAL instances. The locally
+     * defined UUID of the risk log entry can be used to reference the data item locally or
+     * globally (e.g., in an imported OSCAL instance). This UUID should be assigned per-subject,
+     * which means it should be consistently used to identify the same subject across revisions
+     * of the document.
      */
     uuid: string;
 }
@@ -1792,7 +1847,7 @@ export interface RiskResponseReference {
     relatedTasks?: TaskReference[];
     remarks?: string;
     /**
-     * References a unique risk response by UUID.
+     * A machine-oriented identifier reference to a unique risk response.
      */
     responseUUID: string;
 }
@@ -1822,8 +1877,8 @@ export interface Catalog {
     metadata: PublicationMetadata;
     params?: Parameter[];
     /**
-     * A globally unique identifier for this catalog instance. This UUID should be changed when
-     * this document is revised.
+     * A globally unique identifier with cross-instance scope for this catalog instance. This
+     * UUID should be changed when this document is revised.
      */
     uuid: string;
 }
@@ -1839,9 +1894,10 @@ export interface Control {
     class?: string;
     controls?: Control[];
     /**
-     * A unique identifier for a specific control instance that can be used to reference the
-     * control in other OSCAL documents. This identifier's uniqueness is document scoped and is
-     * intended to be consistent for the same control across minor revisions of the document.
+     * A human-oriented, locally unique identifier with instance scope that can be used to
+     * reference this control elsewhere in this and other OSCAL instances (e.g., profiles). This
+     * id should be assigned per-subject, which means it should be consistently used to identify
+     * the same control across revisions of the document.
      */
     id: string;
     links?: Link[];
@@ -1864,14 +1920,18 @@ export interface Parameter {
     class?: string;
     constraints?: Constraint[];
     /**
-     * Another parameter invoking this one
+     * **(deprecated)** Another parameter invoking this one. This construct has been deprecated
+     * and should not be used.
      */
     dependsOn?: string;
     guidelines?: Guideline[];
     /**
-     * A unique identifier for a specific parameter instance. This identifier's uniqueness is
-     * document scoped and is intended to be consistent for the same parameter across minor
-     * revisions of the document.
+     * A human-oriented, locally unique identifier with cross-instance scope that can be used to
+     * reference this defined parameter elsewhere in this or other OSCAL instances. When
+     * referenced from another OSCAL instance, this identifier must be referenced in the context
+     * of the containing resource (e.g., import-profile). This id should be assigned
+     * per-subject, which means it should be consistently used to identify the same subject
+     * across revisions of the document.
      */
     id: string;
     /**
@@ -1939,8 +1999,8 @@ export interface Selection {
  * should be assumed to be permitted.
  */
 export enum ParameterCardinality {
-    One = 'one',
-    OneOrMore = 'one-or-more',
+    One = "one",
+    OneOrMore = "one-or-more",
 }
 
 /**
@@ -1954,10 +2014,10 @@ export interface ControlGroup {
     controls?: Control[];
     groups?: ControlGroup[];
     /**
-     * A unique identifier for a specific group instance that can be used to reference the group
-     * within this and in other OSCAL documents. This identifier's uniqueness is document scoped
-     * and is intended to be consistent for the same group across minor revisions of the
-     * document.
+     * A human-oriented, locally unique identifier with cross-instance scope that can be used to
+     * reference this defined group elsewhere in in this and other OSCAL instances (e.g.,
+     * profiles). This id should be assigned per-subject, which means it should be consistently
+     * used to identify the same group across revisions of the document.
      */
     id?: string;
     links?: Link[];
@@ -1980,8 +2040,12 @@ export interface ComponentDefinition {
     importComponentDefinitions?: ImportComponentDefinition[];
     metadata: PublicationMetadata;
     /**
-     * A globally unique identifier for this component definition instance. This UUID should be
-     * changed when this document is revised.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this component definition elsewhere in this or other OSCAL instances. The
+     * locally defined UUID of the component definition can be used to reference the data item
+     * locally or globally (e.g., in an imported OSCAL instance). This UUID should be assigned
+     * per-subject, which means it should be consistently used to identify the same subject
+     * across revisions of the document.
      */
     uuid: string;
 }
@@ -2004,7 +2068,12 @@ export interface Capability {
     props?: Property[];
     remarks?: string;
     /**
-     * A unique identifier for a capability.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this capability elsewhere in this or other OSCAL instances. The locally
+     * defined UUID of the capability can be used to reference the data item locally or globally
+     * (e.g., in an imported OSCAL instance).This UUID should be assigned per-subject, which
+     * means it should be consistently used to identify the same subject across revisions of the
+     * document.
      */
     uuid: string;
 }
@@ -2028,7 +2097,12 @@ export interface ControlImplementationSet {
      */
     source: string;
     /**
-     * A unique identifier for the set of implemented controls.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference a set of implemented controls elsewhere in this or other OSCAL instances.
+     * The locally defined UUID of the control implementation set can be used to reference the
+     * data item locally or globally (e.g., in an imported OSCAL instance). This UUID should be
+     * assigned per-subject, which means it should be consistently used to identify the same
+     * subject across revisions of the document.
      */
     uuid: string;
 }
@@ -2038,12 +2112,14 @@ export interface ControlImplementationSet {
  */
 export interface ImplementedRequirementElement {
     /**
-     * A reference to a control with a corresponding id value.
+     * A human-oriented identifier reference to a control with a corresponding id value. When
+     * referencing an externally defined control, the Control Identifier Reference must be used
+     * in the context of the external / imported OSCAL instance (e.g., uri-reference).
      */
     controlID: string;
     /**
-     * A description of how the specified control is implemented for the containing component or
-     * capability.
+     * A suggestion for how the specified control may be implemented if the containing component
+     * or capability is instantiated in a system security plan.
      */
     description: string;
     links?: Link[];
@@ -2053,7 +2129,12 @@ export interface ImplementedRequirementElement {
     setParameters?: SetParameterValue[];
     statements?: ControlStatementImplementation[];
     /**
-     * A unique identifier for a specific control implementation.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference a specific control implementation elsewhere in this or other OSCAL
+     * instances. The locally defined UUID of the control implementation can be used to
+     * reference the data item locally or globally (e.g., in an imported OSCAL instance).This
+     * UUID should be assigned per-subject, which means it should be consistently used to
+     * identify the same subject across revisions of the document.
      */
     uuid: string;
 }
@@ -2063,8 +2144,8 @@ export interface ImplementedRequirementElement {
  */
 export interface SetParameterValue {
     /**
-     * A reference to a parameter within a control, who's catalog has been imported into the
-     * current implementation context.
+     * A human-oriented reference to a parameter within a control, who's catalog has been
+     * imported into the current implementation context.
      */
     paramID: string;
     remarks?: string;
@@ -2085,13 +2166,14 @@ export interface ControlStatementImplementation {
     remarks?: string;
     responsibleRoles?: ResponsibleRole[];
     /**
-     * A reference to a control statement by its identifier
+     * A human-oriented identifier reference to a control statement.
      */
     statementID: string;
     /**
-     * A globally unique identifier that can be used to reference this control statement entry
-     * elsewhere in an OSCAL document. A UUID should be consistently used for a given resource
-     * across revisions of the document.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this control statement elsewhere in this or other OSCAL instances. The UUID
+     * of the control statement in the source OSCAL instance is sufficient to reference the data
+     * item locally or globally (e.g., in an imported OSCAL instance).
      */
     uuid: string;
 }
@@ -2101,7 +2183,7 @@ export interface ControlStatementImplementation {
  */
 export interface IncorporatesComponent {
     /**
-     * A reference to a component by its identifier
+     * A machine-oriented identifier reference to a component.
      */
     componentUUID: string;
     /**
@@ -2137,7 +2219,12 @@ export interface ComponentDefinitionComponent {
      */
     type: string;
     /**
-     * The unique identifier for the component.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this component elsewhere in this or other OSCAL instances. The locally
+     * defined UUID of the component can be used to reference the data item locally or globally
+     * (e.g., in an imported OSCAL instance). This UUID should be assigned per-subject, which
+     * means it should be consistently used to identify the same subject across revisions of the
+     * document.
      */
     uuid: string;
 }
@@ -2167,8 +2254,10 @@ export interface PlanOfActionAndMilestonesPOAM {
     risks?: IdentifiedRisk[];
     systemID?: SystemIdentification;
     /**
-     * Uniquely identifies this POA&M. This UUID must be changed each time the content of the
-     * POA&M changes.
+     * A machine-oriented, globally unique identifier with instancescope that can be used to
+     * reference this POA&M instance in this OSCAL instance. This UUID should be assigned
+     * per-subject, which means it should be consistently used to identify the same subject
+     * across revisions of the document.
      */
     uuid: string;
 }
@@ -2202,9 +2291,10 @@ export interface POAMItem {
      */
     title: string;
     /**
-     * Uniquely identifies the POA&M entry. This UUID may be referenced elsewhere in an OSCAL
-     * document when referring to this information. A UUID should be consistently used for a
-     * given POA&M item across revisions of the document.
+     * A machine-oriented, globally unique identifier with instance scope that can be used to
+     * reference this POA&M item entry in this OSCAL instance. This UUID should be assigned
+     * per-subject, which means it should be consistently used to identify the same subject
+     * across revisions of the document.
      */
     uuid?: string;
 }
@@ -2222,7 +2312,8 @@ export interface PoamItemOrigin {
  */
 export interface PoamItemRelatedObservation {
     /**
-     * References an observation defined in the list of observations.
+     * A machine-oriented identifier reference to an observation defined in the list of
+     * observations.
      */
     observationUUID: string;
 }
@@ -2232,13 +2323,18 @@ export interface PoamItemRelatedObservation {
  */
 export interface PoamItemRelatedRisk {
     /**
-     * References an risk defined in the list of risks.
+     * A machine-oriented identifier reference to a risk defined in the list of risks.
      */
     riskUUID: string;
 }
 
 /**
- * A unique identifier for the system described by this system security plan.
+ * A human-oriented, globally unique identifier with cross-instance scope that can be used
+ * to reference this system identification property elsewhere in this or other OSCAL
+ * instances. When referencing an externally defined system identification, the system
+ * identification must be used in the context of the external / imported OSCAL instance
+ * (e.g., uri-reference). This string should be assigned per-subject, which means it should
+ * be consistently used to identify the same system across revisions of the document.
  */
 export interface SystemIdentification {
     id: string;
@@ -2258,16 +2354,20 @@ export interface Profile {
     metadata: PublicationMetadata;
     modify?: ModifyControls;
     /**
-     * A globally unique identifier for this profile instance. This UUID should be changed when
-     * this document is revised.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this profile elsewhere in this or other OSCAL instances. The locally defined
+     * UUID of the profile can be used to reference the data item locally or globally (e.g., in
+     * an imported OSCAL instance).This identifier should be assigned per-subject, which means
+     * it should be consistently used to identify the same profile across revisions of the
+     * document.
      */
     uuid: string;
 }
 
 /**
- * The import designates a catalog, profile, or other resource to be included (referenced
- * and potentially modified) by this profile. The import also identifies which controls to
- * select using the include-all, include-controls, and exclude-controls directives.
+ * The import designates a catalog or profile to be included (referenced and potentially
+ * modified) by this profile. The import also identifies which controls to select using the
+ * include-all, include-controls, and exclude-controls directives.
  */
 export interface ImportResource {
     excludeControls?: Call[];
@@ -2275,7 +2375,7 @@ export interface ImportResource {
      * A resolvable URL reference to the base catalog or profile that this profile is tailoring.
      */
     href: string;
-    includeAll?: InsertAll;
+    includeAll?: IncludeAll;
     includeControls?: Call[];
 }
 
@@ -2305,29 +2405,38 @@ export interface MatchControlsByPattern {
  * When a control is included, whether its child (dependent) controls are also included.
  */
 export enum IncludeContainedControlsWithControl {
-    No = 'no',
-    Yes = 'yes',
+    No = "no",
+    Yes = "yes",
 }
 
 /**
- * Insert all controls from the imported catalog or profile resources identified in the
- * import directive.
- */
-export interface InsertAll {
-}
-
-/**
- * A Merge element merges controls in resolution.
+ * A Merge element provides structuring directives that drive how controls are organized
+ * after resolution.
  */
 export interface MergeControls {
+    /**
+     * An As-is element indicates that the controls should be structured in resolution as they
+     * are structured in their source catalogs. It does not contain any elements or attributes.
+     */
     asIs?: boolean;
+    /**
+     * A Combine element defines how to combine multiple (competing) versions of the same
+     * control.
+     */
     combine?: CombinationRule;
+    /**
+     * A Custom element frames a structure for embedding represented controls in resolution.
+     */
     custom?: CustomGrouping;
+    /**
+     * Use the flat structuring method.
+     */
+    flat?: Flat;
 }
 
 /**
- * A Combine element defines whether and how to combine multiple (competing) versions of the
- * same control
+ * A Combine element defines how to combine multiple (competing) versions of the same
+ * control.
  */
 export interface CombinationRule {
     /**
@@ -2340,9 +2449,9 @@ export interface CombinationRule {
  * How clashing controls should be handled
  */
 export enum CombinationMethod {
-    Keep = 'keep',
-    Merge = 'merge',
-    UseFirst = 'use-first',
+    Keep = "keep",
+    Merge = "merge",
+    UseFirst = "use-first",
 }
 
 /**
@@ -2363,9 +2472,11 @@ export interface CustomGroup {
     class?: string;
     groups?: CustomGroup[];
     /**
-     * A unique identifier for a specific group instance that can be used to reference the group
-     * within this and in other OSCAL documents. This identifier's uniqueness is document scoped
-     * and is intended to be consistent for the same group across minor revisions of the
+     * A human-oriented, locally unique identifier with cross-instance scope that can be used to
+     * reference this defined group elsewhere in this or other OSCAL instances. When referenced
+     * from another OSCAL instance, this identifier must be referenced in the context of the
+     * containing resource (e.g., import-profile). This id should be assigned per-subject, which
+     * means it should be consistently used to identify the same group across revisions of the
      * document.
      */
     id?: string;
@@ -2385,7 +2496,7 @@ export interface CustomGroup {
  */
 export interface SelectControls {
     excludeControls?: Call[];
-    includeAll?: InsertAll;
+    includeAll?: IncludeAll;
     includeControls?: Call[];
     /**
      * A designation of how a selection of controls in a profile is to be ordered.
@@ -2397,9 +2508,15 @@ export interface SelectControls {
  * A designation of how a selection of controls in a profile is to be ordered.
  */
 export enum Order {
-    Ascending = 'ascending',
-    Descending = 'descending',
-    Keep = 'keep',
+    Ascending = "ascending",
+    Descending = "descending",
+    Keep = "keep",
+}
+
+/**
+ * Use the flat structuring method.
+ */
+export interface Flat {
 }
 
 /**
@@ -2417,9 +2534,11 @@ export interface ModifyControls {
 export interface Alteration {
     adds?: Addition[];
     /**
-     * A reference to a control with a corresponding id value.
+     * A human-oriented identifier reference to a control with a corresponding id value. When
+     * referencing an externally defined control, the Control Identifier Reference must be used
+     * in the context of the external / imported OSCAL instance (e.g., uri-reference).
      */
-    controlID?: string;
+    controlID: string;
     removes?: Removal[];
 }
 
@@ -2449,10 +2568,10 @@ export interface Addition {
  * Where to add the new content with respect to the targeted element (beside it or inside it)
  */
 export enum Position {
-    After = 'after',
-    Before = 'before',
-    Ending = 'ending',
-    Starting = 'starting',
+    After = "after",
+    Before = "before",
+    Ending = "ending",
+    Starting = "starting",
 }
 
 /**
@@ -2494,7 +2613,8 @@ export interface ParameterSetting {
     class?: string;
     constraints?: Constraint[];
     /**
-     * Another parameter invoking this one
+     * **(deprecated)** Another parameter invoking this one. This construct has been deprecated
+     * and should not be used.
      */
     dependsOn?: string;
     guidelines?: Guideline[];
@@ -2505,7 +2625,12 @@ export interface ParameterSetting {
     label?: string;
     links?: Link[];
     /**
-     * Indicates the value of the 'id' flag on a target parameter; i.e. which parameter to set
+     * A human-oriented, locally unique identifier with cross-instance scope that can be used to
+     * reference this defined parameter elsewhere in this or other OSCAL instances. When
+     * referenced from another OSCAL instance, this identifier must be referenced in the context
+     * of the containing resource (e.g., import-profile). This id should be assigned
+     * per-subject, which means it should be consistently used to identify the same subject
+     * across revisions of the document.
      */
     paramID: string;
     props?: Property[];
@@ -2528,8 +2653,12 @@ export interface SystemSecurityPlanSSP {
     systemCharacteristics: SystemCharacteristics;
     systemImplementation: SystemImplementation;
     /**
-     * A globally unique identifier for this catalog instance. This UUID should be changed when
-     * this document is revised.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this system security plan (SSP) elsewhere in this or other OSCAL instances.
+     * The locally defined UUID of the SSP can be used to reference the data item locally or
+     * globally (e.g., in an imported OSCAL instance).This UUID should be assigned per-subject,
+     * which means it should be consistently used to identify the same subject across revisions
+     * of the document.
      */
     uuid: string;
 }
@@ -2548,12 +2677,14 @@ export interface ControlImplementationClass {
 }
 
 /**
- * Describes how the system satisfies an individual control.
+ * Describes how the system satisfies the requirements of an individual control.
  */
 export interface ControlBasedRequirement {
     byComponents?: ComponentControlImplementation[];
     /**
-     * A reference to a control with a corresponding id value.
+     * A human-oriented identifier reference to a control with a corresponding id value. When
+     * referencing an externally defined control, the Control Identifier Reference must be used
+     * in the context of the external / imported OSCAL instance (e.g., uri-reference).
      */
     controlID: string;
     links?: Link[];
@@ -2563,8 +2694,11 @@ export interface ControlBasedRequirement {
     setParameters?: SetParameterValue[];
     statements?: SpecificControlStatement[];
     /**
-     * A globally unique identifier that can be used to reference this control requirement entry
-     * elsewhere in an OSCAL document. A UUID should be consistently used for a given resource
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this control requirement elsewhere in this or other OSCAL instances. The
+     * locally defined UUID of the control requirement can be used to reference the data item
+     * locally or globally (e.g., in an imported OSCAL instance). This UUID should be assigned
+     * per-subject, which means it should be consistently used to identify the same subject
      * across revisions of the document.
      */
     uuid: string;
@@ -2575,7 +2709,8 @@ export interface ControlBasedRequirement {
  */
 export interface ComponentControlImplementation {
     /**
-     * A reference to the component that is implementing a given control or control statement.
+     * A machine-oriented identifier reference to the component that is implemeting a given
+     * control.
      */
     componentUUID: string;
     /**
@@ -2597,8 +2732,11 @@ export interface ComponentControlImplementation {
     satisfied?: SatisfiedControlImplementationResponsibility[];
     setParameters?: SetParameterValue[];
     /**
-     * A globally unique identifier that can be used to reference this by-component entry
-     * elsewhere in an OSCAL document. A UUID should be consistently used for a given resource
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this by-component entry elsewhere in this or other OSCAL instances. The
+     * locally defined UUID of the by-component entry can be used to reference the data item
+     * locally or globally (e.g., in an imported OSCAL instance). This UUID should be assigned
+     * per-subject, which means it should be consistently used to identify the same subject
      * across revisions of the document.
      */
     uuid: string;
@@ -2635,9 +2773,12 @@ export interface ProvidedControlImplementation {
     remarks?: string;
     responsibleRoles?: ResponsibleRole[];
     /**
-     * A globally unique identifier that can be used to reference this provided entry elsewhere
-     * in an OSCAL document. A UUID should be consistently used for a given resource across
-     * revisions of the document.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this provided entry elsewhere in this or other OSCAL instances. The locally
+     * defined UUID of the provided entry can be used to reference the data item locally or
+     * globally (e.g., in an imported OSCAL instance). This UUID should be assigned per-subject,
+     * which means it should be consistently used to identify the same subject across revisions
+     * of the document.
      */
     uuid: string;
 }
@@ -2655,15 +2796,19 @@ export interface ControlImplementationResponsibility {
     links?: Link[];
     props?: Property[];
     /**
-     * Identifies a 'provided' assembly associated with this assembly.
+     * A machine-oriented identifier reference to an inherited control implementation that a
+     * leveraging system is inheriting from a leveraged system.
      */
     providedUUID?: string;
     remarks?: string;
     responsibleRoles?: ResponsibleRole[];
     /**
-     * A globally unique identifier that can be used to reference this responsibility entry
-     * elsewhere in an OSCAL document. A UUID should be consistently used for a given resource
-     * across revisions of the document.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this responsibility elsewhere in this or other OSCAL instances. The locally
+     * defined UUID of the responsibility can be used to reference the data item locally or
+     * globally (e.g., in an imported OSCAL instance). This UUID should be assigned per-subject,
+     * which means it should be consistently used to identify the same subject across revisions
+     * of the document.
      */
     uuid: string;
 }
@@ -2680,14 +2825,18 @@ export interface InheritedControlImplementation {
     links?: Link[];
     props?: Property[];
     /**
-     * Identifies a 'provided' assembly associated with this assembly.
+     * A machine-oriented identifier reference to an inherited control implementation that a
+     * leveraging system is inheriting from a leveraged system.
      */
     providedUUID?: string;
     responsibleRoles?: ResponsibleRole[];
     /**
-     * A globally unique identifier that can be used to reference this inherited entry elsewhere
-     * in an OSCAL document. A UUID should be consistently used for a given resource across
-     * revisions of the document.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this inherited entry elsewhere in this or other OSCAL instances. The locally
+     * defined UUID of the inherited control implementation can be used to reference the data
+     * item locally or globally (e.g., in an imported OSCAL instance). This UUID should be
+     * assigned per-subject, which means it should be consistently used to identify the same
+     * subject across revisions of the document.
      */
     uuid: string;
 }
@@ -2706,14 +2855,18 @@ export interface SatisfiedControlImplementationResponsibility {
     props?: Property[];
     remarks?: string;
     /**
-     * Identifies a 'provided' assembly associated with this assembly.
+     * A machine-oriented identifier reference to a control implementation that satisfies a
+     * responsibility imposed by a leveraged system.
      */
     responsibilityUUID?: string;
     responsibleRoles?: ResponsibleRole[];
     /**
-     * A globally unique identifier that can be used to reference this satisfied entry elsewhere
-     * in an OSCAL document. A UUID should be consistently used for a given resource across
-     * revisions of the document.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this satisfied control implementation entry elsewhere in this or other OSCAL
+     * instances. The locally defined UUID of the control implementation can be used to
+     * reference the data item locally or globally (e.g., in an imported OSCAL instance). This
+     * UUID should be assigned per-subject, which means it should be consistently used to
+     * identify the same subject across revisions of the document.
      */
     uuid: string;
 }
@@ -2728,13 +2881,14 @@ export interface SpecificControlStatement {
     remarks?: string;
     responsibleRoles?: ResponsibleRole[];
     /**
-     * A reference to a control statement by its identifier
+     * A human-oriented identifier reference to a control statement.
      */
     statementID: string;
     /**
-     * A globally unique identifier that can be used to reference this control statement entry
-     * elsewhere in an OSCAL document. A UUID should be consistently used for a given resource
-     * across revisions of the document.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this control statement elsewhere in this or other OSCAL instances. The UUID
+     * of the control statement in the source OSCAL instance is sufficient to reference the data
+     * item locally or globally (e.g., in an imported OSCAL instance).
      */
     uuid: string;
 }
@@ -2744,7 +2898,8 @@ export interface SpecificControlStatement {
  */
 export interface ImportProfile {
     /**
-     * A resolvable URL reference to the profile to use as the system's control baseline.
+     * A resolvable URL reference to the profile or catalog to use as the system's control
+     * baseline.
      */
     href: string;
     remarks?: string;
@@ -2798,9 +2953,6 @@ export interface AuthorizationBoundary {
     diagrams?: Diagram[];
     links?: Link[];
     props?: Property[];
-    /**
-     * Commentary about the system's authorization boundary that enhances the diagram.
-     */
     remarks?: string;
 }
 
@@ -2818,12 +2970,13 @@ export interface Diagram {
     description?: string;
     links?: Link[];
     props?: Property[];
-    /**
-     * Commentary about the diagram that enhances it.
-     */
     remarks?: string;
     /**
-     * The identifier for this diagram.
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this diagram elsewhere in this or other OSCAL instances. The locally defined
+     * UUID of the diagram can be used to reference the data item locally or globally (e.g., in
+     * an imported OSCAL instance). This UUID should be assigned per-subject, which means it
+     * should be consistently used to identify the same subject across revisions of the document.
      */
     uuid: string;
 }
@@ -2895,11 +3048,11 @@ export interface SystemCharacteristicsStatus {
  * The current operating status.
  */
 export enum FluffyState {
-    Disposition = 'disposition',
-    Operational = 'operational',
-    Other = 'other',
-    UnderDevelopment = 'under-development',
-    UnderMajorModification = 'under-major-modification',
+    Disposition = "disposition",
+    Operational = "operational",
+    Other = "other",
+    UnderDevelopment = "under-development",
+    UnderMajorModification = "under-major-modification",
 }
 
 /**
@@ -2945,8 +3098,11 @@ export interface InformationType {
      */
     title: string;
     /**
-     * A globally unique identifier that can be used to reference this information type entry
-     * elsewhere in an OSCAL document. A UUID should be consistently used for a given resource
+     * A machine-oriented, globally unique identifier with cross-instance scope that can be used
+     * to reference this information type elsewhere in this or other OSCAL instances. The
+     * locally defined UUID of the information type can be used to reference the data item
+     * locally or globally (e.g., in an imported OSCAL instance). This UUID should be assigned
+     * per-subject, which means it should be consistently used to identify the same subject
      * across revisions of the document.
      */
     uuid?: string;
@@ -3022,7 +3178,7 @@ export interface LeveragedAuthorization {
     dateAuthorized: string;
     links?: Link[];
     /**
-     * A reference to the party that manages the leveraged system.
+     * A machine-oriented identifier reference to the party that manages the leveraged system.
      */
     partyUUID: string;
     props?: Property[];
@@ -3032,9 +3188,12 @@ export interface LeveragedAuthorization {
      */
     title: string;
     /**
-     * A globally unique identifier that can be used to reference this leveraged authorization
-     * entry elsewhere in an OSCAL document. A UUID should be consistently used for a given
-     * resource across revisions of the document.
+     * A machine-oriented, globally unique identifier with cross-instance scope and can be used
+     * to reference this leveraged authorization elsewhere in this or other OSCAL instances. The
+     * locally defined UUID of the leveraged authorization can be used to reference the data
+     * item locally or globally (e.g., in an imported OSCAL instance). This UUID should be
+     * assigned per-subject, which means it should be consistently used to identify the same
+     * subject across revisions of the document.
      */
     uuid: string;
 }
@@ -3042,12 +3201,12 @@ export interface LeveragedAuthorization {
 // Converts JSON strings to/from your types
 // and asserts the results of JSON.parse at runtime
 export class Convert {
-    public static toNewSchema(json: string): NewSchema {
-        return cast(JSON.parse(json), r('NewSchema'));
+    public static toResult(json: string): Result {
+        return cast(JSON.parse(json), r("Result"));
     }
 
-    public static newSchemaToJson(value: NewSchema): string {
-        return JSON.stringify(uncast(value, r('NewSchema')), null, 2);
+    public static resultToJson(value: Result): string {
+        return JSON.stringify(uncast(value, r("Result")), null, 2);
     }
 }
 
@@ -3078,7 +3237,7 @@ function jsToJSONProps(typ: any): any {
 
 function transform(val: any, typ: any, getProps: any, key: any = ''): any {
     function transformPrimitive(typ: string, val: any): any {
-        if (typeof typ === typeof val) { return val; }
+        if (typeof typ === typeof val) return val;
         return invalidValue(typ, val, key);
     }
 
@@ -3095,13 +3254,13 @@ function transform(val: any, typ: any, getProps: any, key: any = ''): any {
     }
 
     function transformEnum(cases: string[], val: any): any {
-        if (cases.indexOf(val) !== -1) { return val; }
+        if (cases.indexOf(val) !== -1) return val;
         return invalidValue(cases, val);
     }
 
     function transformArray(typ: any, val: any): any {
         // val must be an array with no invalid elements
-        if (!Array.isArray(val)) { return invalidValue('array', val); }
+        if (!Array.isArray(val)) return invalidValue("array", val);
         return val.map(el => transform(el, typ, getProps));
     }
 
@@ -3111,14 +3270,14 @@ function transform(val: any, typ: any, getProps: any, key: any = ''): any {
         }
         const d = new Date(val);
         if (isNaN(d.valueOf())) {
-            return invalidValue('Date', val);
+            return invalidValue("Date", val);
         }
         return d;
     }
 
     function transformObject(props: { [k: string]: any }, additional: any, val: any): any {
-        if (val === null || typeof val !== 'object' || Array.isArray(val)) {
-            return invalidValue('object', val);
+        if (val === null || typeof val !== "object" || Array.isArray(val)) {
+            return invalidValue("object", val);
         }
         const result: any = {};
         Object.getOwnPropertyNames(props).forEach(key => {
@@ -3134,24 +3293,24 @@ function transform(val: any, typ: any, getProps: any, key: any = ''): any {
         return result;
     }
 
-    if (typ === 'any') { return val; }
+    if (typ === "any") return val;
     if (typ === null) {
-        if (val === null) { return val; }
+        if (val === null) return val;
         return invalidValue(typ, val);
     }
-    if (typ === false) { return invalidValue(typ, val); }
-    while (typeof typ === 'object' && typ.ref !== undefined) {
+    if (typ === false) return invalidValue(typ, val);
+    while (typeof typ === "object" && typ.ref !== undefined) {
         typ = typeMap[typ.ref];
     }
-    if (Array.isArray(typ)) { return transformEnum(typ, val); }
-    if (typeof typ === 'object') {
-        return typ.hasOwnProperty('unionMembers') ? transformUnion(typ.unionMembers, val)
-            : typ.hasOwnProperty('arrayItems') ? transformArray(typ.arrayItems, val)
-                : typ.hasOwnProperty('props') ? transformObject(getProps(typ), typ.additional, val)
+    if (Array.isArray(typ)) return transformEnum(typ, val);
+    if (typeof typ === "object") {
+        return typ.hasOwnProperty("unionMembers") ? transformUnion(typ.unionMembers, val)
+            : typ.hasOwnProperty("arrayItems") ? transformArray(typ.arrayItems, val)
+                : typ.hasOwnProperty("props") ? transformObject(getProps(typ), typ.additional, val)
                     : invalidValue(typ, val);
     }
     // Numbers can be parsed by Date but shouldn't be.
-    if (typ === Date && typeof val !== 'number') { return transformDate(val); }
+    if (typ === Date && typeof val !== "number") return transformDate(val);
     return transformPrimitive(typ, val);
 }
 
@@ -3184,1195 +3343,1192 @@ function r(name: string) {
 }
 
 const typeMap: any = {
-    NewSchema: o([
-        { json: 'catalog', js: 'catalog', typ: u(undefined, r('Catalog')) },
-        { json: 'profile', js: 'profile', typ: u(undefined, r('Profile')) },
-        { json: 'component-definition', js: 'componentDefinition', typ: u(undefined, r('ComponentDefinition')) },
-        { json: 'system-security-plan', js: 'systemSecurityPlan', typ: u(undefined, r('SystemSecurityPlanSSP')) },
-        { json: 'assessment-plan', js: 'assessmentPlan', typ: u(undefined, r('SecurityAssessmentPlanSAP')) },
-        { json: 'assessment-results', js: 'assessmentResults', typ: u(undefined, r('SecurityAssessmentResultsSAR')) },
-        { json: 'plan-of-action-and-milestones', js: 'planOfActionAndMilestones', typ: u(undefined, r('PlanOfActionAndMilestonesPOAM')) },
-    ], false),
-    SecurityAssessmentPlanSAP: o([
-        { json: 'assessment-assets', js: 'assessmentAssets', typ: u(undefined, r('AssessmentAssets')) },
-        { json: 'assessment-subjects', js: 'assessmentSubjects', typ: u(undefined, a(r('SubjectOfAssessment'))) },
-        { json: 'back-matter', js: 'backMatter', typ: u(undefined, r('BackMatter')) },
-        { json: 'import-ssp', js: 'importSSP', typ: r('ImportSystemSecurityPlan') },
-        { json: 'local-definitions', js: 'localDefinitions', typ: u(undefined, r('AssessmentPlanLocalDefinitions')) },
-        { json: 'metadata', js: 'metadata', typ: r('PublicationMetadata') },
-        { json: 'reviewed-controls', js: 'reviewedControls', typ: r('ReviewedControlsAndControlObjectives') },
-        { json: 'tasks', js: 'tasks', typ: u(undefined, a(r('Task'))) },
-        { json: 'terms-and-conditions', js: 'termsAndConditions', typ: u(undefined, r('AssessmentPlanTermsAndConditions')) },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    AssessmentAssets: o([
-        { json: 'assessment-platforms', js: 'assessmentPlatforms', typ: a(r('AssessmentPlatform')) },
-        { json: 'components', js: 'components', typ: u(undefined, a(r('AssessmentAssetsComponent'))) },
-    ], false),
-    AssessmentPlatform: o([
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'title', js: 'title', typ: u(undefined, '') },
-        { json: 'uses-components', js: 'usesComponents', typ: u(undefined, a(r('UsesComponent'))) },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    Link: o([
-        { json: 'href', js: 'href', typ: '' },
-        { json: 'media-type', js: 'mediaType', typ: u(undefined, '') },
-        { json: 'rel', js: 'rel', typ: u(undefined, '') },
-        { json: 'text', js: 'text', typ: u(undefined, '') },
-    ], false),
-    Property: o([
-        { json: 'class', js: 'class', typ: u(undefined, '') },
-        { json: 'name', js: 'name', typ: '' },
-        { json: 'ns', js: 'ns', typ: u(undefined, '') },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'uuid', js: 'uuid', typ: u(undefined, '') },
-        { json: 'value', js: 'value', typ: '' },
-    ], false),
-    UsesComponent: o([
-        { json: 'component-uuid', js: 'componentUUID', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsible-parties', js: 'responsibleParties', typ: u(undefined, a(r('ResponsibleParty'))) },
-    ], false),
-    ResponsibleParty: o([
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'party-uuids', js: 'partyUuids', typ: a('') },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'role-id', js: 'roleID', typ: '' },
-    ], false),
-    AssessmentAssetsComponent: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'protocols', js: 'protocols', typ: u(undefined, a(r('ServiceProtocolInformation'))) },
-        { json: 'purpose', js: 'purpose', typ: u(undefined, '') },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsible-roles', js: 'responsibleRoles', typ: u(undefined, a(r('ResponsibleRole'))) },
-        { json: 'status', js: 'status', typ: r('ComponentStatus') },
-        { json: 'title', js: 'title', typ: '' },
-        { json: 'type', js: 'type', typ: '' },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    ServiceProtocolInformation: o([
-        { json: 'name', js: 'name', typ: '' },
-        { json: 'port-ranges', js: 'portRanges', typ: u(undefined, a(r('PortRange'))) },
-        { json: 'title', js: 'title', typ: u(undefined, '') },
-        { json: 'uuid', js: 'uuid', typ: u(undefined, '') },
-    ], false),
-    PortRange: o([
-        { json: 'end', js: 'end', typ: u(undefined, 0) },
-        { json: 'start', js: 'start', typ: u(undefined, 0) },
-        { json: 'transport', js: 'transport', typ: u(undefined, r('Transport')) },
-    ], false),
-    ResponsibleRole: o([
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'party-uuids', js: 'partyUuids', typ: u(undefined, a('')) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'role-id', js: 'roleID', typ: '' },
-    ], false),
-    ComponentStatus: o([
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'state', js: 'state', typ: r('PurpleState') },
-    ], false),
-    SubjectOfAssessment: o([
-        { json: 'description', js: 'description', typ: u(undefined, '') },
-        { json: 'exclude-subjects', js: 'excludeSubjects', typ: u(undefined, a(r('SelectAssessmentSubject'))) },
-        { json: 'include-all', js: 'includeAll', typ: u(undefined, r('AssessmentSubjectIncludeAll')) },
-        { json: 'include-subjects', js: 'includeSubjects', typ: u(undefined, a(r('SelectAssessmentSubject'))) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'type', js: 'type', typ: '' },
-    ], false),
-    SelectAssessmentSubject: o([
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'subject-uuid', js: 'subjectUUID', typ: '' },
-        { json: 'type', js: 'type', typ: '' },
-    ], false),
-    AssessmentSubjectIncludeAll: o([
-    ], false),
-    BackMatter: o([
-        { json: 'resources', js: 'resources', typ: u(undefined, a(r('Resource'))) },
-    ], false),
-    Resource: o([
-        { json: 'base64', js: 'base64', typ: u(undefined, r('Base64')) },
-        { json: 'citation', js: 'citation', typ: u(undefined, r('Citation')) },
-        { json: 'description', js: 'description', typ: u(undefined, '') },
-        { json: 'document-ids', js: 'documentIDS', typ: u(undefined, a(r('DocumentIdentifier'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'rlinks', js: 'rlinks', typ: u(undefined, a(r('ResourceLink'))) },
-        { json: 'title', js: 'title', typ: u(undefined, '') },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    Base64: o([
-        { json: 'filename', js: 'filename', typ: u(undefined, '') },
-        { json: 'media-type', js: 'mediaType', typ: u(undefined, '') },
-        { json: 'value', js: 'value', typ: '' },
-    ], false),
-    Citation: o([
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'text', js: 'text', typ: '' },
-    ], false),
-    DocumentIdentifier: o([
-        { json: 'identifier', js: 'identifier', typ: '' },
-        { json: 'scheme', js: 'scheme', typ: u(undefined, '') },
-    ], false),
-    ResourceLink: o([
-        { json: 'hashes', js: 'hashes', typ: u(undefined, a(r('Hash'))) },
-        { json: 'href', js: 'href', typ: '' },
-        { json: 'media-type', js: 'mediaType', typ: u(undefined, '') },
-    ], false),
-    Hash: o([
-        { json: 'algorithm', js: 'algorithm', typ: '' },
-        { json: 'value', js: 'value', typ: '' },
-    ], false),
-    ImportSystemSecurityPlan: o([
-        { json: 'href', js: 'href', typ: '' },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-    ], false),
-    AssessmentPlanLocalDefinitions: o([
-        { json: 'activities', js: 'activities', typ: u(undefined, a(r('Activity'))) },
-        { json: 'components', js: 'components', typ: u(undefined, a(r('AssessmentAssetsComponent'))) },
-        { json: 'inventory-items', js: 'inventoryItems', typ: u(undefined, a(r('InventoryItem'))) },
-        { json: 'objectives-and-methods', js: 'objectivesAndMethods', typ: u(undefined, a(r('AssessmentSpecificControlObjective'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'users', js: 'users', typ: u(undefined, a(r('SystemUser'))) },
-    ], false),
-    Activity: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'related-controls', js: 'relatedControls', typ: u(undefined, r('ReviewedControlsAndControlObjectives')) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsible-roles', js: 'responsibleRoles', typ: u(undefined, a(r('ResponsibleRole'))) },
-        { json: 'steps', js: 'steps', typ: u(undefined, a(r('Step'))) },
-        { json: 'title', js: 'title', typ: u(undefined, '') },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    ReviewedControlsAndControlObjectives: o([
-        { json: 'control-objective-selections', js: 'controlObjectiveSelections', typ: u(undefined, a(r('ReferencedControlObjectives'))) },
-        { json: 'control-selections', js: 'controlSelections', typ: a(r('AssessedControls')) },
-        { json: 'description', js: 'description', typ: u(undefined, '') },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-    ], false),
-    ReferencedControlObjectives: o([
-        { json: 'description', js: 'description', typ: u(undefined, '') },
-        { json: 'exclude-objectives', js: 'excludeObjectives', typ: u(undefined, a(r('SelectObjective'))) },
-        { json: 'include-all', js: 'includeAll', typ: u(undefined, r('ControlObjectiveSelectionIncludeAll')) },
-        { json: 'include-objectives', js: 'includeObjectives', typ: u(undefined, a(r('SelectObjective'))) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-    ], false),
-    SelectObjective: o([
-        { json: 'objective-id', js: 'objectiveID', typ: '' },
-    ], false),
-    ControlObjectiveSelectionIncludeAll: o([
-    ], false),
-    AssessedControls: o([
-        { json: 'description', js: 'description', typ: u(undefined, '') },
-        { json: 'exclude-controls', js: 'excludeControls', typ: u(undefined, a(r('SelectControl'))) },
-        { json: 'include-all', js: 'includeAll', typ: u(undefined, r('ControlSelectionIncludeAll')) },
-        { json: 'include-controls', js: 'includeControls', typ: u(undefined, a(r('SelectControl'))) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-    ], false),
-    SelectControl: o([
-        { json: 'control-id', js: 'controlID', typ: '' },
-        { json: 'statement-ids', js: 'statementIDS', typ: u(undefined, a('')) },
-    ], false),
-    ControlSelectionIncludeAll: o([
-    ], false),
-    Step: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsible-roles', js: 'responsibleRoles', typ: u(undefined, a(r('ResponsibleRole'))) },
-        { json: 'reviewed-controls', js: 'reviewedControls', typ: u(undefined, r('ReviewedControlsAndControlObjectives')) },
-        { json: 'title', js: 'title', typ: u(undefined, '') },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    InventoryItem: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'implemented-components', js: 'implementedComponents', typ: u(undefined, a(r('ImplementedComponent'))) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsible-parties', js: 'responsibleParties', typ: u(undefined, a(r('ResponsibleParty'))) },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    ImplementedComponent: o([
-        { json: 'component-uuid', js: 'componentUUID', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsible-parties', js: 'responsibleParties', typ: u(undefined, a(r('ResponsibleParty'))) },
-    ], false),
-    AssessmentSpecificControlObjective: o([
-        { json: 'control-id', js: 'controlID', typ: '' },
-        { json: 'description', js: 'description', typ: u(undefined, '') },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'parts', js: 'parts', typ: a(r('Part')) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-    ], false),
-    Part: o([
-        { json: 'class', js: 'class', typ: u(undefined, '') },
-        { json: 'id', js: 'id', typ: u(undefined, '') },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'name', js: 'name', typ: '' },
-        { json: 'ns', js: 'ns', typ: u(undefined, '') },
-        { json: 'parts', js: 'parts', typ: u(undefined, a(r('Part'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'prose', js: 'prose', typ: u(undefined, '') },
-        { json: 'title', js: 'title', typ: u(undefined, '') },
-    ], false),
-    SystemUser: o([
-        { json: 'authorized-privileges', js: 'authorizedPrivileges', typ: u(undefined, a(r('Privilege'))) },
-        { json: 'description', js: 'description', typ: u(undefined, '') },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'role-ids', js: 'roleIDS', typ: u(undefined, a('')) },
-        { json: 'short-name', js: 'shortName', typ: u(undefined, '') },
-        { json: 'title', js: 'title', typ: u(undefined, '') },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    Privilege: o([
-        { json: 'description', js: 'description', typ: u(undefined, '') },
-        { json: 'functions-performed', js: 'functionsPerformed', typ: a('') },
-        { json: 'title', js: 'title', typ: '' },
-    ], false),
-    PublicationMetadata: o([
-        { json: 'document-ids', js: 'documentIDS', typ: u(undefined, a(r('DocumentIdentifier'))) },
-        { json: 'last-modified', js: 'lastModified', typ: Date },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'locations', js: 'locations', typ: u(undefined, a(r('Location'))) },
-        { json: 'oscal-version', js: 'oscalVersion', typ: '' },
-        { json: 'parties', js: 'parties', typ: u(undefined, a(r('PartyOrganizationOrPerson'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'published', js: 'published', typ: u(undefined, Date) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsible-parties', js: 'responsibleParties', typ: u(undefined, a(r('ResponsibleParty'))) },
-        { json: 'revisions', js: 'revisions', typ: u(undefined, a(r('RevisionHistoryEntry'))) },
-        { json: 'roles', js: 'roles', typ: u(undefined, a(r('Role'))) },
-        { json: 'title', js: 'title', typ: '' },
-        { json: 'version', js: 'version', typ: '' },
-    ], false),
-    Location: o([
-        { json: 'address', js: 'address', typ: r('Address') },
-        { json: 'email-addresses', js: 'emailAddresses', typ: u(undefined, a('')) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'telephone-numbers', js: 'telephoneNumbers', typ: u(undefined, a(r('TelephoneNumber'))) },
-        { json: 'title', js: 'title', typ: u(undefined, '') },
-        { json: 'urls', js: 'urls', typ: u(undefined, a('')) },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    Address: o([
-        { json: 'addr-lines', js: 'addrLines', typ: u(undefined, a('')) },
-        { json: 'city', js: 'city', typ: u(undefined, '') },
-        { json: 'country', js: 'country', typ: u(undefined, '') },
-        { json: 'postal-code', js: 'postalCode', typ: u(undefined, '') },
-        { json: 'state', js: 'state', typ: u(undefined, '') },
-        { json: 'type', js: 'type', typ: u(undefined, '') },
-    ], false),
-    TelephoneNumber: o([
-        { json: 'number', js: 'number', typ: '' },
-        { json: 'type', js: 'type', typ: u(undefined, '') },
-    ], false),
-    PartyOrganizationOrPerson: o([
-        { json: 'addresses', js: 'addresses', typ: u(undefined, a(r('Address'))) },
-        { json: 'email-addresses', js: 'emailAddresses', typ: u(undefined, a('')) },
-        { json: 'external-ids', js: 'externalIDS', typ: u(undefined, a(r('PartyExternalIdentifier'))) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'location-uuids', js: 'locationUuids', typ: u(undefined, a('')) },
-        { json: 'member-of-organizations', js: 'memberOfOrganizations', typ: u(undefined, a('')) },
-        { json: 'name', js: 'name', typ: u(undefined, '') },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'short-name', js: 'shortName', typ: u(undefined, '') },
-        { json: 'telephone-numbers', js: 'telephoneNumbers', typ: u(undefined, a(r('TelephoneNumber'))) },
-        { json: 'type', js: 'type', typ: r('PartyType') },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    PartyExternalIdentifier: o([
-        { json: 'id', js: 'id', typ: '' },
-        { json: 'scheme', js: 'scheme', typ: '' },
-    ], false),
-    RevisionHistoryEntry: o([
-        { json: 'last-modified', js: 'lastModified', typ: u(undefined, Date) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'oscal-version', js: 'oscalVersion', typ: u(undefined, '') },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'published', js: 'published', typ: u(undefined, Date) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'title', js: 'title', typ: u(undefined, '') },
-        { json: 'version', js: 'version', typ: u(undefined, '') },
-    ], false),
-    Role: o([
-        { json: 'description', js: 'description', typ: u(undefined, '') },
-        { json: 'id', js: 'id', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'short-name', js: 'shortName', typ: u(undefined, '') },
-        { json: 'title', js: 'title', typ: '' },
-    ], false),
-    Task: o([
-        { json: 'associated-activities', js: 'associatedActivities', typ: u(undefined, a(r('AssociatedActivity'))) },
-        { json: 'dependencies', js: 'dependencies', typ: u(undefined, a(r('TaskDependency'))) },
-        { json: 'description', js: 'description', typ: u(undefined, '') },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsible-roles', js: 'responsibleRoles', typ: u(undefined, a(r('ResponsibleRole'))) },
-        { json: 'subjects', js: 'subjects', typ: u(undefined, a(r('SubjectOfAssessment'))) },
-        { json: 'tasks', js: 'tasks', typ: u(undefined, a(r('Task'))) },
-        { json: 'timing', js: 'timing', typ: u(undefined, r('EventTiming')) },
-        { json: 'title', js: 'title', typ: '' },
-        { json: 'type', js: 'type', typ: '' },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    AssociatedActivity: o([
-        { json: 'activity-uuid', js: 'activityUUID', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsible-roles', js: 'responsibleRoles', typ: u(undefined, a(r('ResponsibleRole'))) },
-        { json: 'subjects', js: 'subjects', typ: a(r('SubjectOfAssessment')) },
-    ], false),
-    TaskDependency: o([
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'task-uuid', js: 'taskUUID', typ: '' },
-    ], false),
-    EventTiming: o([
-        { json: 'at-frequency', js: 'atFrequency', typ: u(undefined, r('FrequencyCondition')) },
-        { json: 'on-date', js: 'onDate', typ: u(undefined, r('OnDateCondition')) },
-        { json: 'within-date-range', js: 'withinDateRange', typ: u(undefined, r('OnDateRangeCondition')) },
-    ], false),
-    FrequencyCondition: o([
-        { json: 'period', js: 'period', typ: 0 },
-        { json: 'unit', js: 'unit', typ: r('TimeUnit') },
-    ], false),
-    OnDateCondition: o([
-        { json: 'date', js: 'date', typ: Date },
-    ], false),
-    OnDateRangeCondition: o([
-        { json: 'end', js: 'end', typ: Date },
-        { json: 'start', js: 'start', typ: Date },
-    ], false),
-    AssessmentPlanTermsAndConditions: o([
-        { json: 'parts', js: 'parts', typ: u(undefined, a(r('AssessmentPart'))) },
-    ], false),
-    AssessmentPart: o([
-        { json: 'class', js: 'class', typ: u(undefined, '') },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'name', js: 'name', typ: '' },
-        { json: 'ns', js: 'ns', typ: u(undefined, '') },
-        { json: 'parts', js: 'parts', typ: u(undefined, a(r('AssessmentPart'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'prose', js: 'prose', typ: u(undefined, '') },
-        { json: 'title', js: 'title', typ: u(undefined, '') },
-        { json: 'uuid', js: 'uuid', typ: u(undefined, '') },
-    ], false),
-    SecurityAssessmentResultsSAR: o([
-        { json: 'back-matter', js: 'backMatter', typ: u(undefined, r('BackMatter')) },
-        { json: 'import-ap', js: 'importAp', typ: r('ImportAssessmentPlan') },
-        { json: 'local-definitions', js: 'localDefinitions', typ: u(undefined, r('AssessmentResultsLocalDefinitions')) },
-        { json: 'metadata', js: 'metadata', typ: r('PublicationMetadata') },
-        { json: 'results', js: 'results', typ: a(r('AssessmentResult')) },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    ImportAssessmentPlan: o([
-        { json: 'href', js: 'href', typ: '' },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-    ], false),
-    AssessmentResultsLocalDefinitions: o([
-        { json: 'activities', js: 'activities', typ: u(undefined, a(r('Activity'))) },
-        { json: 'objectives-and-methods', js: 'objectivesAndMethods', typ: u(undefined, a(r('AssessmentSpecificControlObjective'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-    ], false),
-    AssessmentResult: o([
-        { json: 'assessment-log', js: 'assessmentLog', typ: u(undefined, r('AssessmentLog')) },
-        { json: 'attestations', js: 'attestations', typ: u(undefined, a(r('AttestationStatements'))) },
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'end', js: 'end', typ: u(undefined, Date) },
-        { json: 'findings', js: 'findings', typ: u(undefined, a(r('Finding'))) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'local-definitions', js: 'localDefinitions', typ: u(undefined, r('ResultLocalDefinitions')) },
-        { json: 'observations', js: 'observations', typ: u(undefined, a(r('Observation'))) },
-        { json: 'prop', js: 'prop', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'reviewed-controls', js: 'reviewedControls', typ: r('ReviewedControlsAndControlObjectives') },
-        { json: 'risks', js: 'risks', typ: u(undefined, a(r('IdentifiedRisk'))) },
-        { json: 'start', js: 'start', typ: Date },
-        { json: 'title', js: 'title', typ: '' },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    AssessmentLog: o([
-        { json: 'entries', js: 'entries', typ: a(r('AssessmentLogEntry')) },
-    ], false),
-    AssessmentLogEntry: o([
-        { json: 'description', js: 'description', typ: u(undefined, '') },
-        { json: 'end', js: 'end', typ: u(undefined, Date) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'logged-by', js: 'loggedBy', typ: u(undefined, a(r('LoggedBy'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'related-tasks', js: 'relatedTasks', typ: u(undefined, a(r('TaskReference'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'start', js: 'start', typ: Date },
-        { json: 'title', js: 'title', typ: u(undefined, '') },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    LoggedBy: o([
-        { json: 'party-uuid', js: 'partyUUID', typ: '' },
-        { json: 'role-id', js: 'roleID', typ: u(undefined, '') },
-    ], false),
-    TaskReference: o([
-        { json: 'identified-subject', js: 'identifiedSubject', typ: u(undefined, r('IdentifiedSubject')) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsible-parties', js: 'responsibleParties', typ: u(undefined, a(r('ResponsibleParty'))) },
-        { json: 'subjects', js: 'subjects', typ: u(undefined, a(r('SubjectOfAssessment'))) },
-        { json: 'task-uuid', js: 'taskUUID', typ: '' },
-    ], false),
-    IdentifiedSubject: o([
-        { json: 'subject-placeholder-uuid', js: 'subjectPlaceholderUUID', typ: '' },
-        { json: 'subjects', js: 'subjects', typ: a(r('SubjectOfAssessment')) },
-    ], false),
-    AttestationStatements: o([
-        { json: 'parts', js: 'parts', typ: a(r('AssessmentPart')) },
-        { json: 'responsible-parties', js: 'responsibleParties', typ: u(undefined, a(r('ResponsibleParty'))) },
-    ], false),
-    Finding: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'implementation-statement-uuid', js: 'implementationStatementUUID', typ: u(undefined, '') },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'origins', js: 'origins', typ: u(undefined, a(r('FindingOrigin'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'related-observations', js: 'relatedObservations', typ: u(undefined, a(r('FindingRelatedObservation'))) },
-        { json: 'related-risks', js: 'relatedRisks', typ: u(undefined, a(r('FindingRelatedRisk'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'target', js: 'target', typ: r('TargetClass') },
-        { json: 'title', js: 'title', typ: '' },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    FindingOrigin: o([
-        { json: 'actors', js: 'actors', typ: a(r('OriginatingActor')) },
-        { json: 'related-tasks', js: 'relatedTasks', typ: u(undefined, a(r('TaskReference'))) },
-    ], false),
-    OriginatingActor: o([
-        { json: 'actor-uuid', js: 'actorUUID', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'role-id', js: 'roleID', typ: u(undefined, '') },
-        { json: 'type', js: 'type', typ: r('ActorType') },
-    ], false),
-    FindingRelatedObservation: o([
-        { json: 'observation-uuid', js: 'observationUUID', typ: '' },
-    ], false),
-    FindingRelatedRisk: o([
-        { json: 'risk-uuid', js: 'riskUUID', typ: '' },
-    ], false),
-    TargetClass: o([
-        { json: 'description', js: 'description', typ: u(undefined, '') },
-        { json: 'implementation-status', js: 'implementationStatus', typ: u(undefined, r('ImplementationStatus')) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'status', js: 'status', typ: r('StatusClass') },
-        { json: 'target-id', js: 'targetID', typ: '' },
-        { json: 'title', js: 'title', typ: u(undefined, '') },
-        { json: 'type', js: 'type', typ: r('FindingTargetType') },
-    ], false),
-    ImplementationStatus: o([
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'state', js: 'state', typ: '' },
-    ], false),
-    StatusClass: o([
-        { json: 'reason', js: 'reason', typ: u(undefined, '') },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'state', js: 'state', typ: r('ObjectiveStatusState') },
-    ], false),
-    ResultLocalDefinitions: o([
-        { json: 'assessment-assets', js: 'assessmentAssets', typ: u(undefined, r('AssessmentAssets')) },
-        { json: 'components', js: 'components', typ: u(undefined, a(r('AssessmentAssetsComponent'))) },
-        { json: 'inventory-items', js: 'inventoryItems', typ: u(undefined, a(r('InventoryItem'))) },
-        { json: 'tasks', js: 'tasks', typ: u(undefined, a(r('Task'))) },
-        { json: 'users', js: 'users', typ: u(undefined, a(r('SystemUser'))) },
-    ], false),
-    Observation: o([
-        { json: 'collected', js: 'collected', typ: Date },
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'expires', js: 'expires', typ: u(undefined, Date) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'methods', js: 'methods', typ: a('') },
-        { json: 'origins', js: 'origins', typ: u(undefined, a(r('FindingOrigin'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'relevant-evidence', js: 'relevantEvidence', typ: u(undefined, a(r('RelevantEvidence'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'subjects', js: 'subjects', typ: u(undefined, a(r('IdentifiesTheSubject'))) },
-        { json: 'title', js: 'title', typ: u(undefined, '') },
-        { json: 'types', js: 'types', typ: u(undefined, a('')) },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    RelevantEvidence: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'href', js: 'href', typ: u(undefined, '') },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-    ], false),
-    IdentifiesTheSubject: o([
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'subject-uuid', js: 'subjectUUID', typ: '' },
-        { json: 'title', js: 'title', typ: u(undefined, '') },
-        { json: 'type', js: 'type', typ: '' },
-    ], false),
-    IdentifiedRisk: o([
-        { json: 'characterizations', js: 'characterizations', typ: u(undefined, a(r('Characterization'))) },
-        { json: 'deadline', js: 'deadline', typ: u(undefined, Date) },
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'mitigating-factors', js: 'mitigatingFactors', typ: u(undefined, a(r('MitigatingFactor'))) },
-        { json: 'origins', js: 'origins', typ: u(undefined, a(r('FindingOrigin'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'related-observations', js: 'relatedObservations', typ: u(undefined, a(r('RiskRelatedObservation'))) },
-        { json: 'remediations', js: 'remediations', typ: u(undefined, a(r('RiskResponse'))) },
-        { json: 'risk-log', js: 'riskLog', typ: u(undefined, r('RiskLog')) },
-        { json: 'statement', js: 'statement', typ: '' },
-        { json: 'status', js: 'status', typ: '' },
-        { json: 'threat-ids', js: 'threatIDS', typ: u(undefined, a(r('ThreatID'))) },
-        { json: 'title', js: 'title', typ: '' },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    Characterization: o([
-        { json: 'facets', js: 'facets', typ: a(r('Facet')) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'origin', js: 'origin', typ: r('FindingOrigin') },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-    ], false),
-    Facet: o([
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'name', js: 'name', typ: '' },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'system', js: 'system', typ: '' },
-        { json: 'value', js: 'value', typ: '' },
-    ], false),
-    MitigatingFactor: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'implementation-uuid', js: 'implementationUUID', typ: u(undefined, '') },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'subjects', js: 'subjects', typ: u(undefined, a(r('IdentifiesTheSubject'))) },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    RiskRelatedObservation: o([
-        { json: 'observation-uuid', js: 'observationUUID', typ: '' },
-    ], false),
-    RiskResponse: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'lifecycle', js: 'lifecycle', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'origins', js: 'origins', typ: u(undefined, a(r('FindingOrigin'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'required-assets', js: 'requiredAssets', typ: u(undefined, a(r('RequiredAsset'))) },
-        { json: 'tasks', js: 'tasks', typ: u(undefined, a(r('Task'))) },
-        { json: 'title', js: 'title', typ: '' },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    RequiredAsset: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'subjects', js: 'subjects', typ: u(undefined, a(r('IdentifiesTheSubject'))) },
-        { json: 'title', js: 'title', typ: u(undefined, '') },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    RiskLog: o([
-        { json: 'entries', js: 'entries', typ: a(r('RiskLogEntry')) },
-    ], false),
-    RiskLogEntry: o([
-        { json: 'description', js: 'description', typ: u(undefined, '') },
-        { json: 'end', js: 'end', typ: u(undefined, Date) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'logged-by', js: 'loggedBy', typ: u(undefined, a(r('LoggedBy'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'related-responses', js: 'relatedResponses', typ: u(undefined, a(r('RiskResponseReference'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'start', js: 'start', typ: Date },
-        { json: 'status-change', js: 'statusChange', typ: u(undefined, '') },
-        { json: 'title', js: 'title', typ: u(undefined, '') },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    RiskResponseReference: o([
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'related-tasks', js: 'relatedTasks', typ: u(undefined, a(r('TaskReference'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'response-uuid', js: 'responseUUID', typ: '' },
-    ], false),
-    ThreatID: o([
-        { json: 'href', js: 'href', typ: u(undefined, '') },
-        { json: 'id', js: 'id', typ: '' },
-        { json: 'system', js: 'system', typ: '' },
-    ], false),
-    Catalog: o([
-        { json: 'back-matter', js: 'backMatter', typ: u(undefined, r('BackMatter')) },
-        { json: 'controls', js: 'controls', typ: u(undefined, a(r('Control'))) },
-        { json: 'groups', js: 'groups', typ: u(undefined, a(r('ControlGroup'))) },
-        { json: 'metadata', js: 'metadata', typ: r('PublicationMetadata') },
-        { json: 'params', js: 'params', typ: u(undefined, a(r('Parameter'))) },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    Control: o([
-        { json: 'class', js: 'class', typ: u(undefined, '') },
-        { json: 'controls', js: 'controls', typ: u(undefined, a(r('Control'))) },
-        { json: 'id', js: 'id', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'params', js: 'params', typ: u(undefined, a(r('Parameter'))) },
-        { json: 'parts', js: 'parts', typ: u(undefined, a(r('Part'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'title', js: 'title', typ: '' },
-    ], false),
-    Parameter: o([
-        { json: 'class', js: 'class', typ: u(undefined, '') },
-        { json: 'constraints', js: 'constraints', typ: u(undefined, a(r('Constraint'))) },
-        { json: 'depends-on', js: 'dependsOn', typ: u(undefined, '') },
-        { json: 'guidelines', js: 'guidelines', typ: u(undefined, a(r('Guideline'))) },
-        { json: 'id', js: 'id', typ: '' },
-        { json: 'label', js: 'label', typ: u(undefined, '') },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'select', js: 'select', typ: u(undefined, r('Selection')) },
-        { json: 'usage', js: 'usage', typ: u(undefined, '') },
-        { json: 'values', js: 'values', typ: u(undefined, a('')) },
-    ], false),
-    Constraint: o([
-        { json: 'description', js: 'description', typ: u(undefined, '') },
-        { json: 'tests', js: 'tests', typ: u(undefined, a(r('ConstraintTest'))) },
-    ], false),
-    ConstraintTest: o([
-        { json: 'expression', js: 'expression', typ: '' },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-    ], false),
-    Guideline: o([
-        { json: 'prose', js: 'prose', typ: '' },
-    ], false),
-    Selection: o([
-        { json: 'choice', js: 'choice', typ: u(undefined, a('')) },
-        { json: 'how-many', js: 'howMany', typ: u(undefined, r('ParameterCardinality')) },
-    ], false),
-    ControlGroup: o([
-        { json: 'class', js: 'class', typ: u(undefined, '') },
-        { json: 'controls', js: 'controls', typ: u(undefined, a(r('Control'))) },
-        { json: 'groups', js: 'groups', typ: u(undefined, a(r('ControlGroup'))) },
-        { json: 'id', js: 'id', typ: u(undefined, '') },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'params', js: 'params', typ: u(undefined, a(r('Parameter'))) },
-        { json: 'parts', js: 'parts', typ: u(undefined, a(r('Part'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'title', js: 'title', typ: '' },
-    ], false),
-    ComponentDefinition: o([
-        { json: 'back-matter', js: 'backMatter', typ: u(undefined, r('BackMatter')) },
-        { json: 'capabilities', js: 'capabilities', typ: u(undefined, a(r('Capability'))) },
-        { json: 'components', js: 'components', typ: u(undefined, a(r('ComponentDefinitionComponent'))) },
-        { json: 'import-component-definitions', js: 'importComponentDefinitions', typ: u(undefined, a(r('ImportComponentDefinition'))) },
-        { json: 'metadata', js: 'metadata', typ: r('PublicationMetadata') },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    Capability: o([
-        { json: 'control-implementations', js: 'controlImplementations', typ: u(undefined, a(r('ControlImplementationSet'))) },
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'incorporates-components', js: 'incorporatesComponents', typ: u(undefined, a(r('IncorporatesComponent'))) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'name', js: 'name', typ: '' },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    ControlImplementationSet: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'implemented-requirements', js: 'implementedRequirements', typ: a(r('ImplementedRequirementElement')) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'set-parameters', js: 'setParameters', typ: u(undefined, a(r('SetParameterValue'))) },
-        { json: 'source', js: 'source', typ: '' },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    ImplementedRequirementElement: o([
-        { json: 'control-id', js: 'controlID', typ: '' },
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsible-roles', js: 'responsibleRoles', typ: u(undefined, a(r('ResponsibleRole'))) },
-        { json: 'set-parameters', js: 'setParameters', typ: u(undefined, a(r('SetParameterValue'))) },
-        { json: 'statements', js: 'statements', typ: u(undefined, a(r('ControlStatementImplementation'))) },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    SetParameterValue: o([
-        { json: 'param-id', js: 'paramID', typ: '' },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'values', js: 'values', typ: a('') },
-    ], false),
-    ControlStatementImplementation: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsible-roles', js: 'responsibleRoles', typ: u(undefined, a(r('ResponsibleRole'))) },
-        { json: 'statement-id', js: 'statementID', typ: '' },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    IncorporatesComponent: o([
-        { json: 'component-uuid', js: 'componentUUID', typ: '' },
-        { json: 'description', js: 'description', typ: '' },
-    ], false),
-    ComponentDefinitionComponent: o([
-        { json: 'control-implementations', js: 'controlImplementations', typ: u(undefined, a(r('ControlImplementationSet'))) },
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'protocols', js: 'protocols', typ: u(undefined, a(r('ServiceProtocolInformation'))) },
-        { json: 'purpose', js: 'purpose', typ: u(undefined, '') },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsible-roles', js: 'responsibleRoles', typ: u(undefined, a(r('ResponsibleRole'))) },
-        { json: 'title', js: 'title', typ: '' },
-        { json: 'type', js: 'type', typ: '' },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    ImportComponentDefinition: o([
-        { json: 'href', js: 'href', typ: '' },
-    ], false),
-    PlanOfActionAndMilestonesPOAM: o([
-        { json: 'back-matter', js: 'backMatter', typ: u(undefined, r('BackMatter')) },
-        { json: 'import-ssp', js: 'importSSP', typ: u(undefined, r('ImportSystemSecurityPlan')) },
-        { json: 'local-definitions', js: 'localDefinitions', typ: u(undefined, r('PlanOfActionAndMilestonesLocalDefinitions')) },
-        { json: 'metadata', js: 'metadata', typ: r('PublicationMetadata') },
-        { json: 'observations', js: 'observations', typ: u(undefined, a(r('Observation'))) },
-        { json: 'poam-items', js: 'poamItems', typ: a(r('POAMItem')) },
-        { json: 'risks', js: 'risks', typ: u(undefined, a(r('IdentifiedRisk'))) },
-        { json: 'system-id', js: 'systemID', typ: u(undefined, r('SystemIdentification')) },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    PlanOfActionAndMilestonesLocalDefinitions: o([
-        { json: 'components', js: 'components', typ: u(undefined, a(r('AssessmentAssetsComponent'))) },
-        { json: 'inventory-items', js: 'inventoryItems', typ: u(undefined, a(r('InventoryItem'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-    ], false),
-    POAMItem: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'origins', js: 'origins', typ: u(undefined, a(r('PoamItemOrigin'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'related-observations', js: 'relatedObservations', typ: u(undefined, a(r('PoamItemRelatedObservation'))) },
-        { json: 'related-risks', js: 'relatedRisks', typ: u(undefined, a(r('PoamItemRelatedRisk'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'title', js: 'title', typ: '' },
-        { json: 'uuid', js: 'uuid', typ: u(undefined, '') },
-    ], false),
-    PoamItemOrigin: o([
-        { json: 'actors', js: 'actors', typ: a(r('OriginatingActor')) },
-    ], false),
-    PoamItemRelatedObservation: o([
-        { json: 'observation-uuid', js: 'observationUUID', typ: '' },
-    ], false),
-    PoamItemRelatedRisk: o([
-        { json: 'risk-uuid', js: 'riskUUID', typ: '' },
-    ], false),
-    SystemIdentification: o([
-        { json: 'id', js: 'id', typ: '' },
-        { json: 'identifier-type', js: 'identifierType', typ: u(undefined, '') },
-    ], false),
-    Profile: o([
-        { json: 'back-matter', js: 'backMatter', typ: u(undefined, r('BackMatter')) },
-        { json: 'imports', js: 'imports', typ: a(r('ImportResource')) },
-        { json: 'merge', js: 'merge', typ: u(undefined, r('MergeControls')) },
-        { json: 'metadata', js: 'metadata', typ: r('PublicationMetadata') },
-        { json: 'modify', js: 'modify', typ: u(undefined, r('ModifyControls')) },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    ImportResource: o([
-        { json: 'exclude-controls', js: 'excludeControls', typ: u(undefined, a(r('Call'))) },
-        { json: 'href', js: 'href', typ: '' },
-        { json: 'include-all', js: 'includeAll', typ: u(undefined, r('InsertAll')) },
-        { json: 'include-controls', js: 'includeControls', typ: u(undefined, a(r('Call'))) },
-    ], false),
-    Call: o([
-        { json: 'matching', js: 'matching', typ: u(undefined, a(r('MatchControlsByPattern'))) },
-        { json: 'with-child-controls', js: 'withChildControls', typ: u(undefined, r('IncludeContainedControlsWithControl')) },
-        { json: 'with-ids', js: 'withIDS', typ: u(undefined, a('')) },
-    ], false),
-    MatchControlsByPattern: o([
-        { json: 'pattern', js: 'pattern', typ: u(undefined, '') },
-    ], false),
-    InsertAll: o([
-    ], false),
-    MergeControls: o([
-        { json: 'as-is', js: 'asIs', typ: u(undefined, true) },
-        { json: 'combine', js: 'combine', typ: u(undefined, r('CombinationRule')) },
-        { json: 'custom', js: 'custom', typ: u(undefined, r('CustomGrouping')) },
-    ], false),
-    CombinationRule: o([
-        { json: 'method', js: 'method', typ: u(undefined, r('CombinationMethod')) },
-    ], false),
-    CustomGrouping: o([
-        { json: 'groups', js: 'groups', typ: u(undefined, a(r('CustomGroup'))) },
-        { json: 'insert-controls', js: 'insertControls', typ: u(undefined, a(r('SelectControls'))) },
-    ], false),
-    CustomGroup: o([
-        { json: 'class', js: 'class', typ: u(undefined, '') },
-        { json: 'groups', js: 'groups', typ: u(undefined, a(r('CustomGroup'))) },
-        { json: 'id', js: 'id', typ: u(undefined, '') },
-        { json: 'insert-controls', js: 'insertControls', typ: u(undefined, a(r('SelectControls'))) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'params', js: 'params', typ: u(undefined, a(r('Parameter'))) },
-        { json: 'parts', js: 'parts', typ: u(undefined, a(r('Part'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'title', js: 'title', typ: '' },
-    ], false),
-    SelectControls: o([
-        { json: 'exclude-controls', js: 'excludeControls', typ: u(undefined, a(r('Call'))) },
-        { json: 'include-all', js: 'includeAll', typ: u(undefined, r('InsertAll')) },
-        { json: 'include-controls', js: 'includeControls', typ: u(undefined, a(r('Call'))) },
-        { json: 'order', js: 'order', typ: u(undefined, r('Order')) },
-    ], false),
-    ModifyControls: o([
-        { json: 'alters', js: 'alters', typ: u(undefined, a(r('Alteration'))) },
-        { json: 'set-parameters', js: 'setParameters', typ: u(undefined, a(r('ParameterSetting'))) },
-    ], false),
-    Alteration: o([
-        { json: 'adds', js: 'adds', typ: u(undefined, a(r('Addition'))) },
-        { json: 'control-id', js: 'controlID', typ: u(undefined, '') },
-        { json: 'removes', js: 'removes', typ: u(undefined, a(r('Removal'))) },
-    ], false),
-    Addition: o([
-        { json: 'by-id', js: 'byID', typ: u(undefined, '') },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'params', js: 'params', typ: u(undefined, a(r('Parameter'))) },
-        { json: 'parts', js: 'parts', typ: u(undefined, a(r('Part'))) },
-        { json: 'position', js: 'position', typ: u(undefined, r('Position')) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'title', js: 'title', typ: u(undefined, '') },
-    ], false),
-    Removal: o([
-        { json: 'by-class', js: 'byClass', typ: u(undefined, '') },
-        { json: 'by-id', js: 'byID', typ: u(undefined, '') },
-        { json: 'by-item-name', js: 'byItemName', typ: u(undefined, '') },
-        { json: 'by-name', js: 'byName', typ: u(undefined, '') },
-        { json: 'by-ns', js: 'byNS', typ: u(undefined, '') },
-    ], false),
-    ParameterSetting: o([
-        { json: 'class', js: 'class', typ: u(undefined, '') },
-        { json: 'constraints', js: 'constraints', typ: u(undefined, a(r('Constraint'))) },
-        { json: 'depends-on', js: 'dependsOn', typ: u(undefined, '') },
-        { json: 'guidelines', js: 'guidelines', typ: u(undefined, a(r('Guideline'))) },
-        { json: 'label', js: 'label', typ: u(undefined, '') },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'param-id', js: 'paramID', typ: '' },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'select', js: 'select', typ: u(undefined, r('Selection')) },
-        { json: 'usage', js: 'usage', typ: u(undefined, '') },
-        { json: 'values', js: 'values', typ: u(undefined, a('')) },
-    ], false),
-    SystemSecurityPlanSSP: o([
-        { json: 'back-matter', js: 'backMatter', typ: u(undefined, r('BackMatter')) },
-        { json: 'control-implementation', js: 'controlImplementation', typ: r('ControlImplementationClass') },
-        { json: 'import-profile', js: 'importProfile', typ: r('ImportProfile') },
-        { json: 'metadata', js: 'metadata', typ: r('PublicationMetadata') },
-        { json: 'system-characteristics', js: 'systemCharacteristics', typ: r('SystemCharacteristics') },
-        { json: 'system-implementation', js: 'systemImplementation', typ: r('SystemImplementation') },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    ControlImplementationClass: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'implemented-requirements', js: 'implementedRequirements', typ: a(r('ControlBasedRequirement')) },
-        { json: 'set-parameters', js: 'setParameters', typ: u(undefined, a(r('SetParameterValue'))) },
-    ], false),
-    ControlBasedRequirement: o([
-        { json: 'by-components', js: 'byComponents', typ: u(undefined, a(r('ComponentControlImplementation'))) },
-        { json: 'control-id', js: 'controlID', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsible-roles', js: 'responsibleRoles', typ: u(undefined, a(r('ResponsibleRole'))) },
-        { json: 'set-parameters', js: 'setParameters', typ: u(undefined, a(r('SetParameterValue'))) },
-        { json: 'statements', js: 'statements', typ: u(undefined, a(r('SpecificControlStatement'))) },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    ComponentControlImplementation: o([
-        { json: 'component-uuid', js: 'componentUUID', typ: '' },
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'export', js: 'export', typ: u(undefined, r('Export')) },
-        { json: 'implementation-status', js: 'implementationStatus', typ: u(undefined, r('ImplementationStatus')) },
-        { json: 'inherited', js: 'inherited', typ: u(undefined, a(r('InheritedControlImplementation'))) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsible-roles', js: 'responsibleRoles', typ: u(undefined, a(r('ResponsibleRole'))) },
-        { json: 'satisfied', js: 'satisfied', typ: u(undefined, a(r('SatisfiedControlImplementationResponsibility'))) },
-        { json: 'set-parameters', js: 'setParameters', typ: u(undefined, a(r('SetParameterValue'))) },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    Export: o([
-        { json: 'description', js: 'description', typ: u(undefined, '') },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'provided', js: 'provided', typ: u(undefined, a(r('ProvidedControlImplementation'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsibilities', js: 'responsibilities', typ: u(undefined, a(r('ControlImplementationResponsibility'))) },
-    ], false),
-    ProvidedControlImplementation: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsible-roles', js: 'responsibleRoles', typ: u(undefined, a(r('ResponsibleRole'))) },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    ControlImplementationResponsibility: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'provided-uuid', js: 'providedUUID', typ: u(undefined, '') },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsible-roles', js: 'responsibleRoles', typ: u(undefined, a(r('ResponsibleRole'))) },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    InheritedControlImplementation: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'provided-uuid', js: 'providedUUID', typ: u(undefined, '') },
-        { json: 'responsible-roles', js: 'responsibleRoles', typ: u(undefined, a(r('ResponsibleRole'))) },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    SatisfiedControlImplementationResponsibility: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsibility-uuid', js: 'responsibilityUUID', typ: u(undefined, '') },
-        { json: 'responsible-roles', js: 'responsibleRoles', typ: u(undefined, a(r('ResponsibleRole'))) },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    SpecificControlStatement: o([
-        { json: 'by-components', js: 'byComponents', typ: u(undefined, a(r('ComponentControlImplementation'))) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsible-roles', js: 'responsibleRoles', typ: u(undefined, a(r('ResponsibleRole'))) },
-        { json: 'statement-id', js: 'statementID', typ: '' },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    ImportProfile: o([
-        { json: 'href', js: 'href', typ: '' },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-    ], false),
-    SystemCharacteristics: o([
-        { json: 'authorization-boundary', js: 'authorizationBoundary', typ: r('AuthorizationBoundary') },
-        { json: 'data-flow', js: 'dataFlow', typ: u(undefined, r('DataFlow')) },
-        { json: 'date-authorized', js: 'dateAuthorized', typ: u(undefined, '') },
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'network-architecture', js: 'networkArchitecture', typ: u(undefined, r('NetworkArchitecture')) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'responsible-parties', js: 'responsibleParties', typ: u(undefined, a(r('ResponsibleParty'))) },
-        { json: 'security-impact-level', js: 'securityImpactLevel', typ: r('SecurityImpactLevel') },
-        { json: 'security-sensitivity-level', js: 'securitySensitivityLevel', typ: '' },
-        { json: 'status', js: 'status', typ: r('SystemCharacteristicsStatus') },
-        { json: 'system-ids', js: 'systemIDS', typ: a(r('SystemIdentification')) },
-        { json: 'system-information', js: 'systemInformation', typ: r('SystemInformation') },
-        { json: 'system-name', js: 'systemName', typ: '' },
-        { json: 'system-name-short', js: 'systemNameShort', typ: u(undefined, '') },
-    ], false),
-    AuthorizationBoundary: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'diagrams', js: 'diagrams', typ: u(undefined, a(r('Diagram'))) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-    ], false),
-    Diagram: o([
-        { json: 'caption', js: 'caption', typ: u(undefined, '') },
-        { json: 'description', js: 'description', typ: u(undefined, '') },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    DataFlow: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'diagrams', js: 'diagrams', typ: u(undefined, a(r('Diagram'))) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-    ], false),
-    NetworkArchitecture: o([
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'diagrams', js: 'diagrams', typ: u(undefined, a(r('Diagram'))) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-    ], false),
-    SecurityImpactLevel: o([
-        { json: 'security-objective-availability', js: 'securityObjectiveAvailability', typ: '' },
-        { json: 'security-objective-confidentiality', js: 'securityObjectiveConfidentiality', typ: '' },
-        { json: 'security-objective-integrity', js: 'securityObjectiveIntegrity', typ: '' },
-    ], false),
-    SystemCharacteristicsStatus: o([
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'state', js: 'state', typ: r('FluffyState') },
-    ], false),
-    SystemInformation: o([
-        { json: 'information-types', js: 'informationTypes', typ: a(r('InformationType')) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-    ], false),
-    InformationType: o([
-        { json: 'availability-impact', js: 'availabilityImpact', typ: r('AvailabilityImpactLevel') },
-        { json: 'categorizations', js: 'categorizations', typ: u(undefined, a(r('InformationTypeCategorization'))) },
-        { json: 'confidentiality-impact', js: 'confidentialityImpact', typ: r('ConfidentialityImpactLevel') },
-        { json: 'description', js: 'description', typ: '' },
-        { json: 'integrity-impact', js: 'integrityImpact', typ: r('IntegrityImpactLevel') },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'title', js: 'title', typ: '' },
-        { json: 'uuid', js: 'uuid', typ: u(undefined, '') },
-    ], false),
-    AvailabilityImpactLevel: o([
-        { json: 'adjustment-justification', js: 'adjustmentJustification', typ: u(undefined, '') },
-        { json: 'base', js: 'base', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'selected', js: 'selected', typ: u(undefined, '') },
-    ], false),
-    InformationTypeCategorization: o([
-        { json: 'information-type-ids', js: 'informationTypeIDS', typ: u(undefined, a('')) },
-        { json: 'system', js: 'system', typ: '' },
-    ], false),
-    ConfidentialityImpactLevel: o([
-        { json: 'adjustment-justification', js: 'adjustmentJustification', typ: u(undefined, '') },
-        { json: 'base', js: 'base', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'selected', js: 'selected', typ: u(undefined, '') },
-    ], false),
-    IntegrityImpactLevel: o([
-        { json: 'adjustment-justification', js: 'adjustmentJustification', typ: u(undefined, '') },
-        { json: 'base', js: 'base', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'selected', js: 'selected', typ: u(undefined, '') },
-    ], false),
-    SystemImplementation: o([
-        { json: 'components', js: 'components', typ: a(r('AssessmentAssetsComponent')) },
-        { json: 'inventory-items', js: 'inventoryItems', typ: u(undefined, a(r('InventoryItem'))) },
-        { json: 'leveraged-authorizations', js: 'leveragedAuthorizations', typ: u(undefined, a(r('LeveragedAuthorization'))) },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'users', js: 'users', typ: a(r('SystemUser')) },
-    ], false),
-    LeveragedAuthorization: o([
-        { json: 'date-authorized', js: 'dateAuthorized', typ: '' },
-        { json: 'links', js: 'links', typ: u(undefined, a(r('Link'))) },
-        { json: 'party-uuid', js: 'partyUUID', typ: '' },
-        { json: 'props', js: 'props', typ: u(undefined, a(r('Property'))) },
-        { json: 'remarks', js: 'remarks', typ: u(undefined, '') },
-        { json: 'title', js: 'title', typ: '' },
-        { json: 'uuid', js: 'uuid', typ: '' },
-    ], false),
-    Transport: [
-        'TCP',
-        'UDP',
+    "Result": o([
+        { json: "catalog", js: "catalog", typ: u(undefined, r("Catalog")) },
+        { json: "profile", js: "profile", typ: u(undefined, r("Profile")) },
+        { json: "component-definition", js: "componentDefinition", typ: u(undefined, r("ComponentDefinition")) },
+        { json: "system-security-plan", js: "systemSecurityPlan", typ: u(undefined, r("SystemSecurityPlanSSP")) },
+        { json: "assessment-plan", js: "assessmentPlan", typ: u(undefined, r("SecurityAssessmentPlanSAP")) },
+        { json: "assessment-results", js: "assessmentResults", typ: u(undefined, r("SecurityAssessmentResultsSAR")) },
+        { json: "plan-of-action-and-milestones", js: "planOfActionAndMilestones", typ: u(undefined, r("PlanOfActionAndMilestonesPOAM")) },
+    ], false),
+    "SecurityAssessmentPlanSAP": o([
+        { json: "assessment-assets", js: "assessmentAssets", typ: u(undefined, r("AssessmentAssets")) },
+        { json: "assessment-subjects", js: "assessmentSubjects", typ: u(undefined, a(r("SubjectOfAssessment"))) },
+        { json: "back-matter", js: "backMatter", typ: u(undefined, r("BackMatter")) },
+        { json: "import-ssp", js: "importSSP", typ: r("ImportSystemSecurityPlan") },
+        { json: "local-definitions", js: "localDefinitions", typ: u(undefined, r("AssessmentPlanLocalDefinitions")) },
+        { json: "metadata", js: "metadata", typ: r("PublicationMetadata") },
+        { json: "reviewed-controls", js: "reviewedControls", typ: r("ReviewedControlsAndControlObjectives") },
+        { json: "tasks", js: "tasks", typ: u(undefined, a(r("Task"))) },
+        { json: "terms-and-conditions", js: "termsAndConditions", typ: u(undefined, r("AssessmentPlanTermsAndConditions")) },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "AssessmentAssets": o([
+        { json: "assessment-platforms", js: "assessmentPlatforms", typ: a(r("AssessmentPlatform")) },
+        { json: "components", js: "components", typ: u(undefined, a(r("AssessmentAssetsComponent"))) },
+    ], false),
+    "AssessmentPlatform": o([
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "title", js: "title", typ: u(undefined, "") },
+        { json: "uses-components", js: "usesComponents", typ: u(undefined, a(r("UsesComponent"))) },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "Link": o([
+        { json: "href", js: "href", typ: "" },
+        { json: "media-type", js: "mediaType", typ: u(undefined, "") },
+        { json: "rel", js: "rel", typ: u(undefined, "") },
+        { json: "text", js: "text", typ: u(undefined, "") },
+    ], false),
+    "Property": o([
+        { json: "class", js: "class", typ: u(undefined, "") },
+        { json: "name", js: "name", typ: "" },
+        { json: "ns", js: "ns", typ: u(undefined, "") },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "uuid", js: "uuid", typ: u(undefined, "") },
+        { json: "value", js: "value", typ: "" },
+    ], false),
+    "UsesComponent": o([
+        { json: "component-uuid", js: "componentUUID", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsible-parties", js: "responsibleParties", typ: u(undefined, a(r("ResponsibleParty"))) },
+    ], false),
+    "ResponsibleParty": o([
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "party-uuids", js: "partyUuids", typ: a("") },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "role-id", js: "roleID", typ: "" },
+    ], false),
+    "AssessmentAssetsComponent": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "protocols", js: "protocols", typ: u(undefined, a(r("ServiceProtocolInformation"))) },
+        { json: "purpose", js: "purpose", typ: u(undefined, "") },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsible-roles", js: "responsibleRoles", typ: u(undefined, a(r("ResponsibleRole"))) },
+        { json: "status", js: "status", typ: r("ComponentStatus") },
+        { json: "title", js: "title", typ: "" },
+        { json: "type", js: "type", typ: "" },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "ServiceProtocolInformation": o([
+        { json: "name", js: "name", typ: "" },
+        { json: "port-ranges", js: "portRanges", typ: u(undefined, a(r("PortRange"))) },
+        { json: "title", js: "title", typ: u(undefined, "") },
+        { json: "uuid", js: "uuid", typ: u(undefined, "") },
+    ], false),
+    "PortRange": o([
+        { json: "end", js: "end", typ: u(undefined, 0) },
+        { json: "start", js: "start", typ: u(undefined, 0) },
+        { json: "transport", js: "transport", typ: u(undefined, r("Transport")) },
+    ], false),
+    "ResponsibleRole": o([
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "party-uuids", js: "partyUuids", typ: u(undefined, a("")) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "role-id", js: "roleID", typ: "" },
+    ], false),
+    "ComponentStatus": o([
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "state", js: "state", typ: r("PurpleState") },
+    ], false),
+    "SubjectOfAssessment": o([
+        { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "exclude-subjects", js: "excludeSubjects", typ: u(undefined, a(r("SelectAssessmentSubject"))) },
+        { json: "include-all", js: "includeAll", typ: u(undefined, r("IncludeAll")) },
+        { json: "include-subjects", js: "includeSubjects", typ: u(undefined, a(r("SelectAssessmentSubject"))) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "type", js: "type", typ: "" },
+    ], false),
+    "SelectAssessmentSubject": o([
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "subject-uuid", js: "subjectUUID", typ: "" },
+        { json: "type", js: "type", typ: "" },
+    ], false),
+    "IncludeAll": o([
+    ], false),
+    "BackMatter": o([
+        { json: "resources", js: "resources", typ: u(undefined, a(r("Resource"))) },
+    ], false),
+    "Resource": o([
+        { json: "base64", js: "base64", typ: u(undefined, r("Base64")) },
+        { json: "citation", js: "citation", typ: u(undefined, r("Citation")) },
+        { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "document-ids", js: "documentIDS", typ: u(undefined, a(r("DocumentIdentifier"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "rlinks", js: "rlinks", typ: u(undefined, a(r("ResourceLink"))) },
+        { json: "title", js: "title", typ: u(undefined, "") },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "Base64": o([
+        { json: "filename", js: "filename", typ: u(undefined, "") },
+        { json: "media-type", js: "mediaType", typ: u(undefined, "") },
+        { json: "value", js: "value", typ: "" },
+    ], false),
+    "Citation": o([
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "text", js: "text", typ: "" },
+    ], false),
+    "DocumentIdentifier": o([
+        { json: "identifier", js: "identifier", typ: "" },
+        { json: "scheme", js: "scheme", typ: u(undefined, "") },
+    ], false),
+    "ResourceLink": o([
+        { json: "hashes", js: "hashes", typ: u(undefined, a(r("Hash"))) },
+        { json: "href", js: "href", typ: "" },
+        { json: "media-type", js: "mediaType", typ: u(undefined, "") },
+    ], false),
+    "Hash": o([
+        { json: "algorithm", js: "algorithm", typ: "" },
+        { json: "value", js: "value", typ: "" },
+    ], false),
+    "ImportSystemSecurityPlan": o([
+        { json: "href", js: "href", typ: "" },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+    ], false),
+    "AssessmentPlanLocalDefinitions": o([
+        { json: "activities", js: "activities", typ: u(undefined, a(r("Activity"))) },
+        { json: "components", js: "components", typ: u(undefined, a(r("AssessmentAssetsComponent"))) },
+        { json: "inventory-items", js: "inventoryItems", typ: u(undefined, a(r("InventoryItem"))) },
+        { json: "objectives-and-methods", js: "objectivesAndMethods", typ: u(undefined, a(r("AssessmentSpecificControlObjective"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "users", js: "users", typ: u(undefined, a(r("SystemUser"))) },
+    ], false),
+    "Activity": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "related-controls", js: "relatedControls", typ: u(undefined, r("ReviewedControlsAndControlObjectives")) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsible-roles", js: "responsibleRoles", typ: u(undefined, a(r("ResponsibleRole"))) },
+        { json: "steps", js: "steps", typ: u(undefined, a(r("Step"))) },
+        { json: "title", js: "title", typ: u(undefined, "") },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "ReviewedControlsAndControlObjectives": o([
+        { json: "control-objective-selections", js: "controlObjectiveSelections", typ: u(undefined, a(r("ReferencedControlObjectives"))) },
+        { json: "control-selections", js: "controlSelections", typ: a(r("AssessedControls")) },
+        { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+    ], false),
+    "ReferencedControlObjectives": o([
+        { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "exclude-objectives", js: "excludeObjectives", typ: u(undefined, a(r("SelectObjective"))) },
+        { json: "include-all", js: "includeAll", typ: u(undefined, r("IncludeAll")) },
+        { json: "include-objectives", js: "includeObjectives", typ: u(undefined, a(r("SelectObjective"))) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+    ], false),
+    "SelectObjective": o([
+        { json: "objective-id", js: "objectiveID", typ: "" },
+    ], false),
+    "AssessedControls": o([
+        { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "exclude-controls", js: "excludeControls", typ: u(undefined, a(r("SelectControl"))) },
+        { json: "include-all", js: "includeAll", typ: u(undefined, r("IncludeAll")) },
+        { json: "include-controls", js: "includeControls", typ: u(undefined, a(r("SelectControl"))) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+    ], false),
+    "SelectControl": o([
+        { json: "control-id", js: "controlID", typ: "" },
+        { json: "statement-ids", js: "statementIDS", typ: u(undefined, a("")) },
+    ], false),
+    "Step": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsible-roles", js: "responsibleRoles", typ: u(undefined, a(r("ResponsibleRole"))) },
+        { json: "reviewed-controls", js: "reviewedControls", typ: u(undefined, r("ReviewedControlsAndControlObjectives")) },
+        { json: "title", js: "title", typ: u(undefined, "") },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "InventoryItem": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "implemented-components", js: "implementedComponents", typ: u(undefined, a(r("ImplementedComponent"))) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsible-parties", js: "responsibleParties", typ: u(undefined, a(r("ResponsibleParty"))) },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "ImplementedComponent": o([
+        { json: "component-uuid", js: "componentUUID", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsible-parties", js: "responsibleParties", typ: u(undefined, a(r("ResponsibleParty"))) },
+    ], false),
+    "AssessmentSpecificControlObjective": o([
+        { json: "control-id", js: "controlID", typ: "" },
+        { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "parts", js: "parts", typ: a(r("Part")) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+    ], false),
+    "Part": o([
+        { json: "class", js: "class", typ: u(undefined, "") },
+        { json: "id", js: "id", typ: u(undefined, "") },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "name", js: "name", typ: "" },
+        { json: "ns", js: "ns", typ: u(undefined, "") },
+        { json: "parts", js: "parts", typ: u(undefined, a(r("Part"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "prose", js: "prose", typ: u(undefined, "") },
+        { json: "title", js: "title", typ: u(undefined, "") },
+    ], false),
+    "SystemUser": o([
+        { json: "authorized-privileges", js: "authorizedPrivileges", typ: u(undefined, a(r("Privilege"))) },
+        { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "role-ids", js: "roleIDS", typ: u(undefined, a("")) },
+        { json: "short-name", js: "shortName", typ: u(undefined, "") },
+        { json: "title", js: "title", typ: u(undefined, "") },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "Privilege": o([
+        { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "functions-performed", js: "functionsPerformed", typ: a("") },
+        { json: "title", js: "title", typ: "" },
+    ], false),
+    "PublicationMetadata": o([
+        { json: "document-ids", js: "documentIDS", typ: u(undefined, a(r("DocumentIdentifier"))) },
+        { json: "last-modified", js: "lastModified", typ: Date },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "locations", js: "locations", typ: u(undefined, a(r("Location"))) },
+        { json: "oscal-version", js: "oscalVersion", typ: "" },
+        { json: "parties", js: "parties", typ: u(undefined, a(r("PartyOrganizationOrPerson"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "published", js: "published", typ: u(undefined, Date) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsible-parties", js: "responsibleParties", typ: u(undefined, a(r("ResponsibleParty"))) },
+        { json: "revisions", js: "revisions", typ: u(undefined, a(r("RevisionHistoryEntry"))) },
+        { json: "roles", js: "roles", typ: u(undefined, a(r("Role"))) },
+        { json: "title", js: "title", typ: "" },
+        { json: "version", js: "version", typ: "" },
+    ], false),
+    "Location": o([
+        { json: "address", js: "address", typ: r("Address") },
+        { json: "email-addresses", js: "emailAddresses", typ: u(undefined, a("")) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "telephone-numbers", js: "telephoneNumbers", typ: u(undefined, a(r("TelephoneNumber"))) },
+        { json: "title", js: "title", typ: u(undefined, "") },
+        { json: "urls", js: "urls", typ: u(undefined, a("")) },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "Address": o([
+        { json: "addr-lines", js: "addrLines", typ: u(undefined, a("")) },
+        { json: "city", js: "city", typ: u(undefined, "") },
+        { json: "country", js: "country", typ: u(undefined, "") },
+        { json: "postal-code", js: "postalCode", typ: u(undefined, "") },
+        { json: "state", js: "state", typ: u(undefined, "") },
+        { json: "type", js: "type", typ: u(undefined, "") },
+    ], false),
+    "TelephoneNumber": o([
+        { json: "number", js: "number", typ: "" },
+        { json: "type", js: "type", typ: u(undefined, "") },
+    ], false),
+    "PartyOrganizationOrPerson": o([
+        { json: "addresses", js: "addresses", typ: u(undefined, a(r("Address"))) },
+        { json: "email-addresses", js: "emailAddresses", typ: u(undefined, a("")) },
+        { json: "external-ids", js: "externalIDS", typ: u(undefined, a(r("PartyExternalIdentifier"))) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "location-uuids", js: "locationUuids", typ: u(undefined, a("")) },
+        { json: "member-of-organizations", js: "memberOfOrganizations", typ: u(undefined, a("")) },
+        { json: "name", js: "name", typ: u(undefined, "") },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "short-name", js: "shortName", typ: u(undefined, "") },
+        { json: "telephone-numbers", js: "telephoneNumbers", typ: u(undefined, a(r("TelephoneNumber"))) },
+        { json: "type", js: "type", typ: r("PartyType") },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "PartyExternalIdentifier": o([
+        { json: "id", js: "id", typ: "" },
+        { json: "scheme", js: "scheme", typ: "" },
+    ], false),
+    "RevisionHistoryEntry": o([
+        { json: "last-modified", js: "lastModified", typ: u(undefined, Date) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "oscal-version", js: "oscalVersion", typ: u(undefined, "") },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "published", js: "published", typ: u(undefined, Date) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "title", js: "title", typ: u(undefined, "") },
+        { json: "version", js: "version", typ: "" },
+    ], false),
+    "Role": o([
+        { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "id", js: "id", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "short-name", js: "shortName", typ: u(undefined, "") },
+        { json: "title", js: "title", typ: "" },
+    ], false),
+    "Task": o([
+        { json: "associated-activities", js: "associatedActivities", typ: u(undefined, a(r("AssociatedActivity"))) },
+        { json: "dependencies", js: "dependencies", typ: u(undefined, a(r("TaskDependency"))) },
+        { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsible-roles", js: "responsibleRoles", typ: u(undefined, a(r("ResponsibleRole"))) },
+        { json: "subjects", js: "subjects", typ: u(undefined, a(r("SubjectOfAssessment"))) },
+        { json: "tasks", js: "tasks", typ: u(undefined, a(r("Task"))) },
+        { json: "timing", js: "timing", typ: u(undefined, r("EventTiming")) },
+        { json: "title", js: "title", typ: "" },
+        { json: "type", js: "type", typ: "" },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "AssociatedActivity": o([
+        { json: "activity-uuid", js: "activityUUID", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsible-roles", js: "responsibleRoles", typ: u(undefined, a(r("ResponsibleRole"))) },
+        { json: "subjects", js: "subjects", typ: a(r("SubjectOfAssessment")) },
+    ], false),
+    "TaskDependency": o([
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "task-uuid", js: "taskUUID", typ: "" },
+    ], false),
+    "EventTiming": o([
+        { json: "at-frequency", js: "atFrequency", typ: u(undefined, r("FrequencyCondition")) },
+        { json: "on-date", js: "onDate", typ: u(undefined, r("OnDateCondition")) },
+        { json: "within-date-range", js: "withinDateRange", typ: u(undefined, r("OnDateRangeCondition")) },
+    ], false),
+    "FrequencyCondition": o([
+        { json: "period", js: "period", typ: 0 },
+        { json: "unit", js: "unit", typ: r("TimeUnit") },
+    ], false),
+    "OnDateCondition": o([
+        { json: "date", js: "date", typ: Date },
+    ], false),
+    "OnDateRangeCondition": o([
+        { json: "end", js: "end", typ: Date },
+        { json: "start", js: "start", typ: Date },
+    ], false),
+    "AssessmentPlanTermsAndConditions": o([
+        { json: "parts", js: "parts", typ: u(undefined, a(r("AssessmentPart"))) },
+    ], false),
+    "AssessmentPart": o([
+        { json: "class", js: "class", typ: u(undefined, "") },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "name", js: "name", typ: "" },
+        { json: "ns", js: "ns", typ: u(undefined, "") },
+        { json: "parts", js: "parts", typ: u(undefined, a(r("AssessmentPart"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "prose", js: "prose", typ: u(undefined, "") },
+        { json: "title", js: "title", typ: u(undefined, "") },
+        { json: "uuid", js: "uuid", typ: u(undefined, "") },
+    ], false),
+    "SecurityAssessmentResultsSAR": o([
+        { json: "back-matter", js: "backMatter", typ: u(undefined, r("BackMatter")) },
+        { json: "import-ap", js: "importAp", typ: r("ImportAssessmentPlan") },
+        { json: "local-definitions", js: "localDefinitions", typ: u(undefined, r("AssessmentResultsLocalDefinitions")) },
+        { json: "metadata", js: "metadata", typ: r("PublicationMetadata") },
+        { json: "results", js: "results", typ: a(r("AssessmentResult")) },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "ImportAssessmentPlan": o([
+        { json: "href", js: "href", typ: "" },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+    ], false),
+    "AssessmentResultsLocalDefinitions": o([
+        { json: "activities", js: "activities", typ: u(undefined, a(r("Activity"))) },
+        { json: "objectives-and-methods", js: "objectivesAndMethods", typ: u(undefined, a(r("AssessmentSpecificControlObjective"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+    ], false),
+    "AssessmentResult": o([
+        { json: "assessment-log", js: "assessmentLog", typ: u(undefined, r("AssessmentLog")) },
+        { json: "attestations", js: "attestations", typ: u(undefined, a(r("AttestationStatements"))) },
+        { json: "description", js: "description", typ: "" },
+        { json: "end", js: "end", typ: u(undefined, Date) },
+        { json: "findings", js: "findings", typ: u(undefined, a(r("Finding"))) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "local-definitions", js: "localDefinitions", typ: u(undefined, r("ResultLocalDefinitions")) },
+        { json: "observations", js: "observations", typ: u(undefined, a(r("Observation"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "reviewed-controls", js: "reviewedControls", typ: r("ReviewedControlsAndControlObjectives") },
+        { json: "risks", js: "risks", typ: u(undefined, a(r("IdentifiedRisk"))) },
+        { json: "start", js: "start", typ: Date },
+        { json: "title", js: "title", typ: "" },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "AssessmentLog": o([
+        { json: "entries", js: "entries", typ: a(r("AssessmentLogEntry")) },
+    ], false),
+    "AssessmentLogEntry": o([
+        { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "end", js: "end", typ: u(undefined, Date) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "logged-by", js: "loggedBy", typ: u(undefined, a(r("LoggedBy"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "related-tasks", js: "relatedTasks", typ: u(undefined, a(r("TaskReference"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "start", js: "start", typ: Date },
+        { json: "title", js: "title", typ: u(undefined, "") },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "LoggedBy": o([
+        { json: "party-uuid", js: "partyUUID", typ: "" },
+        { json: "role-id", js: "roleID", typ: u(undefined, "") },
+    ], false),
+    "TaskReference": o([
+        { json: "identified-subject", js: "identifiedSubject", typ: u(undefined, r("IdentifiedSubject")) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsible-parties", js: "responsibleParties", typ: u(undefined, a(r("ResponsibleParty"))) },
+        { json: "subjects", js: "subjects", typ: u(undefined, a(r("SubjectOfAssessment"))) },
+        { json: "task-uuid", js: "taskUUID", typ: "" },
+    ], false),
+    "IdentifiedSubject": o([
+        { json: "subject-placeholder-uuid", js: "subjectPlaceholderUUID", typ: "" },
+        { json: "subjects", js: "subjects", typ: a(r("SubjectOfAssessment")) },
+    ], false),
+    "AttestationStatements": o([
+        { json: "parts", js: "parts", typ: a(r("AssessmentPart")) },
+        { json: "responsible-parties", js: "responsibleParties", typ: u(undefined, a(r("ResponsibleParty"))) },
+    ], false),
+    "Finding": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "implementation-statement-uuid", js: "implementationStatementUUID", typ: u(undefined, "") },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "origins", js: "origins", typ: u(undefined, a(r("FindingOrigin"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "related-observations", js: "relatedObservations", typ: u(undefined, a(r("FindingRelatedObservation"))) },
+        { json: "related-risks", js: "relatedRisks", typ: u(undefined, a(r("FindingRelatedRisk"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "target", js: "target", typ: r("TargetClass") },
+        { json: "title", js: "title", typ: "" },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "FindingOrigin": o([
+        { json: "actors", js: "actors", typ: a(r("OriginatingActor")) },
+        { json: "related-tasks", js: "relatedTasks", typ: u(undefined, a(r("TaskReference"))) },
+    ], false),
+    "OriginatingActor": o([
+        { json: "actor-uuid", js: "actorUUID", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "role-id", js: "roleID", typ: u(undefined, "") },
+        { json: "type", js: "type", typ: r("ActorType") },
+    ], false),
+    "FindingRelatedObservation": o([
+        { json: "observation-uuid", js: "observationUUID", typ: "" },
+    ], false),
+    "FindingRelatedRisk": o([
+        { json: "risk-uuid", js: "riskUUID", typ: "" },
+    ], false),
+    "TargetClass": o([
+        { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "implementation-status", js: "implementationStatus", typ: u(undefined, r("ImplementationStatus")) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "status", js: "status", typ: r("StatusClass") },
+        { json: "target-id", js: "targetID", typ: "" },
+        { json: "title", js: "title", typ: u(undefined, "") },
+        { json: "type", js: "type", typ: r("FindingTargetType") },
+    ], false),
+    "ImplementationStatus": o([
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "state", js: "state", typ: "" },
+    ], false),
+    "StatusClass": o([
+        { json: "reason", js: "reason", typ: u(undefined, "") },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "state", js: "state", typ: r("ObjectiveStatusState") },
+    ], false),
+    "ResultLocalDefinitions": o([
+        { json: "assessment-assets", js: "assessmentAssets", typ: u(undefined, r("AssessmentAssets")) },
+        { json: "components", js: "components", typ: u(undefined, a(r("AssessmentAssetsComponent"))) },
+        { json: "inventory-items", js: "inventoryItems", typ: u(undefined, a(r("InventoryItem"))) },
+        { json: "tasks", js: "tasks", typ: u(undefined, a(r("Task"))) },
+        { json: "users", js: "users", typ: u(undefined, a(r("SystemUser"))) },
+    ], false),
+    "Observation": o([
+        { json: "collected", js: "collected", typ: Date },
+        { json: "description", js: "description", typ: "" },
+        { json: "expires", js: "expires", typ: u(undefined, Date) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "methods", js: "methods", typ: a("") },
+        { json: "origins", js: "origins", typ: u(undefined, a(r("FindingOrigin"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "relevant-evidence", js: "relevantEvidence", typ: u(undefined, a(r("RelevantEvidence"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "subjects", js: "subjects", typ: u(undefined, a(r("IdentifiesTheSubject"))) },
+        { json: "title", js: "title", typ: u(undefined, "") },
+        { json: "types", js: "types", typ: u(undefined, a("")) },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "RelevantEvidence": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "href", js: "href", typ: u(undefined, "") },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+    ], false),
+    "IdentifiesTheSubject": o([
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "subject-uuid", js: "subjectUUID", typ: "" },
+        { json: "title", js: "title", typ: u(undefined, "") },
+        { json: "type", js: "type", typ: "" },
+    ], false),
+    "IdentifiedRisk": o([
+        { json: "characterizations", js: "characterizations", typ: u(undefined, a(r("Characterization"))) },
+        { json: "deadline", js: "deadline", typ: u(undefined, Date) },
+        { json: "description", js: "description", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "mitigating-factors", js: "mitigatingFactors", typ: u(undefined, a(r("MitigatingFactor"))) },
+        { json: "origins", js: "origins", typ: u(undefined, a(r("FindingOrigin"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "related-observations", js: "relatedObservations", typ: u(undefined, a(r("RiskRelatedObservation"))) },
+        { json: "remediations", js: "remediations", typ: u(undefined, a(r("RiskResponse"))) },
+        { json: "risk-log", js: "riskLog", typ: u(undefined, r("RiskLog")) },
+        { json: "statement", js: "statement", typ: "" },
+        { json: "status", js: "status", typ: "" },
+        { json: "threat-ids", js: "threatIDS", typ: u(undefined, a(r("ThreatID"))) },
+        { json: "title", js: "title", typ: "" },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "Characterization": o([
+        { json: "facets", js: "facets", typ: a(r("Facet")) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "origin", js: "origin", typ: r("FindingOrigin") },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+    ], false),
+    "Facet": o([
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "name", js: "name", typ: "" },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "system", js: "system", typ: "" },
+        { json: "value", js: "value", typ: "" },
+    ], false),
+    "MitigatingFactor": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "implementation-uuid", js: "implementationUUID", typ: u(undefined, "") },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "subjects", js: "subjects", typ: u(undefined, a(r("IdentifiesTheSubject"))) },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "RiskRelatedObservation": o([
+        { json: "observation-uuid", js: "observationUUID", typ: "" },
+    ], false),
+    "RiskResponse": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "lifecycle", js: "lifecycle", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "origins", js: "origins", typ: u(undefined, a(r("FindingOrigin"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "required-assets", js: "requiredAssets", typ: u(undefined, a(r("RequiredAsset"))) },
+        { json: "tasks", js: "tasks", typ: u(undefined, a(r("Task"))) },
+        { json: "title", js: "title", typ: "" },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "RequiredAsset": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "subjects", js: "subjects", typ: u(undefined, a(r("IdentifiesTheSubject"))) },
+        { json: "title", js: "title", typ: u(undefined, "") },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "RiskLog": o([
+        { json: "entries", js: "entries", typ: a(r("RiskLogEntry")) },
+    ], false),
+    "RiskLogEntry": o([
+        { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "end", js: "end", typ: u(undefined, Date) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "logged-by", js: "loggedBy", typ: u(undefined, a(r("LoggedBy"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "related-responses", js: "relatedResponses", typ: u(undefined, a(r("RiskResponseReference"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "start", js: "start", typ: Date },
+        { json: "status-change", js: "statusChange", typ: u(undefined, "") },
+        { json: "title", js: "title", typ: u(undefined, "") },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "RiskResponseReference": o([
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "related-tasks", js: "relatedTasks", typ: u(undefined, a(r("TaskReference"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "response-uuid", js: "responseUUID", typ: "" },
+    ], false),
+    "ThreatID": o([
+        { json: "href", js: "href", typ: u(undefined, "") },
+        { json: "id", js: "id", typ: "" },
+        { json: "system", js: "system", typ: "" },
+    ], false),
+    "Catalog": o([
+        { json: "back-matter", js: "backMatter", typ: u(undefined, r("BackMatter")) },
+        { json: "controls", js: "controls", typ: u(undefined, a(r("Control"))) },
+        { json: "groups", js: "groups", typ: u(undefined, a(r("ControlGroup"))) },
+        { json: "metadata", js: "metadata", typ: r("PublicationMetadata") },
+        { json: "params", js: "params", typ: u(undefined, a(r("Parameter"))) },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "Control": o([
+        { json: "class", js: "class", typ: u(undefined, "") },
+        { json: "controls", js: "controls", typ: u(undefined, a(r("Control"))) },
+        { json: "id", js: "id", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "params", js: "params", typ: u(undefined, a(r("Parameter"))) },
+        { json: "parts", js: "parts", typ: u(undefined, a(r("Part"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "title", js: "title", typ: "" },
+    ], false),
+    "Parameter": o([
+        { json: "class", js: "class", typ: u(undefined, "") },
+        { json: "constraints", js: "constraints", typ: u(undefined, a(r("Constraint"))) },
+        { json: "depends-on", js: "dependsOn", typ: u(undefined, "") },
+        { json: "guidelines", js: "guidelines", typ: u(undefined, a(r("Guideline"))) },
+        { json: "id", js: "id", typ: "" },
+        { json: "label", js: "label", typ: u(undefined, "") },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "select", js: "select", typ: u(undefined, r("Selection")) },
+        { json: "usage", js: "usage", typ: u(undefined, "") },
+        { json: "values", js: "values", typ: u(undefined, a("")) },
+    ], false),
+    "Constraint": o([
+        { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "tests", js: "tests", typ: u(undefined, a(r("ConstraintTest"))) },
+    ], false),
+    "ConstraintTest": o([
+        { json: "expression", js: "expression", typ: "" },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+    ], false),
+    "Guideline": o([
+        { json: "prose", js: "prose", typ: "" },
+    ], false),
+    "Selection": o([
+        { json: "choice", js: "choice", typ: u(undefined, a("")) },
+        { json: "how-many", js: "howMany", typ: u(undefined, r("ParameterCardinality")) },
+    ], false),
+    "ControlGroup": o([
+        { json: "class", js: "class", typ: u(undefined, "") },
+        { json: "controls", js: "controls", typ: u(undefined, a(r("Control"))) },
+        { json: "groups", js: "groups", typ: u(undefined, a(r("ControlGroup"))) },
+        { json: "id", js: "id", typ: u(undefined, "") },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "params", js: "params", typ: u(undefined, a(r("Parameter"))) },
+        { json: "parts", js: "parts", typ: u(undefined, a(r("Part"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "title", js: "title", typ: "" },
+    ], false),
+    "ComponentDefinition": o([
+        { json: "back-matter", js: "backMatter", typ: u(undefined, r("BackMatter")) },
+        { json: "capabilities", js: "capabilities", typ: u(undefined, a(r("Capability"))) },
+        { json: "components", js: "components", typ: u(undefined, a(r("ComponentDefinitionComponent"))) },
+        { json: "import-component-definitions", js: "importComponentDefinitions", typ: u(undefined, a(r("ImportComponentDefinition"))) },
+        { json: "metadata", js: "metadata", typ: r("PublicationMetadata") },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "Capability": o([
+        { json: "control-implementations", js: "controlImplementations", typ: u(undefined, a(r("ControlImplementationSet"))) },
+        { json: "description", js: "description", typ: "" },
+        { json: "incorporates-components", js: "incorporatesComponents", typ: u(undefined, a(r("IncorporatesComponent"))) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "name", js: "name", typ: "" },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "ControlImplementationSet": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "implemented-requirements", js: "implementedRequirements", typ: a(r("ImplementedRequirementElement")) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "set-parameters", js: "setParameters", typ: u(undefined, a(r("SetParameterValue"))) },
+        { json: "source", js: "source", typ: "" },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "ImplementedRequirementElement": o([
+        { json: "control-id", js: "controlID", typ: "" },
+        { json: "description", js: "description", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsible-roles", js: "responsibleRoles", typ: u(undefined, a(r("ResponsibleRole"))) },
+        { json: "set-parameters", js: "setParameters", typ: u(undefined, a(r("SetParameterValue"))) },
+        { json: "statements", js: "statements", typ: u(undefined, a(r("ControlStatementImplementation"))) },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "SetParameterValue": o([
+        { json: "param-id", js: "paramID", typ: "" },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "values", js: "values", typ: a("") },
+    ], false),
+    "ControlStatementImplementation": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsible-roles", js: "responsibleRoles", typ: u(undefined, a(r("ResponsibleRole"))) },
+        { json: "statement-id", js: "statementID", typ: "" },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "IncorporatesComponent": o([
+        { json: "component-uuid", js: "componentUUID", typ: "" },
+        { json: "description", js: "description", typ: "" },
+    ], false),
+    "ComponentDefinitionComponent": o([
+        { json: "control-implementations", js: "controlImplementations", typ: u(undefined, a(r("ControlImplementationSet"))) },
+        { json: "description", js: "description", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "protocols", js: "protocols", typ: u(undefined, a(r("ServiceProtocolInformation"))) },
+        { json: "purpose", js: "purpose", typ: u(undefined, "") },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsible-roles", js: "responsibleRoles", typ: u(undefined, a(r("ResponsibleRole"))) },
+        { json: "title", js: "title", typ: "" },
+        { json: "type", js: "type", typ: "" },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "ImportComponentDefinition": o([
+        { json: "href", js: "href", typ: "" },
+    ], false),
+    "PlanOfActionAndMilestonesPOAM": o([
+        { json: "back-matter", js: "backMatter", typ: u(undefined, r("BackMatter")) },
+        { json: "import-ssp", js: "importSSP", typ: u(undefined, r("ImportSystemSecurityPlan")) },
+        { json: "local-definitions", js: "localDefinitions", typ: u(undefined, r("PlanOfActionAndMilestonesLocalDefinitions")) },
+        { json: "metadata", js: "metadata", typ: r("PublicationMetadata") },
+        { json: "observations", js: "observations", typ: u(undefined, a(r("Observation"))) },
+        { json: "poam-items", js: "poamItems", typ: a(r("POAMItem")) },
+        { json: "risks", js: "risks", typ: u(undefined, a(r("IdentifiedRisk"))) },
+        { json: "system-id", js: "systemID", typ: u(undefined, r("SystemIdentification")) },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "PlanOfActionAndMilestonesLocalDefinitions": o([
+        { json: "components", js: "components", typ: u(undefined, a(r("AssessmentAssetsComponent"))) },
+        { json: "inventory-items", js: "inventoryItems", typ: u(undefined, a(r("InventoryItem"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+    ], false),
+    "POAMItem": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "origins", js: "origins", typ: u(undefined, a(r("PoamItemOrigin"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "related-observations", js: "relatedObservations", typ: u(undefined, a(r("PoamItemRelatedObservation"))) },
+        { json: "related-risks", js: "relatedRisks", typ: u(undefined, a(r("PoamItemRelatedRisk"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "title", js: "title", typ: "" },
+        { json: "uuid", js: "uuid", typ: u(undefined, "") },
+    ], false),
+    "PoamItemOrigin": o([
+        { json: "actors", js: "actors", typ: a(r("OriginatingActor")) },
+    ], false),
+    "PoamItemRelatedObservation": o([
+        { json: "observation-uuid", js: "observationUUID", typ: "" },
+    ], false),
+    "PoamItemRelatedRisk": o([
+        { json: "risk-uuid", js: "riskUUID", typ: "" },
+    ], false),
+    "SystemIdentification": o([
+        { json: "id", js: "id", typ: "" },
+        { json: "identifier-type", js: "identifierType", typ: u(undefined, "") },
+    ], false),
+    "Profile": o([
+        { json: "back-matter", js: "backMatter", typ: u(undefined, r("BackMatter")) },
+        { json: "imports", js: "imports", typ: a(r("ImportResource")) },
+        { json: "merge", js: "merge", typ: u(undefined, r("MergeControls")) },
+        { json: "metadata", js: "metadata", typ: r("PublicationMetadata") },
+        { json: "modify", js: "modify", typ: u(undefined, r("ModifyControls")) },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "ImportResource": o([
+        { json: "exclude-controls", js: "excludeControls", typ: u(undefined, a(r("Call"))) },
+        { json: "href", js: "href", typ: "" },
+        { json: "include-all", js: "includeAll", typ: u(undefined, r("IncludeAll")) },
+        { json: "include-controls", js: "includeControls", typ: u(undefined, a(r("Call"))) },
+    ], false),
+    "Call": o([
+        { json: "matching", js: "matching", typ: u(undefined, a(r("MatchControlsByPattern"))) },
+        { json: "with-child-controls", js: "withChildControls", typ: u(undefined, r("IncludeContainedControlsWithControl")) },
+        { json: "with-ids", js: "withIDS", typ: u(undefined, a("")) },
+    ], false),
+    "MatchControlsByPattern": o([
+        { json: "pattern", js: "pattern", typ: u(undefined, "") },
+    ], false),
+    "MergeControls": o([
+        { json: "as-is", js: "asIs", typ: u(undefined, true) },
+        { json: "combine", js: "combine", typ: u(undefined, r("CombinationRule")) },
+        { json: "custom", js: "custom", typ: u(undefined, r("CustomGrouping")) },
+        { json: "flat", js: "flat", typ: u(undefined, r("Flat")) },
+    ], false),
+    "CombinationRule": o([
+        { json: "method", js: "method", typ: u(undefined, r("CombinationMethod")) },
+    ], false),
+    "CustomGrouping": o([
+        { json: "groups", js: "groups", typ: u(undefined, a(r("CustomGroup"))) },
+        { json: "insert-controls", js: "insertControls", typ: u(undefined, a(r("SelectControls"))) },
+    ], false),
+    "CustomGroup": o([
+        { json: "class", js: "class", typ: u(undefined, "") },
+        { json: "groups", js: "groups", typ: u(undefined, a(r("CustomGroup"))) },
+        { json: "id", js: "id", typ: u(undefined, "") },
+        { json: "insert-controls", js: "insertControls", typ: u(undefined, a(r("SelectControls"))) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "params", js: "params", typ: u(undefined, a(r("Parameter"))) },
+        { json: "parts", js: "parts", typ: u(undefined, a(r("Part"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "title", js: "title", typ: "" },
+    ], false),
+    "SelectControls": o([
+        { json: "exclude-controls", js: "excludeControls", typ: u(undefined, a(r("Call"))) },
+        { json: "include-all", js: "includeAll", typ: u(undefined, r("IncludeAll")) },
+        { json: "include-controls", js: "includeControls", typ: u(undefined, a(r("Call"))) },
+        { json: "order", js: "order", typ: u(undefined, r("Order")) },
+    ], false),
+    "Flat": o([
+    ], false),
+    "ModifyControls": o([
+        { json: "alters", js: "alters", typ: u(undefined, a(r("Alteration"))) },
+        { json: "set-parameters", js: "setParameters", typ: u(undefined, a(r("ParameterSetting"))) },
+    ], false),
+    "Alteration": o([
+        { json: "adds", js: "adds", typ: u(undefined, a(r("Addition"))) },
+        { json: "control-id", js: "controlID", typ: "" },
+        { json: "removes", js: "removes", typ: u(undefined, a(r("Removal"))) },
+    ], false),
+    "Addition": o([
+        { json: "by-id", js: "byID", typ: u(undefined, "") },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "params", js: "params", typ: u(undefined, a(r("Parameter"))) },
+        { json: "parts", js: "parts", typ: u(undefined, a(r("Part"))) },
+        { json: "position", js: "position", typ: u(undefined, r("Position")) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "title", js: "title", typ: u(undefined, "") },
+    ], false),
+    "Removal": o([
+        { json: "by-class", js: "byClass", typ: u(undefined, "") },
+        { json: "by-id", js: "byID", typ: u(undefined, "") },
+        { json: "by-item-name", js: "byItemName", typ: u(undefined, "") },
+        { json: "by-name", js: "byName", typ: u(undefined, "") },
+        { json: "by-ns", js: "byNS", typ: u(undefined, "") },
+    ], false),
+    "ParameterSetting": o([
+        { json: "class", js: "class", typ: u(undefined, "") },
+        { json: "constraints", js: "constraints", typ: u(undefined, a(r("Constraint"))) },
+        { json: "depends-on", js: "dependsOn", typ: u(undefined, "") },
+        { json: "guidelines", js: "guidelines", typ: u(undefined, a(r("Guideline"))) },
+        { json: "label", js: "label", typ: u(undefined, "") },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "param-id", js: "paramID", typ: "" },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "select", js: "select", typ: u(undefined, r("Selection")) },
+        { json: "usage", js: "usage", typ: u(undefined, "") },
+        { json: "values", js: "values", typ: u(undefined, a("")) },
+    ], false),
+    "SystemSecurityPlanSSP": o([
+        { json: "back-matter", js: "backMatter", typ: u(undefined, r("BackMatter")) },
+        { json: "control-implementation", js: "controlImplementation", typ: r("ControlImplementationClass") },
+        { json: "import-profile", js: "importProfile", typ: r("ImportProfile") },
+        { json: "metadata", js: "metadata", typ: r("PublicationMetadata") },
+        { json: "system-characteristics", js: "systemCharacteristics", typ: r("SystemCharacteristics") },
+        { json: "system-implementation", js: "systemImplementation", typ: r("SystemImplementation") },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "ControlImplementationClass": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "implemented-requirements", js: "implementedRequirements", typ: a(r("ControlBasedRequirement")) },
+        { json: "set-parameters", js: "setParameters", typ: u(undefined, a(r("SetParameterValue"))) },
+    ], false),
+    "ControlBasedRequirement": o([
+        { json: "by-components", js: "byComponents", typ: u(undefined, a(r("ComponentControlImplementation"))) },
+        { json: "control-id", js: "controlID", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsible-roles", js: "responsibleRoles", typ: u(undefined, a(r("ResponsibleRole"))) },
+        { json: "set-parameters", js: "setParameters", typ: u(undefined, a(r("SetParameterValue"))) },
+        { json: "statements", js: "statements", typ: u(undefined, a(r("SpecificControlStatement"))) },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "ComponentControlImplementation": o([
+        { json: "component-uuid", js: "componentUUID", typ: "" },
+        { json: "description", js: "description", typ: "" },
+        { json: "export", js: "export", typ: u(undefined, r("Export")) },
+        { json: "implementation-status", js: "implementationStatus", typ: u(undefined, r("ImplementationStatus")) },
+        { json: "inherited", js: "inherited", typ: u(undefined, a(r("InheritedControlImplementation"))) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsible-roles", js: "responsibleRoles", typ: u(undefined, a(r("ResponsibleRole"))) },
+        { json: "satisfied", js: "satisfied", typ: u(undefined, a(r("SatisfiedControlImplementationResponsibility"))) },
+        { json: "set-parameters", js: "setParameters", typ: u(undefined, a(r("SetParameterValue"))) },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "Export": o([
+        { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "provided", js: "provided", typ: u(undefined, a(r("ProvidedControlImplementation"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsibilities", js: "responsibilities", typ: u(undefined, a(r("ControlImplementationResponsibility"))) },
+    ], false),
+    "ProvidedControlImplementation": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsible-roles", js: "responsibleRoles", typ: u(undefined, a(r("ResponsibleRole"))) },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "ControlImplementationResponsibility": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "provided-uuid", js: "providedUUID", typ: u(undefined, "") },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsible-roles", js: "responsibleRoles", typ: u(undefined, a(r("ResponsibleRole"))) },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "InheritedControlImplementation": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "provided-uuid", js: "providedUUID", typ: u(undefined, "") },
+        { json: "responsible-roles", js: "responsibleRoles", typ: u(undefined, a(r("ResponsibleRole"))) },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "SatisfiedControlImplementationResponsibility": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsibility-uuid", js: "responsibilityUUID", typ: u(undefined, "") },
+        { json: "responsible-roles", js: "responsibleRoles", typ: u(undefined, a(r("ResponsibleRole"))) },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "SpecificControlStatement": o([
+        { json: "by-components", js: "byComponents", typ: u(undefined, a(r("ComponentControlImplementation"))) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsible-roles", js: "responsibleRoles", typ: u(undefined, a(r("ResponsibleRole"))) },
+        { json: "statement-id", js: "statementID", typ: "" },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "ImportProfile": o([
+        { json: "href", js: "href", typ: "" },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+    ], false),
+    "SystemCharacteristics": o([
+        { json: "authorization-boundary", js: "authorizationBoundary", typ: r("AuthorizationBoundary") },
+        { json: "data-flow", js: "dataFlow", typ: u(undefined, r("DataFlow")) },
+        { json: "date-authorized", js: "dateAuthorized", typ: u(undefined, "") },
+        { json: "description", js: "description", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "network-architecture", js: "networkArchitecture", typ: u(undefined, r("NetworkArchitecture")) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "responsible-parties", js: "responsibleParties", typ: u(undefined, a(r("ResponsibleParty"))) },
+        { json: "security-impact-level", js: "securityImpactLevel", typ: r("SecurityImpactLevel") },
+        { json: "security-sensitivity-level", js: "securitySensitivityLevel", typ: "" },
+        { json: "status", js: "status", typ: r("SystemCharacteristicsStatus") },
+        { json: "system-ids", js: "systemIDS", typ: a(r("SystemIdentification")) },
+        { json: "system-information", js: "systemInformation", typ: r("SystemInformation") },
+        { json: "system-name", js: "systemName", typ: "" },
+        { json: "system-name-short", js: "systemNameShort", typ: u(undefined, "") },
+    ], false),
+    "AuthorizationBoundary": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "diagrams", js: "diagrams", typ: u(undefined, a(r("Diagram"))) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+    ], false),
+    "Diagram": o([
+        { json: "caption", js: "caption", typ: u(undefined, "") },
+        { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "DataFlow": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "diagrams", js: "diagrams", typ: u(undefined, a(r("Diagram"))) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+    ], false),
+    "NetworkArchitecture": o([
+        { json: "description", js: "description", typ: "" },
+        { json: "diagrams", js: "diagrams", typ: u(undefined, a(r("Diagram"))) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+    ], false),
+    "SecurityImpactLevel": o([
+        { json: "security-objective-availability", js: "securityObjectiveAvailability", typ: "" },
+        { json: "security-objective-confidentiality", js: "securityObjectiveConfidentiality", typ: "" },
+        { json: "security-objective-integrity", js: "securityObjectiveIntegrity", typ: "" },
+    ], false),
+    "SystemCharacteristicsStatus": o([
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "state", js: "state", typ: r("FluffyState") },
+    ], false),
+    "SystemInformation": o([
+        { json: "information-types", js: "informationTypes", typ: a(r("InformationType")) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+    ], false),
+    "InformationType": o([
+        { json: "availability-impact", js: "availabilityImpact", typ: r("AvailabilityImpactLevel") },
+        { json: "categorizations", js: "categorizations", typ: u(undefined, a(r("InformationTypeCategorization"))) },
+        { json: "confidentiality-impact", js: "confidentialityImpact", typ: r("ConfidentialityImpactLevel") },
+        { json: "description", js: "description", typ: "" },
+        { json: "integrity-impact", js: "integrityImpact", typ: r("IntegrityImpactLevel") },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "title", js: "title", typ: "" },
+        { json: "uuid", js: "uuid", typ: u(undefined, "") },
+    ], false),
+    "AvailabilityImpactLevel": o([
+        { json: "adjustment-justification", js: "adjustmentJustification", typ: u(undefined, "") },
+        { json: "base", js: "base", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "selected", js: "selected", typ: u(undefined, "") },
+    ], false),
+    "InformationTypeCategorization": o([
+        { json: "information-type-ids", js: "informationTypeIDS", typ: u(undefined, a("")) },
+        { json: "system", js: "system", typ: "" },
+    ], false),
+    "ConfidentialityImpactLevel": o([
+        { json: "adjustment-justification", js: "adjustmentJustification", typ: u(undefined, "") },
+        { json: "base", js: "base", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "selected", js: "selected", typ: u(undefined, "") },
+    ], false),
+    "IntegrityImpactLevel": o([
+        { json: "adjustment-justification", js: "adjustmentJustification", typ: u(undefined, "") },
+        { json: "base", js: "base", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "selected", js: "selected", typ: u(undefined, "") },
+    ], false),
+    "SystemImplementation": o([
+        { json: "components", js: "components", typ: a(r("AssessmentAssetsComponent")) },
+        { json: "inventory-items", js: "inventoryItems", typ: u(undefined, a(r("InventoryItem"))) },
+        { json: "leveraged-authorizations", js: "leveragedAuthorizations", typ: u(undefined, a(r("LeveragedAuthorization"))) },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "users", js: "users", typ: a(r("SystemUser")) },
+    ], false),
+    "LeveragedAuthorization": o([
+        { json: "date-authorized", js: "dateAuthorized", typ: "" },
+        { json: "links", js: "links", typ: u(undefined, a(r("Link"))) },
+        { json: "party-uuid", js: "partyUUID", typ: "" },
+        { json: "props", js: "props", typ: u(undefined, a(r("Property"))) },
+        { json: "remarks", js: "remarks", typ: u(undefined, "") },
+        { json: "title", js: "title", typ: "" },
+        { json: "uuid", js: "uuid", typ: "" },
+    ], false),
+    "Transport": [
+        "TCP",
+        "UDP",
     ],
-    PurpleState: [
-        'disposition',
-        'operational',
-        'other',
-        'under-development',
+    "PurpleState": [
+        "disposition",
+        "operational",
+        "other",
+        "under-development",
     ],
-    PartyType: [
-        'organization',
-        'person',
+    "PartyType": [
+        "organization",
+        "person",
     ],
-    TimeUnit: [
-        'days',
-        'hours',
-        'minutes',
-        'months',
-        'seconds',
-        'years',
+    "TimeUnit": [
+        "days",
+        "hours",
+        "minutes",
+        "months",
+        "seconds",
+        "years",
     ],
-    ActorType: [
-        'assessment-platform',
-        'party',
-        'tool',
+    "ActorType": [
+        "assessment-platform",
+        "party",
+        "tool",
     ],
-    ObjectiveStatusState: [
-        'not-satisfied',
-        'satisfied',
+    "ObjectiveStatusState": [
+        "not-satisfied",
+        "satisfied",
     ],
-    FindingTargetType: [
-        'objective-id',
-        'statement-id',
+    "FindingTargetType": [
+        "objective-id",
+        "statement-id",
     ],
-    ParameterCardinality: [
-        'one',
-        'one-or-more',
+    "ParameterCardinality": [
+        "one",
+        "one-or-more",
     ],
-    IncludeContainedControlsWithControl: [
-        'no',
-        'yes',
+    "IncludeContainedControlsWithControl": [
+        "no",
+        "yes",
     ],
-    CombinationMethod: [
-        'keep',
-        'merge',
-        'use-first',
+    "CombinationMethod": [
+        "keep",
+        "merge",
+        "use-first",
     ],
-    Order: [
-        'ascending',
-        'descending',
-        'keep',
+    "Order": [
+        "ascending",
+        "descending",
+        "keep",
     ],
-    Position: [
-        'after',
-        'before',
-        'ending',
-        'starting',
+    "Position": [
+        "after",
+        "before",
+        "ending",
+        "starting",
     ],
-    FluffyState: [
-        'disposition',
-        'operational',
-        'other',
-        'under-development',
-        'under-major-modification',
+    "FluffyState": [
+        "disposition",
+        "operational",
+        "other",
+        "under-development",
+        "under-major-modification",
     ],
 };
