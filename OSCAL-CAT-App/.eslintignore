@@ -3,3 +3,4 @@ meta
 node_modules
 *.conf*
 www
+src/app/interfaces/oscal-types/oscal-catalog.types.ts 
