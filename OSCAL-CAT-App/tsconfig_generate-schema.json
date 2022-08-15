@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "es2019",
+    "module": "commonjs",
+    "lib": ["es2019"],
+    "declaration": true,
+    "outDir": "lib",
+    "rootDir": "src",
+    "strict": true,
+    "types": ["node", "mocha", "chai", "commander"],
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "allowJs": false,
+    "typeRoots": [
+      "./types",
+      "./node_modules/@types"
+    ]
+  },
+  "include": [
+    "src/utils/generate-schema.ts"
+  ],
+  "exclude": [
+    "**/*.ts"
+  ]
+}

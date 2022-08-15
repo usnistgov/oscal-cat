@@ -16,16 +16,25 @@
 
 ## After cloning the repository:
 
-1. From the root directory of the project change the root directory of the project to the App directory:
+1. To develop and build locally, you **must** clone and check out all git submodules recursively.
 
+```sh
+git clone https://github.com/usnistgov/oscal-cat.git path/to/oscal-cat
+cd path/to/oscal-cat
+git submodule update --init --recursive
 ```
+
+2. From the root directory of the project change the root directory of the project to the App directory:
+
+```sh
 cd OSCAL-CAT-App
 ```
 
-2. To install and configure necessary node packages run (needed only the first time):
+3. To install and configure necessary node packages run (needed only the first time):
 
-```
-npm install
+```sh
+npm ci
+npm run build
 ```
 
 ## To start application in the browser:
@@ -39,5 +48,5 @@ cd OSCAL-CAT-App
 2. Launch the application
 
 ```
-ionic serve
+npm run start
 ```
