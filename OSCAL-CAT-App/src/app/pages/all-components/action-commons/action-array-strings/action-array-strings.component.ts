@@ -32,7 +32,8 @@ import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancesto
   templateUrl: './action-array-strings.component.html',
   styleUrls: ['./action-array-strings.component.scss'],
 })
-export class ArrayStringsComponent implements OnInit, IMustCommitFormDataArray {
+export class ArrayStringsComponent
+  implements OnInit, IMustCommitFormDataArray<string> {
 
   @Input() ID: string;
   @Input() listTitle: string;

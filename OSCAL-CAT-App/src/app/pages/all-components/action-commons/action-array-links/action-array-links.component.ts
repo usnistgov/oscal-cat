@@ -39,7 +39,9 @@ import { Link } from './../../../../interfaces/oscal-types/oscal-catalog.types';
     '../../action-all-common/ion-tabs-buttons.scss',
     '../../action-all-common/div-scroll.scss'],
 })
-export class ArrayLinksComponent extends ActionAncestorSimpleArrayComponent implements OnInit, IMustCommitFormDataArray {
+export class ArrayLinksComponent
+  extends ActionAncestorSimpleArrayComponent
+  implements OnInit, IMustCommitFormDataArray<Link> {
 
   @Input() linksArray: Array<Link>;
 
@@ -91,6 +93,9 @@ export class ArrayLinksComponent extends ActionAncestorSimpleArrayComponent impl
   ngOnInit() {
     super.ngOnInit();
 
+    if (this.singleMode && this.actionName.toLowerCase() == 'add') {
+      this.linksArray = this.linksArray || [OscalCatalogEmpties.getEmptyLink()];
+    }
 
     for (const [key, value] of this.inputsMap) {
       console.log(`LINK: Key=${key}, Val=${value}`);

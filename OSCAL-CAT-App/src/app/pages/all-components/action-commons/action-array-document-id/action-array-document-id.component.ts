@@ -39,7 +39,9 @@ import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancesto
     '../../action-all-common/ion-tabs-buttons.scss',
     '../../action-all-common/div-scroll.scss'],
 })
-export class DocumentIDArrayComponent extends ActionAncestorSimpleArrayComponent implements OnInit, IMustCommitFormDataArray {
+export class DocumentIDArrayComponent
+  extends ActionAncestorSimpleArrayComponent
+  implements OnInit, IMustCommitFormDataArray<DocumentIdentifier> {
 
   @Input() idArray: Array<DocumentIdentifier>;
 

@@ -1,0 +1,58 @@
+<div *ngIf="this.showInfo">
+  <ion-row>
+
+    <ion-col>
+      <ion-item>
+        <!-- {{this.knownCat.cat_suffix}} -->
+        <ion-label icon="newspaper-outline">Catalog</ion-label>
+        <ion-checkbox slot="end" (ionChange)="onCheckEntityUpdate($event, 0)" [checked]="this.entityChecks[0]">
+        </ion-checkbox>
+      </ion-item>
+    </ion-col>
+    <!-- 
+    <ion-col>
+      <ion-item>
+        <ion-label icon="newspaper-outline">Schemas</ion-label>
+        <ion-checkbox slot="end"></ion-checkbox>
+      </ion-item>
+    </ion-col>
+    -->
+    <ion-col>
+      <ion-item>
+        <ion-label icon="newspaper-outline">Baselines</ion-label>
+        <ion-checkbox slot="end" (ionChange)="onCheckEntityUpdate($event, 1)" [checked]="this.entityChecks[1]">
+        </ion-checkbox>
+      </ion-item>
+    </ion-col>
+
+    <ion-col>
+      <ion-item>
+        <ion-button>Refresh Selected
+          <!-- cloud-download-outline -->
+          <ion-icon slot="start" name="refresh-circle-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-col>
+
+  </ion-row>
+
+  <ion-row *ngIf="this.showBaselines()">
+    <ion-col>
+      <ion-item>
+        Baselines:
+      </ion-item>
+    </ion-col>
+    <!-- *ngFor="let oscalFile of this.oscalFiles; let itemIndex = index" -->
+    <ion-col *ngFor="let baseline of this.knownCat.cat_baselines; let idx = index;">
+      <ion-item>
+        {{baseline.cat_suffix}} &nbsp;
+        <!-- :{{idx}} -->
+        <ion-badge [color]="baseline.pro_color">{{baseline.pro_short_label}}
+        </ion-badge>
+        <ion-checkbox slot="start" (ionChange)="this.onCheckBaselineUpdate($event, idx)"
+          [checked]="this.baselineChecks[idx]"></ion-checkbox>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+</div>

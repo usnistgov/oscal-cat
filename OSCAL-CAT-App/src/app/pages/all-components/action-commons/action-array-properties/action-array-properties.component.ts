@@ -40,7 +40,9 @@ import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancesto
     '../../action-all-common/ion-tabs-buttons.scss',
     '../../action-all-common/div-scroll.scss'],
 })
-export class PropertiesArrayComponent extends ActionAncestorSimpleArrayComponent implements OnInit, IMustCommitFormDataArray {
+export class PropertiesArrayComponent
+  extends ActionAncestorSimpleArrayComponent
+  implements OnInit, IMustCommitFormDataArray<Property> {
 
   @Input() propertiesArray: Array<Property>;
   @Input() inputDataArray: Array<Property>;

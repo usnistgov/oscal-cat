@@ -36,7 +36,9 @@ import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancesto
   templateUrl: './action-array-external-ids.component.html',
   styleUrls: ['./action-array-external-ids.component.scss'],
 })
-export class ArrayExternalIDsComponent extends ActionAncestorSimpleArrayComponent implements OnInit, IMustCommitFormDataArray {
+export class ArrayExternalIDsComponent
+  extends ActionAncestorSimpleArrayComponent
+  implements OnInit, IMustCommitFormDataArray<PartyExternalIdentifier> {
 
   @Input() externalIDsArray: Array<PartyExternalIdentifier>;
 

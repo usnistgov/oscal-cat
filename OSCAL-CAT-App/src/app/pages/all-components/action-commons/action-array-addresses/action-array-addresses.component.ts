@@ -39,7 +39,8 @@ import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancesto
   templateUrl: './action-array-addresses.component.html',
   styleUrls: ['./action-array-addresses.component.scss'],
 })
-export class ArrayAddressesComponent implements OnInit, AfterViewInit, IMustCommitFormDataArray {
+export class ArrayAddressesComponent
+  implements OnInit, AfterViewInit, IMustCommitFormDataArray<Address> {
 
   @Input() public localForm: FormGroup;
   @Input() public partyName: string;

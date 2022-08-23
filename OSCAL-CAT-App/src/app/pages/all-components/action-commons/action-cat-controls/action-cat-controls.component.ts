@@ -46,7 +46,9 @@ import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancesto
     '../../action-all-common/ion-tabs-buttons.scss',
     '../../action-all-common/div-scroll.scss']
 })
-export class CatControlsComponent extends ActionAncestorSimpleArrayComponent implements OnInit, IMustCommitFormDataArray {
+export class CatControlsComponent
+  extends ActionAncestorSimpleArrayComponent
+  implements OnInit, IMustCommitFormDataArray<Control> {
   // @Input() control: Control;
   @Input() controls: Array<Control>;
 
