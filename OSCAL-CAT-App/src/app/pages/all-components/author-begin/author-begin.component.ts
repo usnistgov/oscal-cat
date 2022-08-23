@@ -626,6 +626,11 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
     }
   }
 
+  hasBaseLines(fileInfo: KnownOscalFileLocation) {
+    console.log(fileInfo.cat_baselines);
+    return !!fileInfo.cat_baselines && fileInfo.cat_baselines.length > 0;
+  }
+
 }
 
 
