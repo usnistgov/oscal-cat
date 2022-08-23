@@ -39,7 +39,9 @@ import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancesto
     '../../action-all-common/ion-tabs-buttons.scss',
     '../../action-all-common/div-scroll.scss'],
 })
-export class ActionArrayRolesComponent extends ActionAncestorSimpleArrayComponent implements OnInit, IMustCommitFormDataArray {
+export class ActionArrayRolesComponent
+  extends ActionAncestorSimpleArrayComponent
+  implements OnInit, IMustCommitFormDataArray<Role> {
 
   @Input() rolesArray: Array<Role>;
   @Input() isPresetRole: boolean;

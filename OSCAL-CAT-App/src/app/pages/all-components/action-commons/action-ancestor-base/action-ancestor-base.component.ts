@@ -31,11 +31,11 @@ import { v4 as UUIDv4 } from 'uuid';
 import { OscalCatalogEmpties } from '../../../../interfaces/oscal-types/oscal-catalog-factory';
 
 
-export interface IMustCommitFormDataArray {
-  formCommitArray(): Array<any>;
+export interface IMustCommitFormDataArray<Type> {
+  formCommitArray(): Array<Type>;
 }
-export interface IMustCommitFormData {
-  formCommit(): any;
+export interface IMustCommitFormData<Type> {
+  formCommit(): Type;
 }
 
 
