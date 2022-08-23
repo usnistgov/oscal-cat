@@ -7,7 +7,42 @@
   </ion-toolbar>
 </ion-header>
 
-  <div><ion-content>
+<ion-content>
+
+  <div>
     You can load your locally saved catalog snapshot to browser to continue the work you previously saved locally
-  </ion-content>
-</div>
+  </div>
+
+  <!--   <ion-button>
+    <ion-item>
+      <label for="file">Choose File</label>
+      <input type="file" id="file" (change)="handleFileInput($event.target.files)">
+    </ion-item>
+  </ion-button>
+
+
+  <ion-button expand="full">
+    <ion-icon lazy="true" slot="start" name="image"></ion-icon>
+    <ion-label slot="end">Upload Image</ion-label>
+    <ion-input type="file" (change)=""handleFileInput($event.target.files)" id="file-input" accept="image/png, image/jpeg">
+    </ion-input>
+  </ion-button>
+ -->
+
+  <ion-item>
+    <ion-button>
+      <label class="myFakeUploadButton" for="myFileInput">Choose File to Upload</label>
+      <input type="file" id="myFileInput" (change)="handleFileInput($event.target.files)">
+    </ion-button>
+  </ion-item>
+
+  <ion-item>
+    <ion-button (click)="validateSchema()">
+      <label>Validate Upload</label>
+    </ion-button>
+  </ion-item>
+
+
+
+
+</ion-content>

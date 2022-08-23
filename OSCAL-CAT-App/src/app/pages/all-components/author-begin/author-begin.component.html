@@ -25,29 +25,29 @@
                         <ion-title>&nbsp;&nbsp;Start with a Known OSCAL Catalog</ion-title>
                     </ion-col>
                 </ion-row>
+
                 <!--  onclick="this.popAlert(oscalFile.cat_suffix, itemIndex)" -->
-                <ion-row *ngFor="let oscalFile of this.oscalFiles; let itemIndex = index">
-                    <ion-col>
-                        <ion-item>
-                            <ion-radio value="{{itemIndex}}">
-                            </ion-radio>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <ion-label>{{oscalFile.cat_label}}</ion-label>
+                <div *ngFor="let oscalFile of this.oscalFiles; let itemIndex = index">
+                    <ion-row>
+                        <ion-col>
                             <ion-item>
-                                <ion-label>Add</ion-label>
-                                <ion-item>
-                                    <ion-label icon="newspaper-outline">Cat </ion-label>
-                                    <ion-checkbox slot="end"></ion-checkbox>
-                                </ion-item>
-                                <ion-item>
-                                    <ion-label icon="newspaper-outline">Profile </ion-label>
-                                    <ion-checkbox slot="end"></ion-checkbox>
-                                </ion-item>
+                                <ion-radio value="{{itemIndex}}">
+                                </ion-radio>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <ion-label>{{oscalFile.cat_label}}</ion-label>
                             </ion-item>
-                            <div>
-                            </div>
+                        </ion-col>
+                        <!--                     
+                    <br />
+                    <ion-row *ngIf="this.hasBaseLines(oscalFile)">
+                        <ion-item *ngFor="let baseLine of oscalFile.baselines; let idx = index">
+                            {{baseLine.cat_suffix}}
                         </ion-item>
-                    </ion-col>
-                </ion-row>
+                    </ion-row> 
+                    -->
+                    </ion-row>
+                    <oscal-cat-author-view [knownCat]="oscalFile" [showInfo]="this.showActiveCatInfo(itemIndex)">
+                    </oscal-cat-author-view>
+                </div>
             </ion-grid>
         </div>
         <br />
