@@ -21,6 +21,15 @@
                 </ion-badge>
             </ion-item>
 
+            <ion-item *ngIf="item.hasProfileColors()">
+                <ion-item *ngFor="let pro_map of item.profileMap | keyvalue">
+                    <ion-badge color="{{pro_map.value.color}}">
+                        {{pro_map.value.label}}
+                    </ion-badge>
+                    <!-- &nbsp; -->
+                </ion-item>
+            </ion-item>
+
             <ion-item>
                 <ion-label [color]="item.hasSomeIncluded()?'success':'default'">In</ion-label>
                 <ion-checkbox (click)="onJoinNodeCheck(item)" [(ngModel)]="item.included" color="success">

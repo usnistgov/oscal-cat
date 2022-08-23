@@ -522,12 +522,13 @@
       </ion-row>
     </ion-grid>
 
-    <!-- Link & Location -->
+    <!-- Link & Location Add/Edit-->
     <ion-grid>
       <ion-row class="topless bottomless">
         <ion-col class="topless bottomless">
           <ion-toolbar class="topless bottomless">
             <ion-buttons class="topless bottomless" style="display: flex;justify-content: space-evenly;">
+
               <!-- Adding Link Element-->
               <ion-tab-button [ngClass]="{'tab-selected' : activeEntityAddTabName=='Link'}"
                 (click)="showMetaLink($event, 'Link', 'link-outline')">
@@ -535,6 +536,7 @@
                 <ion-icon icon="link-outline"></ion-icon>
                 <ion-badge *ngIf="activeEntityAddTabName=='Link'">Adding Link</ion-badge>
               </ion-tab-button>
+
               <!-- Adding Location-->
               <!-- (click)="modalPOoP('Location', 'location-outline')" -->
               <ion-tab-button [ngClass]="{'tab-selected' : activeEntityAddTabName=='Location'}"
