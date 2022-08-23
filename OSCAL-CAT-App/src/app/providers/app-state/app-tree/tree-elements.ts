@@ -34,11 +34,26 @@ export enum TreeNodeType {
     Statement = 'STATEMENT',
 }
 
+export class BaselineLabel {
+    toolTip?: string
+    fullName?: string;
+    label: string;
+    color: string;
+
+    constructor(label: string, color: string, fullName: string, toolTip: string = undefined) {
+        this.label = label;
+        this.color = color;
+        this.fullName = fullName;
+        this.toolTip = toolTip || `Control recommended for ${fullName}-level baseline`;
+    }
+}
+
 @Injectable({
     providedIn: 'root'
 })
 export class TreeItemEntry {
     // export class Catalog { constructor(private cat: any) {} }
+
     key: string;
     label: string;
     included?: boolean;
@@ -54,10 +69,45 @@ export class TreeItemEntry {
     baseline?: Array<string>;
     basePriority?: Array<string>;
 
+    profileMap: Map<number, BaselineLabel>;
+
     constructor() {
         // this.included = false;
+
     }
 
+    hasProfileColors(): boolean {
+        const low: BaselineLabel = {
+            label: 'Lo',
+            color: 'baseline-low',
+        };
+        const medium: BaselineLabel = {
+            label: 'Md',
+            color: 'baseline-medium',
+        };
+        const high: BaselineLabel = {
+            label: 'Hi',
+            color: 'baseline-high',
+        };
+        const privacy: BaselineLabel = {
+            label: 'Pr',
+            color: 'baseline-privacy',
+        };
+        this.addProfileColor(0, low);
+        this.addProfileColor(1, medium);
+        this.addProfileColor(2, high);
+        this.addProfileColor(3, privacy);
+        return this.profileMap && this.profileMap.entries && this.profileMap.size > 0;
+    }
+
+    addProfileColor(sorting: number, labelInfo: BaselineLabel): void {
+        if (this.nodeType != TreeNodeType.Catalog && this.nodeType != TreeNodeType.Group) {
+            if (!this.profileMap) {
+                this.profileMap = new Map<number, BaselineLabel>();
+            }
+            this.profileMap.set(sorting, labelInfo);
+        }
+    }
 
     cloneAttribute(attrToClone: any) {
         if (null === attrToClone || 'object' !== typeof attrToClone) {
@@ -174,7 +224,7 @@ export class TreeItemEntry {
                                                                 newThree = this.getNodeCopyNoKids(grandKid2, newTwo);
                                                                 if (grandKid2.children && grandKid2.children.length > 0) {
                                                                     newThree.children = new Array<TreeItemEntry>();
-                                                                    console.log(`Element ${grandKid2.key} has children`)
+                                                                    // console.log(`Element ${grandKid2.key} has children`)
                                                                 }
                                                             }
                                                         }
@@ -443,7 +493,8 @@ const hasAnyIncluded = (node: TreeItemEntry) => {
             try {
                 if (child) {
                     retValue = retValue || child.hasSomeIncluded();
-                    if (retValue) { return retValue; } // Premature optimization, might skip for children split
+                    // Could be premature optimization, might skip for children split
+                    if (retValue) { return retValue; }
                 }
             } catch (e) {
                 console.log(`Looking @ Key:${child.key}; ${child.label}; Exception ${e}`);

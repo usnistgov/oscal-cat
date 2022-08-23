@@ -24,6 +24,9 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 import { Component, OnInit } from '@angular/core';
+import { Console, time } from 'console';
+import { Catalog, Profile } from 'src/app/interfaces/oscal-types/oscal-catalog.types';
+import { FilePullResult, OscalRemoteFile, OsFileOperations } from 'src/app/providers/app-state/state-nav-cat/os-files.service';
 
 @Component({
   selector: 'app-cat-load',
@@ -31,16 +34,122 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./cat-load.page.scss', './../stylePages.scss'],
 })
 export class CatLoadPage implements OnInit {
+  fileToUpload: File | null = null;
+  isCatLoadDone = false;
+  recCatSchema = require('/src/assets/oscal-cats/json-schemas/oscal_catalog_schema.json');
+  recProSchema = require('/src/assets/oscal-cats/json-schemas/oscal_profile_schema.json');
+  catSchemaFromUrl: any;
+  proSchemaFromUrl: any;
+  // catSchema = require('https://raw.githubusercontent.com/usnistgov/OSCAL/main/json/schema/oscal_catalog_schema.json');
+  loadedCat: Catalog;
+  isProFromUrlLoadDone: boolean;
+  isProFromUrlLoadDoneDone: boolean;
 
-  constructor() { }
+
+  constructor(
+    private catFiles: OscalRemoteFile<Catalog>,
+    private proFiles: OscalRemoteFile<Profile>,
+    private schemaFiles: OscalRemoteFile<any>
+  ) {
+    this.loadCatSchema();
+  }
 
   ngOnInit() {
   }
 
 
+  loadCatSchema() {
+    const url = 'https://raw.githubusercontent.com/usnistgov/OSCAL/main/json/schema/oscal_catalog_schema.json'
+    this.catFiles.getHttpEntity<any>(url)
+      .subscribe(
+        data => { this.getCatSchema(data); },
+        error => {// Process error
+          console.log(`Error reading URL:${url}:\n\t${error}`);
+          // Here fallback to the local resource
+          this.isCatLoadDone = false;
+        },
+        () => { // Complete operation
+          this.isProFromUrlLoadDoneDone = true;
+        }
+      );
+  }
+
+  getCatSchema(data: any) {
+    console.log(data);
+    console.log(`Loaded Schema`);
+    this.catSchemaFromUrl = data;
+    this.isProFromUrlLoadDone = true;
+  }
+
+
   ionViewWillLeave(): void {
     // About to leave tha page - MUST update the session object
+  }
 
+  delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  handleFileInput(files: FileList) {
+    // await this.delay(1000);
+    this.fileToUpload = files.item(0);
+    console.log(this.fileToUpload);
+    // this.fileOperations.uploadFileToSession(files);
+    console.log(`Getting the URL to load`);
+    const url = 'https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev4/json/NIST_SP-800-53_rev4_catalog.json';
+    // this.fileOperations.getHttpFile(url);
+    // Implementing Observable to pull out catalog
+    /*    
+    this.fileOperations.getHttpCatalog(url)
+      .subscribe(
+        data => { // On next operation
+          console.log(data);
+          this.loadedCat = data;
+          // console.log(JSON.stringify(data));
+          this.isCatLoadDone = true;
+        },
+        error => {// Process error
+          console.log(`Error reading URL:${url}:\n\t${error}`);
+          // Here fallback to the local resource
+          this.isCatLoadDone = false;
+        },
+        () => { // Complete operation
+          this.isCatLoadDone = true;
+        }
+  
+      )
+    if (this.isCatLoadDone) {
+      console.log(`Schema validation: ${this.fileOperations.isObjectValid(this.loadedCat, this.catSchema)}`);
+    } */
+    // let catSchemaUrl = this.catFiles.getHttpEntity<any>('https://raw.githubusercontent.com/usnistgov/OSCAL/main/json/schema/oscal_catalog_schema.json');
+    // let proSchemaUrl = this.catFiles.getHttpEntity<any>('https://raw.githubusercontent.com/usnistgov/OSCAL/main/json/schema/oscal_profile_schema.json');
+
+    if (!!this.catSchemaFromUrl && this.isProFromUrlLoadDone && this.isProFromUrlLoadDoneDone) {
+      this.catFiles.getValidatedObjectFromUrl(url, this.catSchemaFromUrl, this.onDataReadyCallback);
+      console.log(`Done?:${this.isProFromUrlLoadDone}\t Done2x?:${this.isProFromUrlLoadDoneDone}`);
+    } else {
+      console.log(`Done?:${this.isProFromUrlLoadDone}\t Done2x?:${this.isProFromUrlLoadDoneDone}`);
+    }
+  }
+
+  onDataReadyCallback<ResultType>(result: FilePullResult<ResultType>) {
+    console.log(result.resultEntity);
+    console.log(result.validationInfo);
+  }
+
+
+  validateSchema() {
+    if (this.isCatLoadDone) {
+      console.log(`Schema validation: ${this.catFiles.isObjectValid(this.loadedCat, this.catSchemaFromUrl)}`);
+    }
+  }
+
+  uploadFileToActivity() {
+    // this.fileUploadService.postFile(this.fileToUpload).subscribe(data => {
+    //   // do something, if upload success
+    // }, error => {
+    //   console.log(error);
+    // });
   }
 
 }

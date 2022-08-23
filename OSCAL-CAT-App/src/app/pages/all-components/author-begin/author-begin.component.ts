@@ -46,22 +46,36 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   oscalFiles: Array<KnownOscalFileLocation>;
   chosenOscalCat: KnownOscalFileLocation;
   newDraft: boolean;
+  activeRadioCat: number;
   //alertControl: AlertController;
 
-  constructor(private session: CurrentSessionData,
+  constructor(
+    private session: CurrentSessionData,
     public alertControl: AlertController) {
+
     this.oscalFiles = KnownOscalFilesService.getAllKnownFiles();
   }
 
   ngOnInit() {
+    // Pull up to UI the previously Saved Work-Items
     this.readSavedWork();
+    this.readInSessionCats();
+    this.activeRadioCat = -1;
   }
   //
+
+  readInSessionCats() {
+    // Read the previously pulled-in Cats from Session
+    this.session.getKeyValueObject<Array<SessionData>>(NamedSessionNodes.SAVED_SESSIONS)
+      .then(
+
+    )
+  }
 
   readSavedWork() {
     if (this.session.isKeyValue(NamedSessionNodes.SAVED_SESSIONS)) {
       this.session.getKeyValueObject<Array<SessionData>>(NamedSessionNodes.SAVED_SESSIONS)
-        .then(
+        .then( // Resolve Promise
           (value: Array<SessionData>) => {
             if (value && Array.isArray(value) && value.length > 0) {
               this.savedWork = value;
@@ -92,6 +106,9 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     }
   }
 
+  handleRemoteLocalCacheRadio($event: Event) {
+
+  }
 
 
   handleRadioChange($event: Event) {
@@ -102,13 +119,21 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     if (value > 1) {
       this.chosenOscalCat = undefined;
       this.chosenSession = this.savedWork[value - 2];
+      this.activeRadioCat = -1;
     } else {
       this.chosenOscalCat = this.oscalFiles[value];
       this.chosenSession = undefined;
+      this.activeRadioCat = value;
     }
     // this.activateSession(false);
     // this.readSavedWork();
   }
+
+
+  showActiveCatInfo(idx: number) {
+    return idx == this.activeRadioCat;
+  }
+
 
   popAlert(data: string, idx: number) {
     // console.log(data);
@@ -255,6 +280,11 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     prompt.present();
   }
 
+
+  hasBaseLines(fileInfo: KnownOscalFileLocation) {
+    console.log(fileInfo.cat_baselines);
+    return !!fileInfo.cat_baselines && fileInfo.cat_baselines.length > 0;
+  }
 
 }
 

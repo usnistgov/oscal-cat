@@ -45,6 +45,7 @@ export enum CatSampleIntendedUse {
     CatalogSample = 0x01,
     BaselineResolved = 0x02,
     BaselineReference = 0x04,
+    BaselineReferenceAndResolved = 0x06,
     Schema4Validation = 0x0f,
 }
 
@@ -52,15 +53,22 @@ export interface KnownOscalFileLocation {
     cat_enum?: KnownCatalogNames;
     cat_id: string;
     cat_suffix?: string;
-    cat_label: string;
-    cat_url: string;
-    cat_file: string;
-    cat_url_res?: string | null;
-    cat_file_res?: string | null;
+    cat_label?: string;
+    cat_file?: string;
+    cat_url?: string;
+
     cat_language: CatSampleFileLanguage;
     cat_location: CatSampleFileLocation;
     cat_use_as: CatSampleIntendedUse;
     cat_baselines?: Array<KnownOscalFileLocation> | null;
+
+    pro_short_label?: string;
+    pro_long_label?: string;
+    pro_color?: string;
+    pro_url?: string;
+    pro_file?: string;
+    pro_url_res?: string | null;
+    pro_file_res?: string | null;
 }
 
 export enum KnownCatalogNames {
