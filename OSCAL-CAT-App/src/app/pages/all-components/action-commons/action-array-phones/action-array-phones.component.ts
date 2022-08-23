@@ -36,7 +36,9 @@ import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancesto
   templateUrl: './action-array-phones.component.html',
   styleUrls: ['./action-array-phones.component.scss'],
 })
-export class ArrayPhonesComponent extends ActionAncestorSimpleArrayComponent implements OnInit, IMustCommitFormDataArray {
+export class ArrayPhonesComponent
+  extends ActionAncestorSimpleArrayComponent
+  implements OnInit, IMustCommitFormDataArray<TelephoneNumber> {
 
   @Input() phonesArray: Array<TelephoneNumber>;
   @Input() phoneName: string;

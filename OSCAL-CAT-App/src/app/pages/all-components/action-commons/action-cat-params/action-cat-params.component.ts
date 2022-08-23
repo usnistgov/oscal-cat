@@ -38,7 +38,9 @@ import { ArrayStringsComponent } from '../action-array-strings/action-array-stri
   templateUrl: './action-cat-params.component.html',
   styleUrls: ['./action-cat-params.component.css']
 })
-export class CatParamsComponent extends ActionAncestorSimpleArrayComponent implements OnInit, IMustCommitFormDataArray {
+export class CatParamsComponent
+  extends ActionAncestorSimpleArrayComponent
+  implements OnInit, IMustCommitFormDataArray<Parameter> {
 
   @Input() params: Array<Parameter>;
 
