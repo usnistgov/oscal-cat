@@ -66,3 +66,7 @@ UserInterfaceState.xcuserstate
 *.xcuserstate
 *.xc
 $RECYCLE.BIN/
+
+# Ignored generated interface types file, see the issue and related
+# PR in usnistgov/oscal-cat#55 and usnistgov/oscal-cat#57.
+src/app/interfaces/oscal-types/oscal-catalog.types.ts
