@@ -53,7 +53,7 @@ export class SelectBaselineComponent implements OnInit {
     'Mark All Baselines',
     'Pre-Check Baseline ...',
     'Cut-Out Baseline ...',
-    'Roll Back Changes'];
+    'All Controls (Default)'];
   constructor() { }
 
   ngOnInit() { }

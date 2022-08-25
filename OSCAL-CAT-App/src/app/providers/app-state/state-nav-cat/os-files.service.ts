@@ -319,3 +319,70 @@ export class OscalRemoteFile<ResultType> extends OsFileOperations /* extends KvS
         return this.result;
     }
 }
+
+
+@Injectable({
+    providedIn: 'root'
+})
+export class OscalSchemaFile<ResultType> extends OsFileOperations /* extends KvServiceBase */ {
+    lastLoaded: Date;
+    originUrl: string;
+    timeLoadStart: number;
+    timeLoadEnd: number;
+
+    delegateHandleData: (data: ResultType) => ResultType;
+    delegateHandleError: (error: any) => void;
+
+    loadedSchema: any;
+    loadError: any;
+
+    isLoadOK: boolean;
+    isLoadDone: boolean;
+
+    constructor(
+        public httpClient: HttpClient,
+        public storage: Storage,
+        public platform: Platform,
+    ) {
+        super(httpClient, storage, platform);
+    }
+
+    loadCatSchema(name: string, url: string) {
+        // const url = 'https://raw.githubusercontent.com/usnistgov/OSCAL/main/json/schema/oscal_catalog_schema.json'
+        this.getHttpEntity<any>(url)
+            .subscribe(
+                data => { this.getCatSchema(data); },
+                error => {// Process error
+                    console.log(`Error reading URL:${url}:\n\t${error}`);
+                    // Here fallback to the local resource
+                    this.isLoadOK = false;
+                    this.loadError = error;
+                },
+                () => { // Complete operation
+                    this.isLoadDone = true;
+                }
+            );
+    }
+
+    setDataDelegate(dataHandler: (data: ResultType) => ResultType) {
+        this.delegateHandleData = dataHandler;
+    }
+
+    setErrorDelegate(dataHandler: (error: any) => void) {
+        this.delegateHandleError = dataHandler;
+    }
+
+    getCatSchema(data: ResultType): ResultType {
+        if (this.delegateHandleData) {
+            const extraData = this.delegateHandleData(data);
+            // this.loadedSchema = extraData;
+            console.log(extraData);
+        } //Possibly Else
+        console.log(data);
+        console.log(`Loaded Schema`);
+        this.loadedSchema = data;
+        this.isLoadOK = true;
+        return this.loadedSchema
+    }
+
+}
