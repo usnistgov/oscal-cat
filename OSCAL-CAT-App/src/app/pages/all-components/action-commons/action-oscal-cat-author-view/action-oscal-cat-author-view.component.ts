@@ -1,13 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { KnobName } from '@ionic/core';
 import { KnownOscalFileLocation } from 'src/app/interfaces/known-locations';
+import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancestor-base.component';
 
 @Component({
   selector: 'oscal-cat-author-view',
   templateUrl: './action-oscal-cat-author-view.component.html',
   styleUrls: ['./action-oscal-cat-author-view.component.css']
 })
-export class OscalCatAuthorViewComponent implements OnInit {
+export class OscalCatAuthorViewComponent implements OnInit, IMustCommitFormDataArray<boolean> {
 
   @Input() showInfo: boolean;
   @Input() knownCat: KnownOscalFileLocation;
@@ -49,6 +50,11 @@ export class OscalCatAuthorViewComponent implements OnInit {
     console.log(this.baselineChecks);
 
     $event.stopPropagation();
+  }
+
+  formCommitArray(): Array<boolean> {
+    const retValue = Array<boolean>();
+    return retValue;
   }
 
 }

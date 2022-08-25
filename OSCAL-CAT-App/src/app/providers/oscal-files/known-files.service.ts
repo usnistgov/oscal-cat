@@ -25,6 +25,7 @@
  */
 
 import { Injectable } from '@angular/core';
+import { OscalSchemaFile } from '../app-state/state-nav-cat/os-files.service';
 import {
     KnownOscalFileLocation, CatSampleFileLanguage,
     CatSampleFileLocation, CatSampleIntendedUse, KnownCatalogNames
@@ -36,6 +37,8 @@ import {
     providedIn: 'root'
 })
 export class KnownOscalFilesService {
+
+
 
     private static schemaGitTag = 'v1.0.4';
     private static contentGitTag = 'v1.0.0';
@@ -62,6 +65,9 @@ export class KnownOscalFilesService {
         `https://raw.githubusercontent.com/usnistgov/oscal-content/${KnownOscalFilesService.contentGitTag}/nist.gov/SP800-53/rev4/json/`;
     private static catsUrl4NIST80053r5 =
         `https://raw.githubusercontent.com/usnistgov/oscal-content/${KnownOscalFilesService.contentGitTag}/nist.gov/SP800-53/rev5/json/`;
+
+    private cat_schema: any;
+    private pro_schema: any;
 
     private static knownCatFiles: Array<KnownOscalFileLocation> = [
         {
@@ -233,22 +239,34 @@ export class KnownOscalFilesService {
                 }, 
         */
     ];
-    constructor() {
+
+    constructor(
+        cat_schema_loader: OscalSchemaFile<any>,
+
+    ) {
+        cat_schema_loader.setDataDelegate(this.cat_schema_data_callback);
     }
 
-    static getSpecifiedCatFile(theKnownCat: KnownCatalogNames) {
-        return this.knownCatFiles.filter(m => m.cat_enum === theKnownCat);
+    cat_schema_data_callback(data: any): any {
+        this.cat_schema = data;
+    }
+    cat_schema_error_callback(error: any) {
+
     }
 
-    static getKnownCatSampleFiles() {
-        return this.knownCatFiles.filter(m => m.cat_use_as === CatSampleIntendedUse.CatalogSample);
+    getSpecifiedCatFile(theKnownCat: KnownCatalogNames) {
+        return KnownOscalFilesService.knownCatFiles.filter(m => m.cat_enum === theKnownCat);
     }
 
-    static getKnownProfileSampleFiles(cat: KnownOscalFileLocation) {
+    getKnownCatSampleFiles() {
+        return KnownOscalFilesService.knownCatFiles.filter(m => m.cat_use_as === CatSampleIntendedUse.CatalogSample);
+    }
+
+    getKnownProfileSampleFiles(cat: KnownOscalFileLocation) {
         return cat.cat_baselines.filter(m => m.cat_use_as === CatSampleIntendedUse.BaselineResolved);
     }
 
-    static getAllKnownFiles() {
+    getAllKnownFiles() {
         return KnownOscalFilesService.knownCatFiles;
     }
 
