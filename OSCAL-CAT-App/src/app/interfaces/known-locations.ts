@@ -69,6 +69,7 @@ export interface KnownOscalFileLocation {
     pro_file?: string;
     pro_url_res?: string | null;
     pro_file_res?: string | null;
+
 }
 
 export enum KnownCatalogNames {

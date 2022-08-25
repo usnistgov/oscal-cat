@@ -50,10 +50,11 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   //alertControl: AlertController;
 
   constructor(
+    private knownFiles: KnownOscalFilesService,
     private session: CurrentSessionData,
     public alertControl: AlertController) {
 
-    this.oscalFiles = KnownOscalFilesService.getAllKnownFiles();
+    this.oscalFiles = knownFiles.getAllKnownFiles();
   }
 
   ngOnInit() {

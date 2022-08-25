@@ -63,7 +63,11 @@ export class AuthoringModeComponent implements OnInit {
     this.showLoader = !flag;
   }
 
-  constructor(private fileOperations: File, private platform: Platform, private logger: LogManagerService) {
+  constructor(
+    private knownFiles: KnownOscalFilesService,
+    private fileOperations: File,
+    private platform: Platform,
+    private logger: LogManagerService) {
     /*, private appFiles: AppFilesService */
     this.hideProgressBar(false);
     for (const e in AuthoringMode) {
@@ -71,7 +75,7 @@ export class AuthoringModeComponent implements OnInit {
         console.log(` Logging in Constructor ${e}`);
       }
     }
-    const cats = KnownOscalFilesService.getKnownCatSampleFiles();
+    const cats = this.knownFiles.getKnownCatSampleFiles();
     // const pros = KnownOscalFilesService.getKnownProfileSampleFiles();
     this.modeLabels = [
       {
