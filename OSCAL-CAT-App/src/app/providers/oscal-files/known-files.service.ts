@@ -24,8 +24,12 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { OscalSchemaFile } from '../app-state/state-nav-cat/os-files.service';
+import { Storage } from '@ionic/storage';
+import { Platform } from '@ionic/angular';
+
+import { OscalSchemaFile, SchemaFile } from '../app-state/state-nav-cat/os-files.service';
 import {
     KnownOscalFileLocation, CatSampleFileLanguage,
     CatSampleFileLocation, CatSampleIntendedUse, KnownCatalogNames
@@ -66,8 +70,9 @@ export class KnownOscalFilesService {
     private static catsUrl4NIST80053r5 =
         `https://raw.githubusercontent.com/usnistgov/oscal-content/${KnownOscalFilesService.contentGitTag}/nist.gov/SP800-53/rev5/json/`;
 
-    private cat_schema: any;
-    private pro_schema: any;
+    private static cat_schema: SchemaFile;
+
+    private static pro_schema: SchemaFile;
 
     private static knownCatFiles: Array<KnownOscalFileLocation> = [
         {
@@ -241,18 +246,28 @@ export class KnownOscalFilesService {
     ];
 
     constructor(
-        cat_schema_loader: OscalSchemaFile<any>,
-
+        httpClient: HttpClient, storage: Storage, platform: Platform,
     ) {
-        cat_schema_loader.setDataDelegate(this.cat_schema_data_callback);
+        const cat_local = 'assets/oscal-cats/json-schemas/oscal_catalog_schema.json';
+        const cat_url = 'https://raw.githubusercontent.com/usnistgov/OSCAL/v1.0.4/json/schema/oscal_catalog_schema.json';
+
+        const pro_local = 'assets/oscal-cats/json-schemas/oscal_profile_schema.json';
+        const pro_url = 'https://raw.githubusercontent.com/usnistgov/OSCAL/v1.0.4/json/schema/oscal_profile_schema.json';
+
+        if (!KnownOscalFilesService.cat_schema) {
+            KnownOscalFilesService.cat_schema = new SchemaFile(httpClient, storage, platform, cat_url, cat_local);
+        }
+        if (!KnownOscalFilesService.pro_schema) {
+            KnownOscalFilesService.pro_schema = new SchemaFile(httpClient, storage, platform, pro_url, pro_local);
+        }
+        if (KnownOscalFilesService.cat_schema && !KnownOscalFilesService.cat_schema.cat_schema) {
+            KnownOscalFilesService.cat_schema.loadSchema();
+        }
+        if (KnownOscalFilesService.pro_schema && !KnownOscalFilesService.pro_schema.cat_schema) {
+            KnownOscalFilesService.pro_schema.loadSchema();
+        }
     }
 
-    cat_schema_data_callback(data: any): any {
-        this.cat_schema = data;
-    }
-    cat_schema_error_callback(error: any) {
-
-    }
 
     getSpecifiedCatFile(theKnownCat: KnownCatalogNames) {
         return KnownOscalFilesService.knownCatFiles.filter(m => m.cat_enum === theKnownCat);

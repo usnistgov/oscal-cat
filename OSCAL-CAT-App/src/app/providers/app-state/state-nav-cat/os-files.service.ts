@@ -324,7 +324,7 @@ export class OscalRemoteFile<ResultType> extends OsFileOperations /* extends KvS
 @Injectable({
     providedIn: 'root'
 })
-export class OscalSchemaFile<ResultType> extends OsFileOperations /* extends KvServiceBase */ {
+export class OscalSchemaFile<ResultType> extends OsFileOperations {
     lastLoaded: Date;
     originUrl: string;
     timeLoadStart: number;
@@ -347,16 +347,29 @@ export class OscalSchemaFile<ResultType> extends OsFileOperations /* extends KvS
         super(httpClient, storage, platform);
     }
 
-    loadCatSchema(name: string, url: string) {
-        // const url = 'https://raw.githubusercontent.com/usnistgov/OSCAL/main/json/schema/oscal_catalog_schema.json'
+    loadCatSchema(url: string) {
+        // const url = 'https://raw.githubusercontent.com/usnistgov/OSCAL/main/json/schema/oscal_catalog_schema.json';
         this.getHttpEntity<any>(url)
             .subscribe(
-                data => { this.getCatSchema(data); },
+                data => {
+                    if (this.delegateHandleData) {
+                        const extraData = this.delegateHandleData(data);
+                        this.loadedSchema = extraData;
+                        console.log(extraData);
+                    } else {
+                        this.getCatSchema(data);
+                    }
+                },
                 error => {// Process error
-                    console.log(`Error reading URL:${url}:\n\t${error}`);
-                    // Here fallback to the local resource
-                    this.isLoadOK = false;
-                    this.loadError = error;
+                    if (this.delegateHandleError) {
+                        this.delegateHandleError(error);
+                        console.log(error);
+                    } else {
+                        console.log(`Error reading URL:${url}:\n\t${error}`);
+                        // Here fallback to the local resource
+                        this.isLoadOK = false;
+                        this.loadError = error;
+                    }
                 },
                 () => { // Complete operation
                     this.isLoadDone = true;
@@ -384,5 +397,112 @@ export class OscalSchemaFile<ResultType> extends OsFileOperations /* extends KvS
         this.isLoadOK = true;
         return this.loadedSchema
     }
+
+}
+@Injectable({
+    providedIn: 'root'
+})
+export class SchemaFile extends OsFileOperations {
+
+    url: string;
+    backup_file: string;
+
+    is_remote_done: boolean;
+    is_local_done: boolean;
+    is_remote_file: boolean;
+
+    cat_schema: any;
+
+    remote_schema_error: any;
+    local_schema_error: any;
+
+    constructor(httpClient: HttpClient, storage: Storage, platform: Platform, url?: string, backup_file?: string,) {
+        super(httpClient, storage, platform);
+        //this.cat_schema_loader = new OscalSchemaFile<any>(httpClient, storage, platform);
+        this.url = url;
+        this.backup_file = backup_file;
+
+    }
+
+    loadSchema(url?: string, backup_file?: string) {
+        // const url = 'https://raw.githubusercontent.com/usnistgov/OSCAL/main/json/schema/oscal_catalog_schema.json';
+        if (!url) {
+            url = this.url;
+        }
+        if (!backup_file) {
+            backup_file = this.backup_file;
+        }
+        this.loadRemoteSchema(url);
+    }
+
+    // First State of the schema load
+    private loadRemoteSchema(url: string) {
+        this.getHttpEntity<any>(url)
+            .subscribe(
+                data => {
+                    this.cat_schema = data;
+                    this.is_remote_file = true;
+                    // console.log('DATA-Stage #1');
+                    // console.log(this.cat_schema);
+                },
+                error => {// Process error
+                    // console.log('ERROR-Stage #1');
+                    this.remote_schema_error = error;
+                    if (error) {
+                        this.is_remote_file = false;
+                        // console.log(`Remote load Error`);
+                        console.log(error);
+                        this.load_local_file_fallback(this.backup_file);
+                    }
+                },
+                () => { // Complete operation
+                    // console.log('DONE-Stage #1');
+                    this.is_remote_done = true;
+                    if (this.remote_schema_error && !this.is_remote_file && this.backup_file) {
+                        this.load_local_file_fallback(this.backup_file);
+                    }
+                }
+            );
+    }
+    private remote_schema_data_callback(data: any): any { }
+    private remote_schema_error_callback(error: any) { }
+    private remote_schema_done_callback() { }
+
+    private load_local_file_fallback(backup_file?: string): void {
+        // console.log('BEGIN-Stage #2');
+        this.is_remote_file = false;
+        if (this.remote_schema_error) {
+            this.loadBackupSchema(this.backup_file);
+        }
+    }
+
+    // Second State of the schema load: as schema is slow changing - load locally saved schema
+    private loadBackupSchema(localUrl: string) {
+        // console.log('IN-IN-Stage #2');
+        this.getHttpEntity<any>(localUrl)
+            .subscribe(
+                data => { // 
+                    this.cat_schema = data;
+                    this.is_remote_file = true;
+                    // console.log('DATA-Stage #2');
+                    // console.log('Local File Fall-Back');
+                    // console.log(this.cat_schema);
+                },
+                error => {// Process local fall-back file load error
+                    this.local_schema_error = error;
+                    if (this.local_schema_error) {
+                        this.is_remote_file = false;
+                        // console.log('ERROR-Stage #2');
+                        // console.log(this.local_schema_error);
+                        this.load_local_file_fallback(this.backup_file);
+                    }
+                },
+                () => { // Complete operation
+                    this.is_local_done = true;
+                    // console.log('DONE-Stage #2');
+                }
+            );
+    }
+
 
 }
