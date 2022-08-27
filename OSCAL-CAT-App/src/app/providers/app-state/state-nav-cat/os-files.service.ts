@@ -516,13 +516,13 @@ export class SchemaFile extends OsFileOperations {
 export class SchemaFile extends OsFileOperations {
 
     url: string;
-    backup_file: string;
+    fallback_file: string;
 
     is_remote_done: boolean;
     is_local_done: boolean;
     is_remote_file: boolean;
 
-    cat_schema: any;
+    schema: any;
 
     remote_schema_error: any;
     local_schema_error: any;
@@ -531,7 +531,7 @@ export class SchemaFile extends OsFileOperations {
         super(httpClient, storage, platform);
         //this.cat_schema_loader = new OscalSchemaFile<any>(httpClient, storage, platform);
         this.url = url;
-        this.backup_file = backup_file;
+        this.fallback_file = backup_file;
 
     }
 
@@ -541,7 +541,7 @@ export class SchemaFile extends OsFileOperations {
             url = this.url;
         }
         if (!backup_file) {
-            backup_file = this.backup_file;
+            backup_file = this.fallback_file;
         }
         this.loadRemoteSchema(url);
     }
@@ -551,7 +551,7 @@ export class SchemaFile extends OsFileOperations {
         this.getHttpEntity<any>(url)
             .subscribe(
                 data => {
-                    this.cat_schema = data;
+                    this.schema = data;
                     this.is_remote_file = true;
                     // console.log('DATA-Stage #1');
                     // console.log(this.cat_schema);
@@ -563,14 +563,14 @@ export class SchemaFile extends OsFileOperations {
                         this.is_remote_file = false;
                         // console.log(`Remote load Error`);
                         console.log(error);
-                        this.load_local_file_fallback(this.backup_file);
+                        this.load_local_file_fallback(this.fallback_file);
                     }
                 },
                 () => { // Complete operation
-                    // console.log('DONE-Stage #1');
+                    // console.log(`DONE-Stage #1 ${this.url}`);
                     this.is_remote_done = true;
-                    if (this.remote_schema_error && !this.is_remote_file && this.backup_file) {
-                        this.load_local_file_fallback(this.backup_file);
+                    if (this.remote_schema_error && !this.is_remote_file && this.fallback_file) {
+                        this.load_local_file_fallback(this.fallback_file);
                     }
                 }
             );
@@ -583,7 +583,7 @@ export class SchemaFile extends OsFileOperations {
         // console.log('BEGIN-Stage #2');
         this.is_remote_file = false;
         if (this.remote_schema_error) {
-            this.loadBackupSchema(this.backup_file);
+            this.loadBackupSchema(this.fallback_file);
         }
     }
 
@@ -593,7 +593,7 @@ export class SchemaFile extends OsFileOperations {
         this.getHttpEntity<any>(localUrl)
             .subscribe(
                 data => { // 
-                    this.cat_schema = data;
+                    this.schema = data;
                     this.is_remote_file = true;
                     // console.log('DATA-Stage #2');
                     // console.log('Local File Fall-Back');
@@ -605,12 +605,12 @@ export class SchemaFile extends OsFileOperations {
                         this.is_remote_file = false;
                         // console.log('ERROR-Stage #2');
                         // console.log(this.local_schema_error);
-                        this.load_local_file_fallback(this.backup_file);
+                        this.load_local_file_fallback(this.fallback_file);
                     }
                 },
                 () => { // Complete operation
                     this.is_local_done = true;
-                    // console.log('DONE-Stage #2');
+                    // console.log(`DONE-Stage #2 ${this.url}`);
                 }
             );
     }

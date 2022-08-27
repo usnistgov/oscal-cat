@@ -45,7 +45,6 @@ import { CatSettingsStoreService } from '../app-state/state-nav-cat/cat-settings
 export class KnownOscalFilesService {
 
 
-
     private static schemaGitTag = 'v1.0.4';
     private static contentGitTag = 'v1.0.0';
 
