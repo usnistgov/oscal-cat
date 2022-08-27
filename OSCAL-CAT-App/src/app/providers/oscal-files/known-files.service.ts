@@ -43,13 +43,17 @@ import {
 export class KnownOscalFilesService {
 
 
-
     private static schemaGitTag = 'v1.0.4';
     private static contentGitTag = 'v1.0.0';
 
     private static oscalUrlBase = 'https://raw.githubusercontent.com/usnistgov/OSCAL/';
     private static contentUrlBase = 'https://raw.githubusercontent.com/usnistgov/oscal-content/';
 
+    private static cat_local = 'assets/oscal-cats/json-schemas/oscal_catalog_schema.json';
+    private static cat_url = `https://raw.githubusercontent.com/usnistgov/OSCAL/${KnownOscalFilesService.contentGitTag}/json/schema/oscal_catalog_schema.json`;
+
+    private static pro_local = 'assets/oscal-cats/json-schemas/oscal_profile_schema.json';
+    private static pro_url = `https://raw.githubusercontent.com/usnistgov/OSCAL/${KnownOscalFilesService.contentGitTag}/json/schema/oscal_profile_schema.json`;
     // https://raw.githubusercontent.com/usnistgov/OSCAL/v1.0.0/json/schema/oscal_catalog_schema.json
     // https://raw.githubusercontent.com/usnistgov/OSCAL/v1.0.4/json/schema/oscal_catalog_schema.json
 
@@ -71,7 +75,6 @@ export class KnownOscalFilesService {
         `https://raw.githubusercontent.com/usnistgov/oscal-content/${KnownOscalFilesService.contentGitTag}/nist.gov/SP800-53/rev5/json/`;
 
     private static cat_schema: SchemaFile;
-
     private static pro_schema: SchemaFile;
 
     private static knownCatFiles: Array<KnownOscalFileLocation> = [
@@ -245,28 +248,29 @@ export class KnownOscalFilesService {
         */
     ];
 
-    constructor(
-        httpClient: HttpClient, storage: Storage, platform: Platform,
-    ) {
-        const cat_local = 'assets/oscal-cats/json-schemas/oscal_catalog_schema.json';
-        const cat_url = 'https://raw.githubusercontent.com/usnistgov/OSCAL/v1.0.4/json/schema/oscal_catalog_schema.json';
+    constructor(httpClient: HttpClient, storage: Storage, platform: Platform,) {
+        this.loadSchemas(httpClient, storage, platform);
+    }
 
-        const pro_local = 'assets/oscal-cats/json-schemas/oscal_profile_schema.json';
-        const pro_url = 'https://raw.githubusercontent.com/usnistgov/OSCAL/v1.0.4/json/schema/oscal_profile_schema.json';
-
+    loadSchemas(httpClient: HttpClient, storage: Storage, platform: Platform) {
         if (!KnownOscalFilesService.cat_schema) {
-            KnownOscalFilesService.cat_schema = new SchemaFile(httpClient, storage, platform, cat_url, cat_local);
+            KnownOscalFilesService.cat_schema = new SchemaFile(
+                httpClient, storage, platform,
+                KnownOscalFilesService.cat_url, KnownOscalFilesService.cat_local);
         }
         if (!KnownOscalFilesService.pro_schema) {
-            KnownOscalFilesService.pro_schema = new SchemaFile(httpClient, storage, platform, pro_url, pro_local);
+            KnownOscalFilesService.pro_schema = new SchemaFile(
+                httpClient, storage, platform,
+                KnownOscalFilesService.pro_url, KnownOscalFilesService.pro_local);
         }
-        if (KnownOscalFilesService.cat_schema && !KnownOscalFilesService.cat_schema.cat_schema) {
+        if (KnownOscalFilesService.cat_schema && !KnownOscalFilesService.cat_schema.schema) {
             KnownOscalFilesService.cat_schema.loadSchema();
         }
-        if (KnownOscalFilesService.pro_schema && !KnownOscalFilesService.pro_schema.cat_schema) {
+        if (KnownOscalFilesService.pro_schema && !KnownOscalFilesService.pro_schema.schema) {
             KnownOscalFilesService.pro_schema.loadSchema();
         }
     }
+
 
 
     getSpecifiedCatFile(theKnownCat: KnownCatalogNames) {
@@ -285,8 +289,13 @@ export class KnownOscalFilesService {
         return KnownOscalFilesService.knownCatFiles;
     }
 
+    getCatSchema(): SchemaFile {
+        return KnownOscalFilesService.cat_schema
+    }
 
-
+    getProSchema(): SchemaFile {
+        return KnownOscalFilesService.pro_schema
+    }
 
 }
 
