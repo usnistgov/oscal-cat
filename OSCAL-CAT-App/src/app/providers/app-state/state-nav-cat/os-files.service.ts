@@ -77,6 +77,8 @@ export class FilePullResult<ResultType>{
 export class OsFileOperations /* extends KvServiceBase */ {
     session_id: string;
     httpFileData: any;
+    doneLoadDateTime: number;
+
 
     constructor(
         public httpClient: HttpClient,
@@ -94,6 +96,14 @@ export class OsFileOperations /* extends KvServiceBase */ {
         reader.readAsDataURL(fileName);
     }
 
+
+    public isStale(hoursOld: number = 12) {
+        const diff = (
+            (Date.now() - this.doneLoadDateTime)
+            / (1000 /* ms adjust */ * 3600 /* seconds adjust */)
+        )
+        return (diff > hoursOld);
+    }
 
     uploadFileToSession(files: FileList) {
         const uploadedFile = files.item(0);
@@ -264,8 +274,8 @@ export class OscalRemoteFile<ResultType> extends OsFileOperations /* extends KvS
         this.remoteUrl = urlFile;
         this.localUrl = localFile;
 
-        console.log(this.remoteUrl);
-        console.log(this.localUrl);
+        // console.log(this.remoteUrl);
+        // console.log(this.localUrl);
 
         // No Observables in Constructor !!! - it may blow occasionally.
         // this.loadRemoteEntity(this.remoteUrl);
@@ -275,7 +285,7 @@ export class OscalRemoteFile<ResultType> extends OsFileOperations /* extends KvS
         if (!url) {
             url = this.remoteUrl;
         }
-        // console.log(url);
+        // console.log(`Loading... ${url}`);
         this.getHttpEntity<any>(url)
             .subscribe(
                 data => {
@@ -304,6 +314,7 @@ export class OscalRemoteFile<ResultType> extends OsFileOperations /* extends KvS
                         this.validationResult = this.validateSchemaByAjv(this.loadedEntity, this.entitySchema);
                         // console.log(this.validationResult)
                     }
+                    this.doneLoadDateTime = Date.now();
                 }
             );
     }
@@ -337,6 +348,7 @@ export class OscalRemoteFile<ResultType> extends OsFileOperations /* extends KvS
                         this.validationResult = this.validateSchemaByAjv(this.loadedEntity, this.entitySchema);
                         // console.log(this.validationResult)
                     }
+                    this.doneLoadDateTime = Date.now();
                 }
             );
     }
@@ -428,6 +440,7 @@ export class SchemaFile extends OsFileOperations {
                     if (this.remote_schema_error && !this.is_remote_file && this.fallback_file) {
                         this.load_local_file_fallback(this.fallback_file);
                     }
+                    this.doneLoadDateTime = Date.now();
                 }
             );
     }
@@ -467,6 +480,7 @@ export class SchemaFile extends OsFileOperations {
                 () => { // Complete operation
                     this.is_local_done = true;
                     // console.log(`DONE-Stage #2 ${this.url}`);
+                    this.doneLoadDateTime = Date.now();
                 }
             );
     }
