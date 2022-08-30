@@ -29,11 +29,12 @@ import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { Platform } from '@ionic/angular';
 
-import { OscalSchemaFile, SchemaFile } from '../app-state/state-nav-cat/os-files.service';
+import { OscalRemoteFile, SchemaFile } from '../app-state/state-nav-cat/os-files.service';
 import {
     KnownOscalFileLocation, CatSampleFileLanguage,
     CatSampleFileLocation, CatSampleIntendedUse, KnownCatalogNames
 } from './../../interfaces/known-locations';
+import { Catalog, Profile } from 'src/app/interfaces/oscal-types/oscal-catalog.types';
 
 
 
@@ -61,10 +62,10 @@ export class KnownOscalFilesService {
     // https://raw.githubusercontent.com/usnistgov/oscal-content/v1.0.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_LOW-baseline_profile.json
 
     // App-Dir-Local fall-back files (leftover form the disconnected alfa version)
-    private static catsPath = './../../assets/oscal-cats/';
-    private static proPath = './../../assets/oscal-cats/baselines/';
-    private static proPath80053r4 = './../../assets/oscal-profiles/baselines-800-53-rev4/';
-    private static proPath80053r5 = './../../assets/oscal-profiles/baselines-800-53-rev5/';
+    private static catsPath = '/assets/oscal-cats/'; // app/src/assets/oscal-cats/
+    private static proPath = '/assets/oscal-cats/baselines/';
+    private static proPath80053r4 = '/assets/oscal-profiles/baselines-800-53-rev4/';
+    private static proPath80053r5 = '/assets/oscal-profiles/baselines-800-53-rev5/';
 
     // URLs for remote catalog/profile/resolved profile files
     private static catsBase4NIST =
@@ -100,10 +101,10 @@ export class KnownOscalFilesService {
                     cat_use_as: CatSampleIntendedUse.BaselineReferenceAndResolved,
                     cat_baselines: null,
 
-                    pro_url: KnownOscalFilesService.catsUrl4NIST80053r4 + 'NIST_SP-800-53_rev4_LOW-baseline_profile.json',
-                    pro_file: KnownOscalFilesService.proPath80053r4 + 'NIST_SP-800-53_rev4_LOW-baseline_profile.json',
-                    pro_url_res: KnownOscalFilesService.catsUrl4NIST80053r4 + 'NIST_SP-800-53_rev4_LOW-baseline-resolved-profile_catalog.json',
-                    pro_file_res: KnownOscalFilesService.proPath80053r4 + 'NIST_SP-800-53_rev4_LOW-baseline-resolved-profile_catalog.json',
+                    pro_url: KnownOscalFilesService.catsUrl4NIST80053r4 + 'NIST_SP-800-53_rev4_LOW-baseline_profile-min.json',
+                    pro_file: KnownOscalFilesService.proPath80053r4 + 'NIST_SP-800-53_rev4_LOW-baseline_profile-min.json',
+                    pro_url_res: KnownOscalFilesService.catsUrl4NIST80053r4 + 'NIST_SP-800-53_rev4_LOW-baseline-resolved-profile_catalog-min.json',
+                    pro_file_res: KnownOscalFilesService.proPath80053r4 + 'NIST_SP-800-53_rev4_LOW-baseline-resolved-profile_catalog-min.json',
 
                     pro_color: 'baseline-low',
                     pro_short_label: 'L',
@@ -118,10 +119,10 @@ export class KnownOscalFilesService {
                     cat_use_as: CatSampleIntendedUse.BaselineReferenceAndResolved,
                     cat_baselines: null,
 
-                    pro_url: KnownOscalFilesService.catsUrl4NIST80053r4 + 'NIST_SP-800-53_rev4_MODERATE-baseline_profile.json',
-                    pro_file: KnownOscalFilesService.proPath80053r4 + 'NIST_SP-800-53_rev4_MODERATE-baseline_profile.json',
-                    pro_url_res: KnownOscalFilesService.catsUrl4NIST80053r4 + 'NIST_SP-800-53_rev4_MODERATE-baseline-resolved-profile_catalog.json',
-                    pro_file_res: KnownOscalFilesService.proPath80053r4 + 'NIST_SP-800-53_rev4_MODERATE-baseline-resolved-profile_catalog.json',
+                    pro_url: KnownOscalFilesService.catsUrl4NIST80053r4 + 'NIST_SP-800-53_rev4_MODERATE-baseline_profile-min.json',
+                    pro_file: KnownOscalFilesService.proPath80053r4 + 'NIST_SP-800-53_rev4_MODERATE-baseline_profile-min.json',
+                    pro_url_res: KnownOscalFilesService.catsUrl4NIST80053r4 + 'NIST_SP-800-53_rev4_MODERATE-baseline-resolved-profile_catalog-min.json',
+                    pro_file_res: KnownOscalFilesService.proPath80053r4 + 'NIST_SP-800-53_rev4_MODERATE-baseline-resolved-profile_catalog-min.json',
 
                     pro_color: 'baseline-medium',
                     pro_short_label: 'M',
@@ -136,15 +137,15 @@ export class KnownOscalFilesService {
                     cat_use_as: CatSampleIntendedUse.BaselineReferenceAndResolved,
                     cat_baselines: null,
 
-                    pro_url: KnownOscalFilesService.catsUrl4NIST80053r4 + 'NIST_SP-800-53_rev4_HIGH-baseline_profile.json',
-                    pro_file: KnownOscalFilesService.proPath80053r4 + 'NIST_SP-800-53_rev4_HIGH-baseline_profile.json',
-                    pro_url_res: KnownOscalFilesService.catsUrl4NIST80053r4 + 'NIST_SP-800-53_rev4_HIGH-baseline-resolved-profile_catalog.json',
-                    pro_file_res: KnownOscalFilesService.proPath80053r4 + 'NIST_SP-800-53_rev4_HIGH-baseline-resolved-profile_catalog.json',
+                    pro_url: KnownOscalFilesService.catsUrl4NIST80053r4 + 'NIST_SP-800-53_rev4_HIGH-baseline_profile-min.json',
+                    pro_file: KnownOscalFilesService.proPath80053r4 + 'NIST_SP-800-53_rev4_HIGH-baseline_profile-min.json',
+                    pro_url_res: KnownOscalFilesService.catsUrl4NIST80053r4 + 'NIST_SP-800-53_rev4_HIGH-baseline-resolved-profile_catalog-min.json',
+                    pro_file_res: KnownOscalFilesService.proPath80053r4 + 'NIST_SP-800-53_rev4_HIGH-baseline-resolved-profile_catalog-min.json',
 
                     pro_color: 'baseline-high',
                     pro_short_label: 'H',
-                },
-            ],
+                }
+            ]
         },
 
         {
@@ -168,10 +169,10 @@ export class KnownOscalFilesService {
                     cat_use_as: CatSampleIntendedUse.BaselineReferenceAndResolved,
                     cat_baselines: null,
 
-                    pro_url: KnownOscalFilesService.catsUrl4NIST80053r5 + 'NIST_SP-800-53_rev4_LOW-baseline_profile.json',
-                    pro_file: KnownOscalFilesService.proPath80053r5 + 'NIST_SP-800-53_rev4_LOW-baseline_profile.json',
-                    pro_url_res: KnownOscalFilesService.catsUrl4NIST80053r5 + 'NIST_SP-800-53_rev4_LOW-baseline-resolved-profile_catalog.json',
-                    pro_file_res: KnownOscalFilesService.proPath80053r5 + 'NIST_SP-800-53_rev4_LOW-baseline-resolved-profile_catalog.json',
+                    pro_url: KnownOscalFilesService.catsUrl4NIST80053r5 + 'NIST_SP-800-53_rev5_LOW-baseline_profile-min.json',
+                    pro_file: KnownOscalFilesService.proPath80053r5 + 'NIST_SP-800-53_rev5_LOW-baseline_profile-min.json',
+                    pro_url_res: KnownOscalFilesService.catsUrl4NIST80053r5 + 'NIST_SP-800-53_rev5_LOW-baseline-resolved-profile_catalog-min.json',
+                    pro_file_res: KnownOscalFilesService.proPath80053r5 + 'NIST_SP-800-53_rev5_LOW-baseline-resolved-profile_catalog-min.json',
 
                     pro_color: 'baseline-low',
                     pro_short_label: 'L',
@@ -186,10 +187,10 @@ export class KnownOscalFilesService {
                     cat_use_as: CatSampleIntendedUse.BaselineReferenceAndResolved,
                     cat_baselines: null,
 
-                    pro_url: KnownOscalFilesService.catsUrl4NIST80053r5 + 'NIST_SP-800-53_rev4_MODERATE-baseline_profile.json',
-                    pro_file: KnownOscalFilesService.proPath80053r5 + 'NIST_SP-800-53_rev4_MODERATE-baseline_profile.json',
-                    pro_url_res: KnownOscalFilesService.catsUrl4NIST80053r5 + 'NIST_SP-800-53_rev4_MODERATE-baseline-resolved-profile_catalog.json',
-                    pro_file_res: KnownOscalFilesService.proPath80053r5 + 'NIST_SP-800-53_rev4_MODERATE-baseline-resolved-profile_catalog.json',
+                    pro_url: KnownOscalFilesService.catsUrl4NIST80053r5 + 'NIST_SP-800-53_rev5_MODERATE-baseline_profile-min.json',
+                    pro_file: KnownOscalFilesService.proPath80053r5 + 'NIST_SP-800-53_rev5_MODERATE-baseline_profile-min.json',
+                    pro_url_res: KnownOscalFilesService.catsUrl4NIST80053r5 + 'NIST_SP-800-53_rev5_MODERATE-baseline-resolved-profile_catalog-min.json',
+                    pro_file_res: KnownOscalFilesService.proPath80053r5 + 'NIST_SP-800-53_rev5_MODERATE-baseline-resolved-profile_catalog-min.json',
 
                     pro_color: 'baseline-medium',
                     pro_short_label: 'M',
@@ -204,10 +205,10 @@ export class KnownOscalFilesService {
                     cat_use_as: CatSampleIntendedUse.BaselineReferenceAndResolved,
                     cat_baselines: null,
 
-                    pro_url: KnownOscalFilesService.catsUrl4NIST80053r5 + 'NIST_SP-800-53_rev4_HIGH-baseline_profile.json',
-                    pro_file: KnownOscalFilesService.proPath80053r5 + 'NIST_SP-800-53_rev4_HIGH-baseline_profile.json',
-                    pro_url_res: KnownOscalFilesService.catsUrl4NIST80053r5 + 'NIST_SP-800-53_rev4_HIGH-baseline-resolved-profile_catalog.json',
-                    pro_file_res: KnownOscalFilesService.proPath80053r5 + 'NIST_SP-800-53_rev4_HIGH-baseline-resolved-profile_catalog.json',
+                    pro_url: KnownOscalFilesService.catsUrl4NIST80053r5 + 'NIST_SP-800-53_rev5_HIGH-baseline_profile-min.json',
+                    pro_file: KnownOscalFilesService.proPath80053r5 + 'NIST_SP-800-53_rev5_HIGH-baseline_profile-min.json',
+                    pro_url_res: KnownOscalFilesService.catsUrl4NIST80053r5 + 'NIST_SP-800-53_rev5_HIGH-baseline-resolved-profile_catalog-min.json',
+                    pro_file_res: KnownOscalFilesService.proPath80053r5 + 'NIST_SP-800-53_rev5_HIGH-baseline-resolved-profile_catalog-min.json',
 
                     pro_color: 'baseline-high',
                     pro_short_label: 'H',
@@ -222,18 +223,18 @@ export class KnownOscalFilesService {
                     cat_use_as: CatSampleIntendedUse.BaselineReferenceAndResolved,
                     cat_baselines: null,
 
-                    pro_url: KnownOscalFilesService.catsUrl4NIST80053r5 + 'NIST_SP-800-53_rev4_HIGH-baseline_profile.json',
-                    pro_file: KnownOscalFilesService.proPath80053r5 + 'NIST_SP-800-53_rev4_HIGH-baseline_profile.json',
-                    pro_url_res: KnownOscalFilesService.catsUrl4NIST80053r5 + 'NIST_SP-800-53_rev4_HIGH-baseline-resolved-profile_catalog.json',
-                    pro_file_res: KnownOscalFilesService.proPath80053r5 + 'NIST_SP-800-53_rev4_HIGH-baseline-resolved-profile_catalog.json',
+                    pro_url: KnownOscalFilesService.catsUrl4NIST80053r5 + 'NIST_SP-800-53_rev5_PRIVACY-baseline_profile-min.json',
+                    pro_file: KnownOscalFilesService.proPath80053r5 + 'NIST_SP-800-53_rev5_PRIVACY-baseline_profile-min.json',
+                    pro_url_res: KnownOscalFilesService.catsUrl4NIST80053r5 + 'NIST_SP-800-53_rev5_PRIVACY-baseline-resolved-profile_catalog-min.json',
+                    pro_file_res: KnownOscalFilesService.proPath80053r5 + 'NIST_SP-800-53_rev5_PRIVACY-baseline-resolved-profile_catalog-min.json',
 
                     pro_color: 'baseline-privacy',
                     pro_short_label: 'P',
-                },
-            ],
-        },
+                }
+            ]
+        }
         /*         
-                {
+            ,{
                     cat_id: 'Oscal Catalog JSON Schema',
                     cat_label: 'OSCAL Cat JSON-Schema',
                     cat_url: 'https://raw.githubusercontent.com/usnistgov/OSCAL/master/json/schema/oscal_catalog_schema.json',
@@ -249,7 +250,11 @@ export class KnownOscalFilesService {
     ];
 
     constructor(httpClient: HttpClient, storage: Storage, platform: Platform,) {
+        console.log(`Loading Schemas`);
         this.loadSchemas(httpClient, storage, platform);
+
+        console.log(`Loading Cats`);
+        this.initCatsProfilesBaselines(httpClient, storage, platform);
     }
 
     loadSchemas(httpClient: HttpClient, storage: Storage, platform: Platform) {
@@ -272,6 +277,51 @@ export class KnownOscalFilesService {
     }
 
 
+    initCatsProfilesBaselines(httpClient: HttpClient, storage: Storage, platform: Platform) {
+        KnownOscalFilesService.knownCatFiles.forEach(
+            cat => {
+                if (!cat.content_cat) {
+                    cat.content_cat = new OscalRemoteFile<Catalog>(
+                        httpClient, storage, platform,
+                        cat.cat_url,
+                        cat.cat_file,
+                        KnownOscalFilesService.cat_schema.schema
+                    );
+                    if (!cat.content_cat.loadedEntity) {
+                        cat.content_cat.loadRemoteEntity();
+                    }
+                }
+                if (cat.cat_baselines && cat.cat_baselines.length > 0) {
+                    cat.cat_baselines.forEach(
+                        catBaseline => {
+                            if (!cat.content_pro) {
+                                cat.content_pro = new OscalRemoteFile<Profile>(
+                                    httpClient, storage, platform,
+                                    catBaseline.pro_url,
+                                    catBaseline.pro_file,
+                                    KnownOscalFilesService.pro_schema.schema
+                                )
+                            }
+                            if (!cat.content_res_pro) {
+                                cat.content_res_pro = new OscalRemoteFile<Catalog>(
+                                    httpClient, storage, platform,
+                                    catBaseline.pro_url_res,
+                                    catBaseline.pro_file_res,
+                                    KnownOscalFilesService.cat_schema.schema
+                                )
+                            }
+
+                            if (!cat.content_pro.loadedEntity) {
+                                cat.content_pro.loadRemoteEntity();
+                            }
+                            if (!cat.content_res_pro.loadedEntity) {
+                                cat.content_res_pro.loadRemoteEntity();
+                            }
+                        })
+                }
+            }
+        )
+    }
 
     getSpecifiedCatFile(theKnownCat: KnownCatalogNames) {
         return KnownOscalFilesService.knownCatFiles.filter(m => m.cat_enum === theKnownCat);
@@ -296,7 +346,6 @@ export class KnownOscalFilesService {
     getProSchema(): SchemaFile {
         return KnownOscalFilesService.pro_schema
     }
-
 }
 
 @Injectable({
