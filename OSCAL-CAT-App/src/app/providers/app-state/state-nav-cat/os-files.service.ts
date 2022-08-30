@@ -614,6 +614,4 @@ export class SchemaFile extends OsFileOperations {
                 }
             );
     }
-
-
 }
