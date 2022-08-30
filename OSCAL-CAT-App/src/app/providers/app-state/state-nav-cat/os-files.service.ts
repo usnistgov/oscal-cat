@@ -572,6 +572,7 @@ export class SchemaFile extends OsFileOperations {
                     if (this.remote_schema_error && !this.is_remote_file && this.fallback_file) {
                         this.load_local_file_fallback(this.fallback_file);
                     }
+                    this.doneLoadDateTime = Date.now();
                 }
             );
     }
@@ -611,6 +612,7 @@ export class SchemaFile extends OsFileOperations {
                 () => { // Complete operation
                     this.is_local_done = true;
                     // console.log(`DONE-Stage #2 ${this.url}`);
+                    this.doneLoadDateTime = Date.now();
                 }
             );
     }
