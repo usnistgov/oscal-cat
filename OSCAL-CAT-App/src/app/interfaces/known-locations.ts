@@ -1,3 +1,6 @@
+import { OscalRemoteFile } from "../providers/app-state/state-nav-cat/os-files.service";
+import { Catalog, Profile } from "./oscal-types/oscal-catalog.types";
+
 /*
  * Portions of this software was developed by employees of the National Institute
  * of Standards and Technology (NIST), an agency of the Federal Government and is
@@ -70,6 +73,9 @@ export interface KnownOscalFileLocation {
     pro_url_res?: string | null;
     pro_file_res?: string | null;
 
+    content_cat?: OscalRemoteFile<Catalog>;
+    content_pro?: OscalRemoteFile<Profile>;
+    content_res_pro?: OscalRemoteFile<Catalog>;
 }
 
 export enum KnownCatalogNames {
