@@ -235,79 +235,125 @@ export class OsFileOperations /* extends KvServiceBase */ {
 export class OscalRemoteFile<ResultType> extends OsFileOperations /* extends KvServiceBase */ {
 
     session_id: string;
-    httpFileData: any;
 
-    loadedEntity: ResultType;
+    remoteUrl: string;
+    localUrl: string;
+
     entitySchema: any;
-    isEntityLoadData: boolean;
-    isEntityLoadError: boolean;
-    isEntityLoadDone: boolean;
-    result: FilePullResult<ResultType>;
+    loadedEntity: ResultType;
+
+    isLoaded: boolean;
+    isRemoteFile: boolean;
+    isRemoteFileError: boolean;
+    isRemoteFileDone: boolean;
+    isLocalFileError: boolean;
+    isLocalFileDone: boolean;
+
+    validationResult: FilePullResult<ResultType>;
 
     constructor(
         public httpClient: HttpClient,
         public storage: Storage,
         public platform: Platform,
+        public urlFile?: string,
+        public localFile?: string,
+        public schema?: any,
     ) {
         super(httpClient, storage, platform);
+        this.entitySchema = schema;
+        this.remoteUrl = urlFile;
+        this.localUrl = localFile;
+
+        console.log(this.remoteUrl);
+        console.log(this.localUrl);
+
+        // No Observables in Constructor !!! - it may blow occasionally.
+        // this.loadRemoteEntity(this.remoteUrl);
     }
 
-
-    /**
-     * Funnel method for all types (Catalog/Profile) HTTP pull from online sources
-     *
-     * @template ResultType - Type of the object that will return back
-     * @param {string} url - URL for the object to pull
-     * @param {*} entitySchema - Schema 
-     * @returns {FilePullResult<ResultType>} Result-Digest object
-     * @memberof OsFileOperations
-     */
-    getValidatedObjectFromUrl(url: string, entitySchema: any, returnOnDone: returnResultDelegate<ResultType>): void {
-        this.entitySchema = entitySchema
-
-        this.getHttpEntity<ResultType>(url)
+    loadRemoteEntity(url?: string) {
+        if (!url) {
+            url = this.remoteUrl;
+        }
+        // console.log(url);
+        this.getHttpEntity<any>(url)
             .subscribe(
-                data => { // On next operation
+                data => {
                     this.loadedEntity = data;
-                    // console.log(JSON.stringify(data));
-                    this.isEntityLoadData = true;
-                    console.log(data);
-                    console.log(`Data-Lambda`);
+                    this.isRemoteFile = true;
+                    // console.log('DATA-Stage #1');
+                    // console.log(this.loadedEntity);
                 },
                 error => {// Process error
-                    console.log(`Error reading URL:${url}:\n\t${error}`);
-                    console.log(error);
-                    // Here fallback to the local resource
-                    this.isEntityLoadError = false;
-                    console.log(`Error-Lambda`);
+                    // console.log('ERROR-Stage #1');
+                    this.isRemoteFileError = error;
+                    if (error && this.localUrl) {
+                        this.isRemoteFile = false;
+                        // console.log(`Remote load Error`);
+                        // console.log(error);
+                        this.loadLocalEntity(this.localUrl);
+                    }
                 },
                 () => { // Complete operation
-                    this.isEntityLoadDone = true;
-                    console.log(`Done-Lambda`);
-                    let returnResult: FilePullResult<ResultType> = this.validateSchemaByAjv(this.loadedEntity, this.entitySchema);
-                    console.log(returnResult)
-                    returnOnDone(this.result);
+                    // console.log(`DONE-Stage #1 ${this.remoteUrl}`);
+                    this.isRemoteFileDone = true;
+                    if (this.isRemoteFileError && !this.isRemoteFile && this.localUrl) {
+                        this.loadLocalEntity(this.localUrl);
+                    }
+                    if (this.loadedEntity && this.entitySchema) {
+                        this.validationResult = this.validateSchemaByAjv(this.loadedEntity, this.entitySchema);
+                        // console.log(this.validationResult)
+                    }
                 }
-            )
-        return
+            );
     }
 
-    publicValidateEntity(): FilePullResult<ResultType> {
-        let validationAjv: AjvValidationResult;
-        if (this.isEntityLoadDone && !!this.entitySchema && !!this.loadedEntity) {
-            console.log(this.loadedEntity);
-            console.log(this.entitySchema);
+    loadLocalEntity(localUrl: string) {
+        if (!localUrl) {
+            localUrl = this.localUrl;
+        }
+        // console.log(url);
+        this.getHttpEntity<any>(localUrl)
+            .subscribe(
+                data => {
+                    this.loadedEntity = data;
+                    this.isRemoteFile = false;
+                    // console.log('Local DATA-Stage #1');
+                    // console.log(this.loadedEntity);
+                },
+                error => {// Process error
+                    // console.log('Local ERROR-Stage #1');
+                    this.isLocalFileError = error;
+                    if (error && this.localUrl) {
+                        this.isRemoteFile = false;
+                        // console.log(`Local load Error`);
+                        // console.log(error);                        
+                    }
+                },
+                () => { // Complete operation
+                    // console.log(`Local DONE-Stage #1 ${this.remoteUrl}`);
+                    this.isLocalFileDone = false;
+                    if (this.loadedEntity && this.entitySchema) {
+                        this.validationResult = this.validateSchemaByAjv(this.loadedEntity, this.entitySchema);
+                        // console.log(this.validationResult)
+                    }
+                }
+            );
+    }
 
+    public validateEntity(): FilePullResult<ResultType> {
+        let validationAjv: AjvValidationResult;
+        if (this.isRemoteFileDone || this.isLocalFileDone && !!this.entitySchema && !!this.loadedEntity) {
             validationAjv = this.isValidByAjv(this.loadedEntity, this.entitySchema);
         }
-        this.result = new FilePullResult<ResultType>(this.loadedEntity, validationAjv);
-        return this.result;
+        this.validationResult = new FilePullResult<ResultType>(this.loadedEntity, validationAjv);
+        return this.validationResult;
     }
 
     private validateSchemaByAjv(loadedEntity: ResultType, entitySchema: any): FilePullResult<ResultType> {
         let validationAjv: AjvValidationResult;
 
-        if (this.isEntityLoadDone && !!entitySchema && !!loadedEntity) {
+        if (!!entitySchema && !!loadedEntity) {
             console.log(loadedEntity);
             console.log(entitySchema);
 
@@ -315,90 +361,11 @@ export class OscalRemoteFile<ResultType> extends OsFileOperations /* extends KvS
             console.log(`Schema validation: ${validationAjv.isValid}`);
             console.log(validationAjv.validationErrors);
         }
-        this.result = new FilePullResult<ResultType>(this.loadedEntity, validationAjv);
-        return this.result;
+        this.validationResult = new FilePullResult<ResultType>(this.loadedEntity, validationAjv);
+        return this.validationResult;
     }
 }
 
-
-@Injectable({
-    providedIn: 'root'
-})
-export class OscalSchemaFile<ResultType> extends OsFileOperations {
-    lastLoaded: Date;
-    originUrl: string;
-    timeLoadStart: number;
-    timeLoadEnd: number;
-
-    delegateHandleData: (data: ResultType) => ResultType;
-    delegateHandleError: (error: any) => void;
-
-    loadedSchema: any;
-    loadError: any;
-
-    isLoadOK: boolean;
-    isLoadDone: boolean;
-
-    constructor(
-        public httpClient: HttpClient,
-        public storage: Storage,
-        public platform: Platform,
-    ) {
-        super(httpClient, storage, platform);
-    }
-
-    loadCatSchema(url: string) {
-        // const url = 'https://raw.githubusercontent.com/usnistgov/OSCAL/main/json/schema/oscal_catalog_schema.json';
-        this.getHttpEntity<any>(url)
-            .subscribe(
-                data => {
-                    if (this.delegateHandleData) {
-                        const extraData = this.delegateHandleData(data);
-                        this.loadedSchema = extraData;
-                        console.log(extraData);
-                    } else {
-                        this.getCatSchema(data);
-                    }
-                },
-                error => {// Process error
-                    if (this.delegateHandleError) {
-                        this.delegateHandleError(error);
-                        console.log(error);
-                    } else {
-                        console.log(`Error reading URL:${url}:\n\t${error}`);
-                        // Here fallback to the local resource
-                        this.isLoadOK = false;
-                        this.loadError = error;
-                    }
-                },
-                () => { // Complete operation
-                    this.isLoadDone = true;
-                }
-            );
-    }
-
-    setDataDelegate(dataHandler: (data: ResultType) => ResultType) {
-        this.delegateHandleData = dataHandler;
-    }
-
-    setErrorDelegate(dataHandler: (error: any) => void) {
-        this.delegateHandleError = dataHandler;
-    }
-
-    getCatSchema(data: ResultType): ResultType {
-        if (this.delegateHandleData) {
-            const extraData = this.delegateHandleData(data);
-            // this.loadedSchema = extraData;
-            console.log(extraData);
-        } //Possibly Else
-        console.log(data);
-        console.log(`Loaded Schema`);
-        this.loadedSchema = data;
-        this.isLoadOK = true;
-        return this.loadedSchema
-    }
-
-}
 @Injectable({
     providedIn: 'root'
 })
@@ -503,6 +470,4 @@ export class SchemaFile extends OsFileOperations {
                 }
             );
     }
-
-
 }
