@@ -132,7 +132,12 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
 
 
   showActiveCatInfo(idx: number) {
-    return idx == this.activeRadioCat;
+    if (
+      this.knownFiles.isCatInfoStale(
+        this.knownFiles.getAllKnownFiles()[idx])
+    ) {
+      return idx == this.activeRadioCat;
+    }
   }
 
 
