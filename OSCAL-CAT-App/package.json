@@ -76,5 +76,11 @@
     "ts-node": "~8.3.0",
     "typescript": "~4.4.4"
   },
+  "overrides": {
+    "node-fetch": "^2.6.7"
+  },
+  "engines": {
+    "npm": "^8.3.0"
+  },
   "description": "OSCAL-CAT: an Ionic project"
 }
