@@ -1,112 +1,100 @@
-<div>
-  <div style="border: 1px; width: 100%;">
+<div></div>
+<!-- style="border: 1px; width: 100%;" -->
+<ion-grid class="topless, bottomless">
+  <ion-row style="display: flex;justify-content: space-evenly;">
+    <ion-col>
+      <ion-button (click)="flipShowBaselineOptions()" title="Tailor Baselines Options" class="topless, bottomless">
+        {{this.getTitleBL()}}
+        <ion-icon [icon]="this.getIconBL()"></ion-icon>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
 
-    <ion-item>
+<ion-grid *ngIf="this.showBaselinesOptions">
 
+  <ion-row class="topless, bottomless">
 
+    <ion-col>
+      <ion-buttons>
+        <!-- Mark baselines style="display: flex;justify-content: space-evenly;" slot="start"-->
+        <ion-tab-button [ngClass]="'tab-selected'" class="topless, bottomless" (click)="this.setState(1)">
+          <ion-icon icon="brush-outline" [color]="this.stateColor(1)"></ion-icon>
+          <ion-label class="topless, bottomless" [color]="this.stateColor(1)">{{ this.getTitle(1) }}
+          </ion-label>
+          <ion-badge *ngIf="this.isActive(1)">Activate</ion-badge>
+        </ion-tab-button>
+      </ion-buttons>
+    </ion-col>
 
-      <ion-grid>
+    <ion-col>
+      <ion-buttons>
+        <!-- Pre-Check baseline -->
+        <ion-tab-button [ngClass]="'tab-selected'" class="topless, bottomless" (click)="this.setState(2)">
+          <ion-icon icon="checkmark" [color]="this.stateColor(2)"></ion-icon>
+          <ion-label class="topless, bottomless" [color]="this.stateColor(2)">{{ this.getTitle(2) }}
+          </ion-label>
+          <ion-badge *ngIf="this.isActive(2)">Activate</ion-badge>
+        </ion-tab-button>
+      </ion-buttons>
+    </ion-col>
 
-        <ion-row style="display: flex;justify-content: space-evenly;" class="topless, bottomless">
-          <ion-col>
-            <!-- <ion-item> </ion-item> -->
+    <ion-col>
+      <ion-buttons>
+        <!-- Cut-Out baseline -->
+        <ion-tab-button [ngClass]="'tab-selected'" class="topless, bottomless" (click)="this.setState(3)">
+          <ion-icon icon="cut-outline" [color]="this.stateColor(3)"></ion-icon>
+          <ion-label class="topless, bottomless" [color]="this.stateColor(3)">{{ this.getTitle(3) }}
+          </ion-label>
+          <ion-badge *ngIf="this.isActive(3)">Activate</ion-badge>
+        </ion-tab-button>
+      </ion-buttons>
+    </ion-col>
 
-            <ion-button (click)="flipShowBaselineOptions()">
-              Baselines
-              <ion-icon icon="options-outline"></ion-icon>
-            </ion-button>
-          </ion-col>
+    <ion-col>
+      <ion-buttons>
+        <!-- Back to Cat -->
+        <ion-tab-button [ngClass]="'tab-selected'" class="topless, bottomless" (click)="this.setState(4)">
+          <ion-icon icon="list" [color]="this.stateColor(4)"></ion-icon>
+          <ion-label class="topless, bottomless" [color]="this.stateColor(4)">{{ this.getTitle(4) }}
+          </ion-label>
+          <ion-badge *ngIf="this.isActive(4)">Activate</ion-badge>
+        </ion-tab-button>
+      </ion-buttons>
+    </ion-col>
 
-          <ion-col class="topless, bottomless">
+    <ion-col class="topless, bottomless">
+      <ion-button (click)="processBaseline()" color="warning" *ngIf="this.optionChosen() && this.showBaselinesOptions"
+        class="topless, bottomless">
+        {{ this.getTitle(this.formState) }}&nbsp;
+        <ion-icon [icon]="this.getIconForSelect()"></ion-icon>
+      </ion-button>
+    </ion-col>
 
-            <ion-item *ngIf="this.showBaselinesOptions" style="display: flex;justify-content: space-evenly;">
+  </ion-row>
 
-              <ion-buttons class="" style="display: flex;justify-content: space-evenly;" slot="start">
-                <!-- Mark baselines -->
-                <ion-tab-button [ngClass]="'tab-selected'" class="topless, bottomless" (click)="this.setState(1)">
-                  <ion-icon icon="brush-outline" [color]="this.stateColor(1)"></ion-icon>
-                  <ion-label class="topless, bottomless" [color]="this.stateColor(1)">{{ this.getTitle(1) }}</ion-label>
-                  <ion-badge *ngIf="this.isActive(1)">Activate</ion-badge>
-                </ion-tab-button>
+  <ion-row *ngIf="this.showBaselines() && this.showBaselinesOptions" class="topless, bottomless">
 
-                <!-- Pre-Check baseline -->
-                <ion-tab-button [ngClass]="'tab-selected'" class="topless, bottomless" (click)="this.setState(2)">
-                  <ion-icon icon="checkmark" [color]="this.stateColor(2)"></ion-icon>
-                  <ion-label class="topless, bottomless" [color]="this.stateColor(2)">{{ this.getTitle(2) }}</ion-label>
-                  <ion-badge *ngIf="this.isActive(2)">Activate</ion-badge>
-                </ion-tab-button>
+    <ion-radio-group name="level" value="low">
+      <ion-col>
+        <ion-item>
+          Baselines:
+        </ion-item>
+      </ion-col>
 
-                <!-- Cut-Out baseline -->
-                <ion-tab-button [ngClass]="'tab-selected'" class="topless, bottomless" (click)="this.setState(3)">
-                  <ion-icon icon="cut-outline" [color]="this.stateColor(3)"></ion-icon>
-                  <ion-label class="topless, bottomless" [color]="this.stateColor(3)">{{ this.getTitle(3) }}</ion-label>
-                  <ion-badge *ngIf="this.isActive(3)">Activate</ion-badge>
-                </ion-tab-button>
+      <!-- *ngFor="let oscalFile of this.oscalFiles; let itemIndex = index" -->
+      <ion-col *ngFor="let baseline of this.knownCat.cat_baselines; let idx = index;">
+        <ion-item>
+          {{baseline.cat_suffix}} &nbsp;
+          <!-- :{{idx}} -->
+          <ion-badge [color]="baseline.pro_color">{{baseline.pro_short_label}}
+          </ion-badge>
+          <ion-radio slot="start" (ionChange)="this.onCheckBaselineUpdate($event, idx)"
+            [checked]="this.baselineChecks[idx]" [value]="idx"></ion-radio>
+        </ion-item>
+      </ion-col>
 
-                <!-- Back to Cat -->
-                <ion-tab-button [ngClass]="'tab-selected'" class="topless, bottomless" (click)="this.setState(4)">
-                  <ion-icon icon="list" [color]="this.stateColor(4)"></ion-icon>
-                  <ion-label class="topless, bottomless" [color]="this.stateColor(4)">{{ this.getTitle(4) }}</ion-label>
-                  <ion-badge *ngIf="this.isActive(4)">Activate</ion-badge>
-                </ion-tab-button>
-              </ion-buttons>
-              <!-- <ion-item> </ion-item> -->
-              <ion-button (click)="processBaseline()" color="warning"
-                *ngIf="this.optionChosen() && this.showBaselinesOptions">
-                {{ this.getTitle(this.formState) }}&nbsp;
-                <ion-icon [icon]="this.getIconForSelect()"></ion-icon>
-              </ion-button>
-            </ion-item>
-          </ion-col>
-        </ion-row>
+    </ion-radio-group>
+  </ion-row>
 
-        <ion-row *ngIf="this.showBaselines() && this.showBaselinesOptions" class="topless, bottomless">
-
-
-
-          <ion-col class="topless, bottomless">
-            <ion-item>
-              <ion-list>
-                <ion-radio-group name="level" value="low" class="topless, bottomless">
-                  <ion-row>
-                    <!--        
-                      <ion-col>     
-                        <ion-list-header>
-                          <ion-label>Risk Tolerance</ion-label>
-                        </ion-list-header>
-                      </ion-col>
-                    -->
-
-                    <ion-col>
-                      <ion-item>
-                        <ion-label>Low</ion-label>&nbsp;
-                        <ion-radio value="low"></ion-radio>
-                      </ion-item>
-                    </ion-col>
-
-                    <ion-col>
-                      <ion-item>
-                        <ion-label>Medium</ion-label>&nbsp;
-                        <ion-radio value="medium"></ion-radio>
-                      </ion-item>
-                    </ion-col>
-                    <ion-col>
-                      <ion-item>
-                        <ion-label>High</ion-label>&nbsp;
-                        <ion-radio value="heigh"></ion-radio>
-                      </ion-item>
-                    </ion-col>
-                  </ion-row>
-
-                </ion-radio-group>
-              </ion-list>
-            </ion-item>
-          </ion-col>
-        </ion-row>
-
-      </ion-grid>
-
-    </ion-item>
-
-  </div>
-</div>
+</ion-grid>
