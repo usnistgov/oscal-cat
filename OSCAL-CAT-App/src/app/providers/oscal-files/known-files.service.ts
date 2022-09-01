@@ -323,8 +323,35 @@ export class KnownOscalFilesService {
         )
     }
 
+    refreshCat(cat: KnownOscalFileLocation) {
+        if (cat.needsRefresh && cat.cat_use_as == CatSampleIntendedUse.BaselineReferenceAndResolved) {
+            if (!!cat.content_pro && !cat.content_pro.loadedEntity) {
+                cat.content_pro.loadRemoteEntity();
+                cat.needsRefresh = false;
+            }
+            if (!!cat.content_res_pro && !cat.content_res_pro.loadedEntity) {
+                cat.content_res_pro.loadRemoteEntity();
+                cat.needsRefresh = false;
+            }
+        }
+        if (cat.cat_use_as == CatSampleIntendedUse.CatalogSample) {
+            if (cat.needsRefresh && !!cat.content_cat && !cat.content_cat.loadedEntity) {
+                cat.content_cat.loadRemoteEntity();
+                cat.needsRefresh = false;
+            }
+        }
+    }
+
+    /**
+     * Determines if the particular OscalCat object has 
+     * any Stale components that need refreshing
+     *
+     * @param {KnownOscalFileLocation} catInfo - Any OscalCat object from the known Files
+     * @returns {boolean} - True is teh Object has any staleness in it
+     * @memberof KnownOscalFilesService
+     */
     isCatInfoStale(catInfo: KnownOscalFileLocation): boolean {
-        const deltaX = 0.001
+        const deltaX = 15.000 / 3600.0;
         let isStale = !!catInfo && !!catInfo.content_cat && catInfo.content_cat.isStale(deltaX);
         if (catInfo && catInfo.cat_baselines && catInfo.cat_baselines.length > 0) {
             catInfo.cat_baselines.forEach(
