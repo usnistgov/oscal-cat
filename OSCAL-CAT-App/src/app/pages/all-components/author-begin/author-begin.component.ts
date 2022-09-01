@@ -134,8 +134,10 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   handleRadioChange($event: Event) {
     const value = ($event as CustomEvent).detail.value;
     const cats = ['', ''];
-    // console.log($event);
-    console.log(value);
+    // console.log($event);    
+    // console.log(value);
+    this.knownFiles.setActive(value);
+    this.oscalFiles
     if (value > 1) {
       this.chosenOscalCat = undefined;
       this.chosenSession = this.savedWork[value - 2];
