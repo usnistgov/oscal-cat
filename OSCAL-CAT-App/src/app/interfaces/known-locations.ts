@@ -76,6 +76,7 @@ export interface KnownOscalFileLocation {
     content_cat?: OscalRemoteFile<Catalog>;
     content_pro?: OscalRemoteFile<Profile>;
     content_res_pro?: OscalRemoteFile<Catalog>;
+    needsRefresh?: boolean;
 }
 
 export enum KnownCatalogNames {

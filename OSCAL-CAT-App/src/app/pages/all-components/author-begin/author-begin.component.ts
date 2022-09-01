@@ -23,7 +23,7 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { KnownOscalFilesService } from './../../../providers/oscal-files/known-files.service';
 import { KnownOscalFileLocation } from 'src/app/interfaces/known-locations';
 import { AlertController, ModalController } from '@ionic/angular';
@@ -32,6 +32,7 @@ import { v4 as UUIDv4 } from 'uuid';
 import {
   CurrentSessionData, NamedSessionNodes, SessionData
 } from './../../../providers/app-state/state-nav-cat/state-session-data.service';
+import { OscalCatAuthorViewComponent } from '../action-commons/action-oscal-cat-author-view/action-oscal-cat-author-view.component';
 
 
 @Component({
@@ -48,6 +49,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   newDraft: boolean;
   activeRadioCat: number;
   //alertControl: AlertController;
+  @ViewChild('catDetails') catDetails: OscalCatAuthorViewComponent;
 
   constructor(
     private knownFiles: KnownOscalFilesService,
@@ -63,13 +65,32 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     this.readInSessionCats();
     this.activeRadioCat = -1;
   }
+
+  handleCatRefresh(index: number) {
+    const resArray = this.catDetails.formCommitArray();
+    const entityChecks = resArray[0];
+    const baselineChecks = resArray[1];
+    const cat = this.knownFiles.getAllKnownFiles()[index];
+    console.log(cat);
+    if (cat && entityChecks[0]) {
+      cat.needsRefresh = entityChecks[0];
+    }
+    if ((cat && cat.cat_baselines && baselineChecks.length > 0)) {
+      const limit = Math.min(cat.cat_baselines.length, baselineChecks.length);
+      for (let i = 0; i < limit; i++) {
+        cat.cat_baselines[i].needsRefresh = baselineChecks[i];
+        this.knownFiles.refreshCat(cat.cat_baselines[i]);
+      }
+    }
+    this.knownFiles.refreshCat(cat);
+    console.log(cat);
+  }
   //
 
   readInSessionCats() {
     // Read the previously pulled-in Cats from Session
     this.session.getKeyValueObject<Array<SessionData>>(NamedSessionNodes.SAVED_SESSIONS)
       .then(
-
     )
   }
 
@@ -108,15 +129,13 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   }
 
   handleRemoteLocalCacheRadio($event: Event) {
-
   }
 
-
   handleRadioChange($event: Event) {
-    console.log($event);
     const value = ($event as CustomEvent).detail.value;
-    console.log(value);
     const cats = ['', ''];
+    // console.log($event);
+    console.log(value);
     if (value > 1) {
       this.chosenOscalCat = undefined;
       this.chosenSession = this.savedWork[value - 2];
@@ -131,7 +150,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   }
 
 
-  showActiveCatInfo(idx: number) {
+  showActiveCatInfo(idx: number): boolean {
     if (
       this.knownFiles.isCatInfoStale(
         this.knownFiles.getAllKnownFiles()[idx])

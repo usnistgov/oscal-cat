@@ -45,7 +45,8 @@
                     </ion-row> 
                     -->
                     </ion-row>
-                    <oscal-cat-author-view [knownCat]="oscalFile" [showInfo]="this.showActiveCatInfo(itemIndex)">
+                    <oscal-cat-author-view #catDetails [knownCat]="oscalFile" [index]="itemIndex"
+                        [showInfo]="this.showActiveCatInfo(itemIndex)" (refreshCats)="this.handleCatRefresh(itemIndex)">
                     </oscal-cat-author-view>
                 </div>
             </ion-grid>
@@ -62,22 +63,23 @@
                 <!-- Continue working with the previously saved item(s) -->
                 <ion-row *ngFor="let workItem of this.savedWork; let savedIndex = index">
                     <ion-col>
+
                         <ion-item>
-                            <ion-radio value="{{2+savedIndex}}">
-                            </ion-radio>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <ion-radio value="{{2+savedIndex}}"></ion-radio>&nbsp;&nbsp;&nbsp;&nbsp;
                             <ion-label>{{workItem.name}} [{{workItem.uuid}}]</ion-label>
 
                             <ion-button [title]="'Press to remove '.concat(workItem.name)" color="danger"
                                 (click)="presentDeleteWarning($event,savedIndex)">
                                 <ion-icon icon='trash-outline'></ion-icon>
                             </ion-button>
+
                             <ion-button [title]="'Press to edit '.concat(workItem.name)"
                                 (click)="editWorkItemName($event,savedIndex)" disabled="true">
                                 <ion-icon icon='pencil-outline'></ion-icon>
                             </ion-button>
 
-
                         </ion-item>
+
                     </ion-col>
                 </ion-row>
             </ion-grid>

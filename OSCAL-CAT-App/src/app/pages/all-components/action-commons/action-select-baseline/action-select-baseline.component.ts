@@ -99,6 +99,13 @@ export class SelectBaselineComponent implements OnInit {
     }
   }
 
+  getTitleBL() {
+    return (this.showBaselinesOptions) ? "Tailor Baselines  " : "";
+  }
+  getIconBL() {
+    return (this.showBaselinesOptions) ? "options-outline" : "arrow-forward-circle-outline";
+  }
+
   isActive(value: StateMark) {
     return value == this.formState;
   }

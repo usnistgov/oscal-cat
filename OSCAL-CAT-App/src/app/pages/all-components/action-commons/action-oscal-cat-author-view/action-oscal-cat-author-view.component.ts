@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { KnobName } from '@ionic/core';
 import { KnownOscalFileLocation } from 'src/app/interfaces/known-locations';
+import { KnownOscalFilesService } from 'src/app/providers/oscal-files/known-files.service';
 import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancestor-base.component';
 
 @Component({
@@ -8,22 +9,35 @@ import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancesto
   templateUrl: './action-oscal-cat-author-view.component.html',
   styleUrls: ['./action-oscal-cat-author-view.component.css']
 })
-export class OscalCatAuthorViewComponent implements OnInit, IMustCommitFormDataArray<boolean> {
+export class OscalCatAuthorViewComponent implements OnInit, IMustCommitFormDataArray<Array<boolean>> {
 
+  @Input() index: number;
   @Input() showInfo: boolean;
   @Input() knownCat: KnownOscalFileLocation;
+  @Output() refreshCats: EventEmitter<any> = new EventEmitter(); //() => void;
 
-  private entityChecks: Array<boolean> = [false, false];
-  private baselineChecks: Array<boolean> = [false, false, false, false];
+  knownFiles: KnownOscalFilesService
 
-  constructor() {
-    // this.entityChecks = [false, false];
-    // this.baselineChecks = [false, false, false, false];
+  private entityChecks: Array<boolean> /* = [false, false] */;
+  private baselineChecks: Array<boolean> /* = [false, false, false, false] */;
+
+  constructor(knownFiles: KnownOscalFilesService) {
+    this.knownFiles = knownFiles;
+    this.entityChecks = new Array<boolean>(2);
+    const countBaselines = (this.knownCat && this.knownCat.cat_baselines && this.knownCat.cat_baselines.length > 0) ? this.knownCat.cat_baselines.length : 4;
+    this.baselineChecks = new Array<boolean>(countBaselines);
   }
 
   ngOnInit() {
 
 
+  }
+
+  refreshSelectedCatParts() {
+    if (this.refreshCats) {
+      this.refreshCats.emit();
+      this.showInfo = false;
+    }
   }
 
   showBaselines() {
@@ -34,10 +48,9 @@ export class OscalCatAuthorViewComponent implements OnInit, IMustCommitFormDataA
     if (id < 2 && id >= 0) {
       this.entityChecks[id] = $event.detail.checked; //!this.entityChecks[id];
     }
-    console.log(`EB-Id: ${id}; Checked:${$event.detail.checked}`);
-    console.log($event);
-    console.log(this.entityChecks);
-
+    // console.log(`EB-Id: ${id}; Checked:${$event.detail.checked}`);
+    // console.log($event);
+    // console.log(this.entityChecks);
     $event.stopPropagation();
   }
 
@@ -45,16 +58,14 @@ export class OscalCatAuthorViewComponent implements OnInit, IMustCommitFormDataA
     if (id < this.baselineChecks.length && id >= 0) {
       this.baselineChecks[id] = $event.detail.checked;
     }
-    console.log(`BL-Id: ${id};  Checked:${$event.detail.checked}`);
-    console.log($event);
-    console.log(this.baselineChecks);
-
+    // console.log(`BL-Id: ${id};  Checked:${$event.detail.checked}`);
+    // console.log($event);
+    // console.log(this.baselineChecks);
     $event.stopPropagation();
   }
 
-  formCommitArray(): Array<boolean> {
-    const retValue = Array<boolean>();
-    return retValue;
+  formCommitArray(): Array<Array<boolean>> {
+    return [this.entityChecks, this.baselineChecks];
   }
 
 }
