@@ -66,6 +66,7 @@ export class KnownOscalFilesService {
     private static catsPath = '/assets/oscal-cats/'; // app/src/assets/oscal-cats/
     private static proPath80053r4 = '/assets/oscal-cats/baselines_rev4/';
     private static proPath80053r5 = '/assets/oscal-cats/baselines_rev5/';
+    private static activeItemIndex = 0;
 
     // URLs for remote catalog/profile/resolved profile files
     private static catsBase4NIST =
@@ -367,6 +368,14 @@ export class KnownOscalFilesService {
             );
         }
         return isStale;
+    }
+
+    getActive(): KnownOscalFileLocation {
+        return KnownOscalFilesService.knownCatFiles[KnownOscalFilesService.activeItemIndex];
+    }
+
+    setActive(newIndex: number): void {
+        KnownOscalFilesService.activeItemIndex = newIndex;
     }
 
     getSpecifiedCatFile(theKnownCat: KnownCatalogNames) {

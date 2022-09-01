@@ -24,6 +24,8 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 import { Component, OnInit } from '@angular/core';
+import { KnownOscalFileLocation } from 'src/app/interfaces/known-locations';
+import { KnownOscalFilesService } from 'src/app/providers/oscal-files/known-files.service';
 import { BaselineCatComponent } from '../../baseline-cat/baseline-cat.component';
 
 enum StateMark {
@@ -48,13 +50,21 @@ export class SelectBaselineComponent implements OnInit {
   baselinesMarked = false;
   baselinesSelected = false;
   baselinesTailored = false;
+
+  knownFiles: KnownOscalFilesService;
+  knownCat: KnownOscalFileLocation;
+
   formState: StateMark = StateMark.noState;
   actionNames = ['No-State',
     'Mark All Baselines',
     'Pre-Check Baseline ...',
     'Cut-Out Baseline ...',
     'All Controls (Default)'];
-  constructor() { }
+  constructor(knownFiles: KnownOscalFilesService) {
+    this.knownFiles = knownFiles;
+    this.knownCat = knownFiles.getActive();
+    console.log(this.knownCat);
+  }
 
   ngOnInit() { }
 
@@ -81,6 +91,7 @@ export class SelectBaselineComponent implements OnInit {
   }
 
   processBaseline() {
+    this.showBaselinesOptions = false;
   }
 
   optionChosen(): boolean {

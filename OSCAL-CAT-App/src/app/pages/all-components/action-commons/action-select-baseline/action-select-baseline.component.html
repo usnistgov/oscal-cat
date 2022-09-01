@@ -1,21 +1,15 @@
 <div></div>
 <!-- style="border: 1px; width: 100%;" -->
 <ion-grid class="topless, bottomless">
-  <ion-row style="display: flex;justify-content: space-evenly;">
-    <ion-col>
+  <ion-row style="display: flex;justify-content: space-evenly;" class="topless, bottomless">
+    <ion-col class="topless, bottomless">
       <ion-button (click)="flipShowBaselineOptions()" title="Tailor Baselines Options" class="topless, bottomless">
         {{this.getTitleBL()}}
         <ion-icon [icon]="this.getIconBL()"></ion-icon>
       </ion-button>
     </ion-col>
-  </ion-row>
-</ion-grid>
 
-<ion-grid *ngIf="this.showBaselinesOptions">
-
-  <ion-row class="topless, bottomless">
-
-    <ion-col>
+    <ion-col *ngIf="this.showBaselinesOptions" class="topless, bottomless">
       <ion-buttons>
         <!-- Mark baselines style="display: flex;justify-content: space-evenly;" slot="start"-->
         <ion-tab-button [ngClass]="'tab-selected'" class="topless, bottomless" (click)="this.setState(1)">
@@ -27,7 +21,7 @@
       </ion-buttons>
     </ion-col>
 
-    <ion-col>
+    <ion-col *ngIf="this.showBaselinesOptions" class="topless, bottomless">
       <ion-buttons>
         <!-- Pre-Check baseline -->
         <ion-tab-button [ngClass]="'tab-selected'" class="topless, bottomless" (click)="this.setState(2)">
@@ -39,7 +33,7 @@
       </ion-buttons>
     </ion-col>
 
-    <ion-col>
+    <ion-col *ngIf="this.showBaselinesOptions" class="topless, bottomless">
       <ion-buttons>
         <!-- Cut-Out baseline -->
         <ion-tab-button [ngClass]="'tab-selected'" class="topless, bottomless" (click)="this.setState(3)">
@@ -51,7 +45,7 @@
       </ion-buttons>
     </ion-col>
 
-    <ion-col>
+    <ion-col *ngIf="this.showBaselinesOptions" class="topless, bottomless">
       <ion-buttons>
         <!-- Back to Cat -->
         <ion-tab-button [ngClass]="'tab-selected'" class="topless, bottomless" (click)="this.setState(4)">
@@ -73,12 +67,13 @@
 
   </ion-row>
 
-  <ion-row *ngIf="this.showBaselines() && this.showBaselinesOptions" class="topless, bottomless">
+  <ion-radio-group name="level" value="">
+    <ion-row *ngIf="this.showBaselines() && this.showBaselinesOptions" class="topless, bottomless">
 
-    <ion-radio-group name="level" value="low">
+
       <ion-col>
         <ion-item>
-          Baselines:
+          Choose {{ this.getTitle(this.formState) }}
         </ion-item>
       </ion-col>
 
@@ -89,12 +84,10 @@
           <!-- :{{idx}} -->
           <ion-badge [color]="baseline.pro_color">{{baseline.pro_short_label}}
           </ion-badge>
-          <ion-radio slot="start" (ionChange)="this.onCheckBaselineUpdate($event, idx)"
-            [checked]="this.baselineChecks[idx]" [value]="idx"></ion-radio>
+          <ion-radio slot="start" (ionChange)="this.onCheckBaselineUpdate($event, idx)" value="{{idx}}"></ion-radio>
         </ion-item>
       </ion-col>
 
-    </ion-radio-group>
-  </ion-row>
-
+    </ion-row>
+  </ion-radio-group>
 </ion-grid>
