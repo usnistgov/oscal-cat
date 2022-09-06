@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CatSettingsStoreService, StorePersistedSettings } from 'src/app/providers/app-state/state-nav-cat/cat-settings-store.service';
+import { CookiePersistedSettings, CookiesHandlerService } from 'src/app/providers/app-state/state-nav-cat/state-cookies.service';
 @Component({
   selector: 'app-cat-settings',
   templateUrl: './cat-settings.page.html',
@@ -6,16 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CatSettingsPage implements OnInit {
 
-  staleTimeOut: number;
+  asyncEntries: Promise<Array<StorePersistedSettings>>;
+  entries: Array<StorePersistedSettings>;
 
-  constructor() {
-
+  constructor(private storageService: CatSettingsStoreService
+  ) {
+    this.entries = storageService.getSettings();
+    storageService.refreshSettings();
+    console.log(this.entries);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
-
-
-
-
 }

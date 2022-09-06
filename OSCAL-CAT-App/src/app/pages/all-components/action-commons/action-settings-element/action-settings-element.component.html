@@ -8,10 +8,27 @@
       </ion-item>
     </ion-col>
 
-    <ion-col>
+    <ion-col *ngIf="this.isString()">
       <ion-item>
-        <ion-input title="this.getToolTip()" [value]="this.value"></ion-input>
-        <ion-label>hours</ion-label>
+        <ion-input #valueStr type="text" title="this.getToolTip()" value=“{{getValue()}}”>
+        </ion-input>
+        <ion-label *ngIf="this.getUnitName()">{{this.getUnitName()}}</ion-label>
+      </ion-item>
+    </ion-col>
+
+    <ion-col *ngIf="this.isNumber()">
+      <ion-item>
+        <ion-input #valueNum type="number" title="this.getToolTip()" value="{{getValue()}}">
+        </ion-input>
+        <ion-label *ngIf="this.getUnitName()">{{this.getUnitName()}}</ion-label>
+      </ion-item>
+    </ion-col>
+
+    <ion-col *ngIf="this.isBoolean()">
+      <ion-item>
+        <ion-checkbox #valueBin title="this.getToolTip()" checked=“{{getValue()}}”>
+        </ion-checkbox>
+        <ion-label *ngIf="this.getUnitName()">{{ this.getUnitName() }}</ion-label>
       </ion-item>
     </ion-col>
 

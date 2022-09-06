@@ -36,7 +36,8 @@
     <ion-title>Application Settings</ion-title>
   </ion-header>
 
-  <oscal-settings-element title="Expiration of catalogs/profiles" toolTip="" buttonTitle="Save Expiration">
+  <!-- <oscal-settings-element *ngFor="let entry of this.asyncEntries | async; index as idx" [storeEntry]="entry"> -->
+  <oscal-settings-element *ngFor="let entry of this.entries; index as idx" [storeEntry]="entry">
   </oscal-settings-element>
 
 </ion-content>
