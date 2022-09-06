@@ -31,6 +31,7 @@ import { ModalController } from '@ionic/angular';
 import { TreeItemEntry } from './../../providers/app-state/app-tree/tree-elements';
 import { CatalogService, } from './../../providers/oscal-data/catalog.service';
 import { CatSelectCatAsyncPage } from '../cat-select-cat-async/cat-select-cat-async.page';
+import { CookiesHandlerService } from 'src/app/providers/app-state/state-nav-cat/state-cookies.service';
 
 
 @Component({

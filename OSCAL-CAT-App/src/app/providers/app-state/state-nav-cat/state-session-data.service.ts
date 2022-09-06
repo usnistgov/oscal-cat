@@ -52,6 +52,7 @@ export enum NamedSessionNodes {
     SAVED_INCLUDE = 'OSCAL-SAVED-INCLUDES',
     SAVED_MODS = 'OSCAL-SAVED-MODS',
     SAVED_GROUPS = 'OSCAL-SAVED_GROUPS',
+    OSCAL_CAT_SETTINGS = 'OSCAL-CAT-SETTINGS',
 }
 
 export class SessionEntry {

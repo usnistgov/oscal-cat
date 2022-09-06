@@ -95,7 +95,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   }
 
   readSavedWork() {
-    if (this.session.isKeyValue(NamedSessionNodes.SAVED_SESSIONS)) {
+    if (this.session.isKeyValuePresent(NamedSessionNodes.SAVED_SESSIONS)) {
       this.session.getKeyValueObject<Array<SessionData>>(NamedSessionNodes.SAVED_SESSIONS)
         .then( // Resolve Promise
           (value: Array<SessionData>) => {
