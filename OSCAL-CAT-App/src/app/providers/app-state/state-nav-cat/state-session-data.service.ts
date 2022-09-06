@@ -67,10 +67,10 @@ export class SessionEntry {
 }
 export class SessionData extends SessionEntry {
 
-    constructor(uuid: string, name: string) {
+    constructor(uuid: string, name: string, index: number) {
         super(uuid, name);
+        this.index = index;
     }
-
 
     public knownCat?: KnownOscalFileLocation;
     public catalog?: Catalog;
@@ -81,8 +81,7 @@ export class SessionData extends SessionEntry {
     public catTree?: TreeNodeType;
     public proTree?: TreeNodeType;
     public regroupTree?: TreeNodeType;
-
-
+    public index: number;
 }
 
 @Injectable({
@@ -196,10 +195,10 @@ export class CurrentSessionData extends KvServiceBase {
         return undefined;
     }
 
-    activateNewSession(name: string): string {
+    activateNewSession(name: string, index: number): string {
 
         const uuid = this.getNewSessionUUID();
-        const newSession = new SessionData(uuid, name);
+        const newSession = new SessionData(uuid, name, index);
         this.ActiveSession = newSession
         return this.session_id
     }

@@ -44,6 +44,7 @@ import { Catalog, Profile } from 'src/app/interfaces/oscal-types/oscal-catalog.t
 export class KnownOscalFilesService {
 
 
+
     private static schemaGitTag = 'v1.0.4';
     private static contentGitTag = 'v1.0.0';
 
@@ -370,7 +371,17 @@ export class KnownOscalFilesService {
         return isStale;
     }
 
+    static getIndexForCat(chosenOscalCat: KnownOscalFileLocation): number {
+        if (chosenOscalCat.cat_enum == KnownCatalogNames.NIST_800_53_Rev4) {
+            return 0;
+        }
+        if (chosenOscalCat.cat_enum == KnownCatalogNames.NIST_800_53_Rev5) {
+            return 0;
+        }
+    }
+
     getActive(): KnownOscalFileLocation {
+        console.log(`Chosen Index ${KnownOscalFilesService.activeItemIndex}`);
         return KnownOscalFilesService.knownCatFiles[KnownOscalFilesService.activeItemIndex];
     }
 

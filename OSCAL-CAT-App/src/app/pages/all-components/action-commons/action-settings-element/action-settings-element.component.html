@@ -1,0 +1,27 @@
+<ion-grid fixed>
+
+  <ion-row>
+
+    <ion-col>
+      <ion-item>
+        <ion-label>{{this.getTitle()}}</ion-label>
+      </ion-item>
+    </ion-col>
+
+    <ion-col>
+      <ion-item>
+        <ion-input title="this.getToolTip()" [value]="this.value"></ion-input>
+        <ion-label>hours</ion-label>
+      </ion-item>
+    </ion-col>
+
+    <ion-col>
+      <ion-item>
+        <ion-button (click)="onClick()" expand="block" fill="clear" shape="round">
+          {{this.getButtonTitle()}}</ion-button>
+      </ion-item>
+    </ion-col>
+
+  </ion-row>
+
+</ion-grid>
