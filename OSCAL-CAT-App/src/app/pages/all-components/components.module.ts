@@ -54,6 +54,7 @@ import { SelectBaselineComponent } from './action-commons/action-select-baseline
 import { CatParamsComponent } from './action-commons/action-cat-params/action-cat-params.component';
 import { CatControlsComponent } from './action-commons/action-cat-controls/action-cat-controls.component';
 import { OscalCatAuthorViewComponent } from './action-commons/action-oscal-cat-author-view/action-oscal-cat-author-view.component';
+import { ActionSettingsElementComponent } from './action-commons/action-settings-element/action-settings-element.component';
 
 
 
@@ -63,14 +64,14 @@ import { OscalCatAuthorViewComponent } from './action-commons/action-oscal-cat-a
     BackMatterComponent, ControlComponent, MetaInfoComponent, AuthoringModeComponent, ActionPartyInfoComponent,
     PropertiesArrayComponent, DocumentIDArrayComponent, ActionArrayRolesComponent, ArrayPhonesComponent,
     ArrayExternalIDsComponent, ActionMapRolesComponent, AuthorBeginComponent, SelectBaselineComponent,
-    CatParamsComponent, CatControlsComponent, OscalCatAuthorViewComponent,
+    CatParamsComponent, CatControlsComponent, OscalCatAuthorViewComponent, ActionSettingsElementComponent,
   ],
   exports: [SelectFamiliesComponent, NavCatComponent, ActionWaitComponent, ActionAncestorBaseComponent,
     ArrayAddressesComponent, ArrayStringsComponent, ArrayLinksComponent, LocationInfoComponent, LocationsArrayComponent,
     BackMatterComponent, ControlComponent, MetaInfoComponent, AuthoringModeComponent, ActionPartyInfoComponent,
     PropertiesArrayComponent, DocumentIDArrayComponent, ActionArrayRolesComponent, ArrayPhonesComponent,
     ArrayExternalIDsComponent, ActionMapRolesComponent, AuthorBeginComponent, SelectBaselineComponent,
-    CatParamsComponent, CatControlsComponent, OscalCatAuthorViewComponent,
+    CatParamsComponent, CatControlsComponent, OscalCatAuthorViewComponent, ActionSettingsElementComponent,
   ],
 
   imports: [IonicModule, ReactiveFormsModule, FormsModule, CommonModule,

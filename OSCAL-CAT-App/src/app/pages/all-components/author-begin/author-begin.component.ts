@@ -196,7 +196,8 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       const newSession: SessionData = {
         name: `Profile Draft Based on ${this.chosenOscalCat.cat_suffix}`,
         uuid: UUIDv4(),
-      };
+        index: KnownOscalFilesService.getIndexForCat(this.chosenOscalCat),
+      }
       console.log(newSession);
       if (addSessionToList) {
         if (!this.savedWork) {

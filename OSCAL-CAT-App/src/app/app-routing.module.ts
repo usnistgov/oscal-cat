@@ -98,6 +98,10 @@ const routes: Routes = [
     path: 'cat-begin',
     loadChildren: () => import('./pages/cat-begin/cat-begin.module').then(m => m.CatBeginPageModule)
   },
+  {
+    path: 'settings',
+    loadChildren: () => import('./pages/cat-settings/cat-settings.module').then(m => m.CatSettingsPageModule)
+  },
 ];
 
 @NgModule({

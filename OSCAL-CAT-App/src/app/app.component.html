@@ -32,7 +32,7 @@
         </ion-list>
 
         <ion-list lines="none">
-          <ion-list-header>Catalog File</ion-list-header>
+          <ion-list-header>Catalog Files</ion-list-header>
           <ion-menu-toggle autoHide="false" *ngFor="let page of appPartsPages; let i = index">
             <ion-item *ngIf="page.sequence===2" [routerLink]="page.url" routerLinkActive="selected"
               routerDirection="root" detail="false">
@@ -45,6 +45,17 @@
         </ion-list>
 
         <ion-list lines="none">
+          <ion-list-header>Configuration</ion-list-header>
+          <ion-menu-toggle autoHide="false" *ngFor="let page of appPartsPages; let i = index">
+            <ion-item *ngIf="page.sequence===3" [routerLink]="page.url" routerLinkActive="selected"
+              routerDirection="root" detail="false">
+              <ion-icon slot="start" [name]="page.icon"></ion-icon>
+              <ion-label>
+                {{page.title}}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
           <!--    
           <ion-list-header>
             Extras
