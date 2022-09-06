@@ -50,27 +50,27 @@ export class AppComponent implements OnInit {
       sequence: 1,
       title: 'Authoring Mode',
       url: '/cat-begin',
-      icon: 'color-wand' // options, pricetags, push, shuffle
+      icon: 'color-wand', // options, pricetags, push, shuffle
     }, {
       sequence: 1,
       title: 'Meta Info',
       url: '/cat-meta',
-      icon: 'finger-print'
+      icon: 'finger-print',
     }, {
       sequence: 1,
       title: 'All Controls',
       url: '/cat-select-async',
-      icon: 'list' // cafe
+      icon: 'list', // cafe
     }, {
       sequence: 1,
       title: 'Selected Controls',
       url: '/pro-edit',
-      icon: 'filter' // color-fill
+      icon: 'filter', // color-fill
     }, {
       sequence: 1,
       title: 'Regroup Controls',
       url: '/pro-group',
-      icon: 'list-circle' // funnel
+      icon: 'list-circle', // funnel
     },
     // {
     //   sequence: 1,
@@ -88,13 +88,20 @@ export class AppComponent implements OnInit {
       sequence: 2,
       title: 'Download File',
       url: '/save',
-      icon: 'cloud-download'
+      icon: 'cloud-download',
     },
     {
       sequence: 2,
       title: 'Upload File',
       url: '/load',
-      icon: 'cloud-upload'
+      icon: 'cloud-upload',
+    },
+
+    {
+      sequence: 3,
+      title: 'Settings',
+      url: '/settings',
+      icon: 'settings-outline',
     },
   ];
 
