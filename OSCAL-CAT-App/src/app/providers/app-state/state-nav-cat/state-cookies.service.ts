@@ -24,6 +24,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 import { DOCUMENT } from '@angular/common';
+import { Injectable, Type } from '@angular/core';
 
 export enum TimeUnit {
     Minutes = 0x01,
@@ -34,12 +35,82 @@ export enum TimeUnit {
     Years = 0x10,
 }
 
+export class CookiePersistedSettings {
+    title: string;
+    toolTip: string;
+    saveButtonTitle: string;
+    unitName?: string;
 
-export class CookiesHandler {
+    cookieName: string;
+    expirationDays?: number;
+    valueUnit?: string | undefined;
+    value?: string | number | boolean;
+    firstValue: string | number | boolean;
+}
 
-    constructor() { }
 
-    setToExpireIn(delta: number, unit?: TimeUnit): string {
+@Injectable({
+    providedIn: 'root'
+})
+export class CookiesHandlerService {
+
+    private static settingCookies: Array<CookiePersistedSettings> = [
+        {
+            cookieName: 'cat-expiration-hours',
+            expirationDays: 180,
+            firstValue: 8,
+            value: 8,
+
+            title: 'Offer to Update Catalogs, Profiles, and Schemas in:',
+            toolTip: '',
+            saveButtonTitle: 'Save Expiration Interval',
+            unitName: 'hours',
+        },
+        {
+            cookieName: 'cat-is-demo-flag',
+            expirationDays: 180,
+            firstValue: false,
+            value: true,
+
+            title: 'Extend Functionality in Meta for Demo:',
+            toolTip: 'Extends Demo Functionality to save Typing',
+            saveButtonTitle: 'Save Demo Flag',
+        },
+    ];
+
+
+    constructor() {
+        this.refreshCookies();
+    }
+
+    refreshCookies() {
+        CookiesHandlerService.settingCookies.forEach(
+            (info: CookiePersistedSettings) => {
+                const str_value = this.getCookieString(info.cookieName);
+                if (str_value != '') {
+                    console.log(`Found cookie ${info.cookieName} = [${str_value}]`);
+                    switch (typeof (info.firstValue)) {
+                        case ('number'):
+                            info.value = Number(str_value);
+                        case ('boolean'):
+                            info.value = Boolean(str_value);
+                        default:
+                            info.value = str_value;
+                    }
+                } else {
+                    console.log(`no cookie ${info.cookieName}`);
+                    info.value = info.firstValue;
+                    this.setCookieForDays(info.cookieName, info.value, info.expirationDays);
+                }
+            }
+        )
+    }
+
+    getSettings(): Array<CookiePersistedSettings> {
+        return CookiesHandlerService.settingCookies;
+    }
+
+    private setToExpireIn(delta: number, unit?: TimeUnit): string {
         const time2Expire = new Date();
         switch (unit) {
             case TimeUnit.Minutes:
@@ -64,22 +135,24 @@ export class CookiesHandler {
         return time2Expire.toUTCString();
     }
 
-    setCookieForDays(cookieName: string, cookieValue: string, cookieExpirationDays = 60) {
+    private setCookieForDays(cookieName: string, cookieValue: string | number | boolean, cookieExpirationDays = 180) {
         const expiration = (cookieExpirationDays > 0) ? this.setToExpireIn(cookieExpirationDays) : this.setToExpireIn(60);
         document.cookie = `${cookieName}=${cookieValue}; expires=${expiration}; path=/`;
     }
 
-    private setCookieForExpiration(cookieName: string, cookieValue: string, cookieExpiration: string = null) {
-        const expiration = cookieExpiration || this.setToExpireIn(60);
-        document.cookie = `${cookieName}=${cookieValue}; expires=${expiration}; path=/`;
+    private setCookieForExpiration(cookieName: string, cookieValue: string | number | boolean, cookieExpiration: string = null) {
+        const expiration = cookieExpiration || this.setToExpireIn(180);
+        const savedCookieValue = JSON.stringify(cookieValue);
+        document.cookie = `${cookieName}=${savedCookieValue}; expires=${expiration}; path=/`;
+
     }
 
-    deleteCookie(cookieName: string): void {
+    private deleteCookie(cookieName: string): void {
         const pastExpiration = this.setToExpireIn(-60);
         document.cookie = `${cookieName}=; expires=${pastExpiration}; path=/`;
     }
 
-    getCookie(cookieName: string): string {
+    private getCookieString(cookieName: string): string {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${cookieName}=`);
         if (parts.length === 2) {
@@ -87,6 +160,31 @@ export class CookiesHandler {
         } else {
             return '';
         }
+    }
+
+    getCookieValue(info: CookiePersistedSettings): string | number | boolean {
+        const str_value = this.getCookieString(info.cookieName);
+        if (str_value != '') {
+            switch (typeof (info.firstValue)) {
+                case ('number'):
+                    info.value = Number(str_value);
+                case ('boolean'):
+                    info.value = Boolean(str_value);
+                default:
+                    info.value = str_value;
+            }
+        }
+        return info.value
+    }
+
+    setCookieValue(info: CookiePersistedSettings) {
+        info.value = info.firstValue;
+        this.deleteCookie(info.cookieName);
+        this.setCookieForDays(info.cookieName, info.value, info.expirationDays);
+        console.log(this.getCookieValue(info));
+        this.refreshCookies()
+        console.log(`Setting ${info.cookieName}=${info.value}`);
+        console.log(CookiesHandlerService.settingCookies);
     }
 
 }

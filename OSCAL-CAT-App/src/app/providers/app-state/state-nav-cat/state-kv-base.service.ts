@@ -56,22 +56,30 @@ export class KvServiceBase {
 
     /**
      * @method @async setKeyValueObject
-     * @param {string} keyValue: the Key to persist
-     * @param {*} dataValue: the Value to persist
+     * @param {string} key: the Key to persist
+     * @param {*} value: the Value to persist
      * @returns {Promise<any>}
      * @memberof KvServiceBase
      */
-    async setKeyValueObject<T>(keyValue: string, dataValue: T): Promise<any> {
+    async setKeyValueObject<T>(key: string, value: T): Promise<any> {
         // Pack up the object from JSON to Stringified version
-        console.log(dataValue);
+        console.log(value);
         let strValue = '';
-        if (dataValue) {
-            strValue = JSON.stringify(dataValue);
-            console.log(`Saving Key:${keyValue}\nas Str:${strValue}`)
+        if (value) {
+            strValue = JSON.stringify(value);
+            console.log(`Saving Key:${key}\nas Str:${strValue}`)
         }
-        return await this.storage.set(keyValue, strValue);
+        return await this.storage.set(key, strValue);
     }
 
+    async setKeyValueString(key: string, value: string): Promise<string> {
+        let strValue = '';
+        if (value) {
+            strValue = JSON.stringify(value);
+            console.log(`Saving Key:${key}\nas Str:${value}`)
+        }
+        return await this.storage.set(key, strValue);
+    }
 
 
     async getKeyValueObject<T>(keyValue: string): Promise<T> {
@@ -87,10 +95,7 @@ export class KvServiceBase {
     }
 
 
-    async setKeyValueString(keyValue: string): Promise<string> {
-        const theValue = await this.storage.get(keyValue);
-        return theValue;
-    }
+
 
     async getKeyValue(keyValue: string): Promise<string> {
         const theValue = await this.storage.get(keyValue);
@@ -98,9 +103,9 @@ export class KvServiceBase {
     }
 
 
-    async isKeyValue(keyValue: string): Promise<boolean> {
+    async isKeyValuePresent(keyValue: string): Promise<boolean> {
         const value = await this.storage.get(keyValue);
-        console.log(`IS-the-Key:${keyValue}={Value:${value}}`);
+        // console.log(`IS-the-Key:${keyValue}={Value:${value}}`);
         return !!value;
     }
 

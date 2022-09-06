@@ -182,7 +182,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
 
   initMetaInfo() {
 
-    if (this.session.isKeyValue(NamedSessionNodes.ACTIVE_SESSION)) {
+    if (this.session.isKeyValuePresent(NamedSessionNodes.ACTIVE_SESSION)) {
       this.activeSession = this.session.ActiveSession;
       if (this.activeSession && this.activeSession.meta) {
         this.metaInfo = this.activeSession.meta;
