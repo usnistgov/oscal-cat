@@ -27,6 +27,7 @@ import { Injectable, OnInit } from '@angular/core';
 
 import { TreeItemEntry, TreeNodeType } from './../app-state/app-tree/tree-elements';
 import { Convert, Catalog, Control, ControlGroup, } from './../../interfaces/oscal-types/oscal-catalog.types';
+import { KnownOscalFilesService } from '../oscal-files/known-files.service';
 
 // import {Catalog} from './../../../assets/oscal-cats/NIST_SP-800-53_rev4_catalog.json'
 
@@ -77,7 +78,9 @@ export class CatalogService {
   }
 
 
-  constructor() {
+  constructor(
+    private knownFiles: KnownOscalFilesService,
+  ) {
     // Way 1 - Stopped working with variable, but works with literal
     // CAT: './../../assets/oscal-cats/NIST_SP-800-53_rev4_catalog.json'
     const start = new Date().getTime();
