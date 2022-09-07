@@ -32,6 +32,7 @@ import { TreeItemEntry } from './../../providers/app-state/app-tree/tree-element
 import { CatalogService, } from './../../providers/oscal-data/catalog.service';
 import { CatSelectCatAsyncPage } from '../cat-select-cat-async/cat-select-cat-async.page';
 import { CookiesHandlerService } from 'src/app/providers/app-state/state-nav-cat/state-cookies.service';
+import { KnownOscalFilesService } from 'src/app/providers/oscal-files/known-files.service';
 
 
 @Component({
@@ -48,9 +49,10 @@ export class CatSelectProfilePage extends CatSelectCatAsyncPage implements OnIni
   constructor(
     @Optional() @SkipSelf() theCatService: CatalogService,
     modalController: ModalController,
+    knownFiles: KnownOscalFilesService,
     router: Router,
   ) {
-    super(theCatService, modalController);
+    super(theCatService, knownFiles, modalController);
     this.cat = theCatService;
     this.router = router;
     // this.groups = this.cat.getTreeNodesStat();

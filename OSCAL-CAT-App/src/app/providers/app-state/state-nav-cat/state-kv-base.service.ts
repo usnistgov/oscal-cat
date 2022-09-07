@@ -23,7 +23,7 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
-import { HttpClient } from '@angular/common/http';
+// import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';

@@ -30,7 +30,7 @@ import { v4 as UUIDv4 } from 'uuid';
 import { KvServiceBase } from './state-kv-base.service';
 
 
-import { TreeNodeType } from './../app-tree/tree-elements';
+import { TreeItemEntry, TreeNodeType } from './../app-tree/tree-elements';
 
 import {
     Catalog,
@@ -79,9 +79,9 @@ export class SessionData extends SessionEntry {
 
     public meta?: PublicationMetadata;
 
-    public catTree?: TreeNodeType;
-    public proTree?: TreeNodeType;
-    public regroupTree?: TreeNodeType;
+    public catTree?: TreeItemEntry;
+    public proTree?: TreeItemEntry;
+    public regroupTree?: TreeItemEntry;
     public index: number;
 }
 

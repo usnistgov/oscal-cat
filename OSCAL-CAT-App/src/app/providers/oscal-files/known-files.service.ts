@@ -336,6 +336,7 @@ export class KnownOscalFilesService {
                 cat.needsRefresh = false;
             }
         }
+
         if (cat.cat_use_as == CatSampleIntendedUse.CatalogSample) {
             if (cat.needsRefresh && !!cat.content_cat && !cat.content_cat.loadedEntity) {
                 cat.content_cat.loadRemoteEntity();

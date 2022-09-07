@@ -59,7 +59,7 @@ export class SelectBaselineComponent implements OnInit {
     'Mark All Baselines',
     'Pre-Check Baseline ...',
     'Cut-Out Baseline ...',
-    'All Controls (Default)'];
+    'Default Cat'];
   constructor(knownFiles: KnownOscalFilesService) {
     this.knownFiles = knownFiles;
     this.knownCat = knownFiles.getActive();
