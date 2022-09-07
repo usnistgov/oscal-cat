@@ -44,9 +44,10 @@ export class SelectFamiliesComponent implements OnInit {
   checkItems: Array<{ key: string; value: string; checked: boolean; }> = [];
   familyLabel = '';
 
-  constructor() {
+  constructor(cat: CatalogService
+  ) {
     console.log('!!! Beginning Select !!!');
-    this.cat = new CatalogService();
+    // this.cat = new CatalogService();
     this.families = this.cat.getRawGroups();
 
     if (this.families) {

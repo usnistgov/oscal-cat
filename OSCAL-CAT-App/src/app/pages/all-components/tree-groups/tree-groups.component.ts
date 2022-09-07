@@ -42,11 +42,14 @@ export class TreeGroupsComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChildren(IonItem, { read: ElementRef }) private groups: QueryList<ElementRef>;
   @ViewChildren(IonItem, { read: ElementRef }) private items: QueryList<ElementRef>;
 
-  cat: CatalogService;
+  //cat: CatalogService;
   name = 'GroupTreeView';
 
-  constructor(private gestureCtrl: GestureController) {
-    this.cat = this.theCat;
+  constructor(
+    cat: CatalogService,
+    private gestureCtrl: GestureController
+  ) {
+    // this.cat = this.theCat;
     // this.groups = this.cat.getCatGroupsList();
     // console.log(`Groups = ${this.groupsInfo}`);
     // this.groups = this.cat.getTreeNodesStat();
