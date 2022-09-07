@@ -24,6 +24,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 import { Injectable } from '@angular/core';
+import { KnownOscalFilesService } from '../../oscal-files/known-files.service';
 
 export enum TreeNodeType {
     Catalog = 'CATALOG',
@@ -73,7 +74,7 @@ export class TreeItemEntry {
 
     constructor() {
         // this.included = false;
-
+        // this.knownFiles.getActive();
     }
 
     hasProfileColors(): boolean {
