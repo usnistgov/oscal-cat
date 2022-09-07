@@ -26,6 +26,7 @@
 import { Component, OnInit, Optional, SkipSelf } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
+import { KnownOscalFilesService } from 'src/app/providers/oscal-files/known-files.service';
 
 
 import { TreeItemEntry } from '../../providers/app-state/app-tree/tree-elements';
@@ -45,9 +46,13 @@ export class CatSelectProfileGroupsPage extends CatSelectCatAsyncPage implements
   mustGoBack = false;
 
   constructor(
-    @Optional() @SkipSelf() theCatService: CatalogService,
+    @Optional() @SkipSelf()
+    theCatService: CatalogService,
+    knownFiles: KnownOscalFilesService,
     modalController: ModalController) {
-    super(theCatService, modalController);
+
+    super(theCatService, knownFiles, modalController);
+
   }
 
   async ngOnInit() {
