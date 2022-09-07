@@ -48,6 +48,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   chosenOscalCat: KnownOscalFileLocation;
   newDraft: boolean;
   activeRadioCat: number;
+  activeIndex: number;
   //alertControl: AlertController;
   @ViewChild('catDetails') catDetails: OscalCatAuthorViewComponent;
 
@@ -57,6 +58,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     public alertControl: AlertController) {
 
     this.oscalFiles = knownFiles.getAllKnownFiles();
+    this.activeIndex = this.knownFiles.getActiveIndex();
   }
 
   ngOnInit() {

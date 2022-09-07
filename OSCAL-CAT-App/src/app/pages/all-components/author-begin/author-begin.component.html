@@ -16,7 +16,7 @@
 </div>
 <br />
 <div>
-    <ion-radio-group (ionChange)="handleRadioChange($event)">
+    <ion-radio-group (ionChange)="handleRadioChange($event)" [(ngModel)]="this.activeIndex">
         <div *ngIf="true">
             <!-- Start with a new document (from scratch) -->
             <ion-grid>
