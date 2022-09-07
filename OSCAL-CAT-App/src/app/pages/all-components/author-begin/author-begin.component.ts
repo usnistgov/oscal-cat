@@ -25,7 +25,7 @@
  */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { KnownOscalFilesService } from './../../../providers/oscal-files/known-files.service';
-import { KnownOscalFileLocation } from 'src/app/interfaces/known-locations';
+import { KnownCatalogNames, KnownOscalFileLocation } from 'src/app/interfaces/known-locations';
 import { AlertController, ModalController } from '@ionic/angular';
 import { v4 as UUIDv4 } from 'uuid';
 
@@ -195,25 +195,41 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     if (this.chosenOscalCat) {
       // Need to create a new persisted session
       console.log(`Cat-Activate - Chosen-Cat`);
+
       const newSession: SessionData = {
         name: `Profile Draft Based on ${this.chosenOscalCat.cat_suffix}`,
         uuid: UUIDv4(),
         index: KnownOscalFilesService.getIndexForCat(this.chosenOscalCat),
+        catType: this.chosenOscalCat.cat_enum,
+        knownCat: this.chosenOscalCat,
+        catalog: this.chosenOscalCat.content_cat.loadedEntity,
       }
+
       console.log(newSession);
+
       if (addSessionToList) {
         if (!this.savedWork) {
           console.log(`Creating savedWork Array`);
           this.savedWork = new Array<SessionData>();
         }
         this.savedWork.push(newSession);
+
         console.log(`savedWork Array has Length:${this.savedWork.length}`);
         console.log(`Saved work Array ${this.savedWork}`);
         console.log(this.savedWork);
         // TODO: Fix the below with better wrapper
         this.session.setKeyValueObject<Array<SessionData>>(NamedSessionNodes.SAVED_SESSIONS, this.savedWork)
+          .then(
+            x => {
+              this.session.ActiveSession = newSession;
+            }
+          ).catch(
+            e => { console.log(e); }
+          );
       }
-      this.session.ActiveSession = newSession;
+      // !!!==- This line can cause cascading circular reference -==!!!
+      // this.session.ActiveSession = newSession;
+      //
     } else if (!this.chosenOscalCat && this.chosenSession) {
       // Session was already persisted
       this.session.ActiveSession = this.chosenSession;

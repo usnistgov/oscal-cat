@@ -28,11 +28,13 @@ import { Router } from '@angular/router';
 
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
-import { FormBuilder, FormArray, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+// import { FormBuilder, FormArray, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
 import { TreeItemEntry } from './../../providers/app-state/app-tree/tree-elements';
 import { ActionWaitComponent } from './../all-components/action-commons/action-wait/action-wait.component';
 import { CatalogService } from './../../providers/oscal-data/catalog.service';
+import { KnownOscalFilesService } from 'src/app/providers/oscal-files/known-files.service';
+import { KnownCatalogNames, KnownOscalFileLocation } from 'src/app/interfaces/known-locations';
 @Component({
   selector: 'oscal-cat-select-cat-async',
   templateUrl: './cat-select-cat-async.page.html',
@@ -45,25 +47,50 @@ export class CatSelectCatAsyncPage implements OnInit {
   userCanLeave = false;
   viewTab = 0;
   loading: any;
+  activeCatInfo: KnownOscalFileLocation;
 
 
 
-  constructor(theCatService: CatalogService, public modalController: ModalController) {
+  constructor(
+    theCatService: CatalogService,
+    public knownFiles: KnownOscalFilesService,
+    public modalController: ModalController,
+  ) {
 
 
     this.cat = theCatService;
+    this.cat.InitData();
+    this.activeCatInfo = this.knownFiles.getActive();
     // this.groups = this.cat.getTreeNodesStat();
+  }
+
+  isActiveRev4(): boolean {
+    if (this.activeCatInfo && this.activeCatInfo.cat_enum) {
+      return this.activeCatInfo.cat_enum === KnownCatalogNames.NIST_800_53_Rev4
+    }
+    else {
+      return false;
+    }
+  }
+  isActiveRev5(): boolean {
+    if (this.activeCatInfo && this.activeCatInfo.cat_enum) {
+      return this.activeCatInfo.cat_enum === KnownCatalogNames.NIST_800_53_Rev5
+    }
+    else {
+      return true;
+    }
+
   }
 
   async ngOnInit() {
     await this.presentLoading();
-    this.loadTree().
+    this.loadTree(this.isActiveRev4()).
       then(() => {
         this.loading.dismiss();
       });
   }
 
-  async loadTree(useRev4 = true) {
+  async loadTree(useRev4) {
     this.cat.getCatalog(useRev4);
     if (!this.theTree$) {
       console.log('Reading Tree');

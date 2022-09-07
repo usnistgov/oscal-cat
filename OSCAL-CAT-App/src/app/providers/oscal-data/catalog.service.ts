@@ -28,6 +28,8 @@ import { Injectable, OnInit } from '@angular/core';
 import { TreeItemEntry, TreeNodeType } from './../app-state/app-tree/tree-elements';
 import { Convert, Catalog, Control, ControlGroup, } from './../../interfaces/oscal-types/oscal-catalog.types';
 import { KnownOscalFilesService } from '../oscal-files/known-files.service';
+// import { CurrentSessionData } from '../app-state/state-nav-cat/state-session-data.service';
+import { KnownCatalogNames } from 'src/app/interfaces/known-locations';
 
 // import {Catalog} from './../../../assets/oscal-cats/NIST_SP-800-53_rev4_catalog.json'
 
@@ -55,52 +57,65 @@ export class CatalogService {
   jsonCat5: Catalog;
   wasHere: boolean;
   asyncCount = 0;
-  isRev4 = true;
+  isRev4 = false;
   // private handler: HttpHandler = new HttpXhrBackend();
   // private http = new HttpClient(this.handler);private http: HttpClient
 
-  // Blows up intermittently
-  fetchJsonCat(jsonFile: string): Catalog {
-    let newCat: Catalog;
-    fetch(jsonFile).then(
-      res => res.json()
-    ).then(jsonData => {
-      newCat = jsonData;
-    });
-    return newCat;
+
+  // // Blows up intermittently
+  // fetchJsonCat(jsonFile: string): Catalog {
+  //   let newCat: Catalog;
+  //   fetch(jsonFile).then(
+  //     res => res.json()
+  //   ).then(jsonData => {
+  //     newCat = jsonData;
+  //   });
+  //   return newCat;
+  // }
+
+  // // BLows up occasionally with a circular reference
+  // requireJsonCat(jsonFile: string): Catalog {
+  //   const newCat: Catalog = require(jsonFile);
+
+  //   return newCat;
+  // }
+
+
+  refreshRemoteFiles() {
+    let catIndex = this.knownFiles.getActiveIndex();
+    console.log(catIndex);
+    if (this.knownFiles.getActive().cat_enum == KnownCatalogNames.NIST_800_53_Rev4) {
+      catIndex = 0;
+      this.isRev4 = true;
+    } else if (this.knownFiles.getActive().cat_enum == KnownCatalogNames.NIST_800_53_Rev5) {
+      catIndex = 1;
+      this.isRev4 = false;
+    }
+    if (catIndex >= 0) {
+      this.knownFiles.getAllKnownFiles()[catIndex].needsRefresh = true;
+      this.knownFiles.refreshCat(this.knownFiles.getAllKnownFiles()[catIndex]);
+      if (catIndex == 0) {
+        this.jsonCat4 = this.knownFiles.getAllKnownFiles()[0].content_cat.loadedEntity
+        console.log(this.jsonCat4);
+      } else if (catIndex == 1) {
+        this.jsonCat5 = this.knownFiles.getAllKnownFiles()[1].content_cat.loadedEntity
+        console.log(this.jsonCat5);
+      }
+      console.log(`Refreshed Successfully`);
+    } else {
+      console.log(`Active Index and Entity not found`);
+    }
+
   }
-
-  // BLows up occasionally with a circular reference
-  requireJsonCat(jsonFile: string): Catalog {
-    const newCat: Catalog = require(jsonFile);
-
-    return newCat;
-  }
-
 
   constructor(
     private knownFiles: KnownOscalFilesService,
+    // private sessions: CurrentSessionData,
   ) {
     // Way 1 - Stopped working with variable, but works with literal
-    // CAT: './../../assets/oscal-cats/NIST_SP-800-53_rev4_catalog.json'
-    const start = new Date().getTime();
-    // this.catExample = require('./../../../assets/oscal-cats/NIST_SP-800-53_rev4_catalog.json');
-    // this.catExample = require('./../../../assets/oscal-cats/NIST_SP-800-53_rev4_catalog.json');
-    this.jsonCat4 = require('./../../../assets/oscal-cats/NIST_SP-800-53_rev4_catalog.json');
-    this.jsonCat5 = require('./../../../assets/oscal-cats/NIST_SP-800-53_rev5-FINAL_catalog.json');
 
-    const end = new Date().getTime();
-    console.log(`Start:${start}\t end:${end}\ttime:${end - start}`);
-
-    // LOW-RES: './../../assets/oscal-profiles/baselines-800-53-rev4/NIST_SP-800-53_rev4_LOW-baseline-resolved-profile_catalog.json'
-    // this.catExample = require('./../../assets/oscal-profiles/baselines-800-53-rev4
-    // /NIST_SP-800-53_rev4_LOW-baseline-resolved-profile_catalog.json');
-
-    // console.log(`Cat-File Object = ${Object.keys(this.root)}`);
-    const x = this.workCatLocal;
-    this.groupsInit = this.getRawGroups();
-    // this.root = require(x);
-
+    this.InitData();
+    // this.isRev4 = this.sessions.ActiveSession.catType === KnownCatalogNames.NIST_800_53_Rev4;
     /*
     this.http.get(this.workCatRemote).subscribe(data => {
       this.jsonCatalog = data;
@@ -119,11 +134,33 @@ export class CatalogService {
     // console.log(this.catalog);
     // console.log(this.jsonCatalog);
 
-    this.allGroups = this.allGroups || new Array<TreeItemEntry>();
-    this.allControls = this.allControls || new Array<TreeItemEntry>();
   }
 
-  OnInit() {
+  InitData() {
+    const start = new Date().getTime();
+    // this.catExample = require('./../../../assets/oscal-cats/NIST_SP-800-53_rev4_catalog.json');
+    // this.catExample = require('./../../../assets/oscal-cats/NIST_SP-800-53_rev4_catalog.json');
+
+    // backup-way for demo
+    this.jsonCat4 = require('./../../../assets/oscal-cats/NIST_SP-800-53_rev4_catalog.json'); // <--== Old Way
+    this.jsonCat5 = require('./../../../assets/oscal-cats/NIST_SP-800-53_rev5-FINAL_catalog.json'); // <--== Old Way
+
+    // this.refreshRemoteFiles();
+    // this.jsonCat4 = this.knownFiles.getAllKnownFiles()[0].content_cat.loadedEntity;
+    console.log(this.jsonCat4);
+    // this.jsonCat5 = this.knownFiles.getAllKnownFiles()[1].content_cat.loadedEntity;
+    console.log(this.jsonCat5);
+
+    const end = new Date().getTime();
+    console.log(`Start:${start}\t end:${end}\ttime:${end - start}`);
+
+    // LOW-RES: './../../assets/oscal-profiles/baselines-800-53-rev4/NIST_SP-800-53_rev4_LOW-baseline-resolved-profile_catalog.json'
+
+    const x = this.workCatLocal;
+    this.groupsInit = this.getRawGroups();
+
+    this.allGroups = this.allGroups || new Array<TreeItemEntry>();
+    this.allControls = this.allControls || new Array<TreeItemEntry>();
   }
 
   getCatalog(useRev4 = true) {
@@ -253,11 +290,11 @@ export class CatalogService {
 
   getMetaData() { if (this.catExample) { return this.catExample.catalog.metadata; } }
 
-  createMasterCatNode(): TreeItemEntry {
+  createTopCatNode(isRev4: boolean): TreeItemEntry {
     const retNode = new TreeItemEntry();
     retNode.parent = null;
-    retNode.key = '800-53 Rev4 Catalog';
-    retNode.label = '800-53 Rev4 Catalog';
+    retNode.key = isRev4 ? '800-53 Rev4 Catalog' : '800-53 Rev5 Catalog';
+    retNode.label = isRev4 ? '800-53 Rev4 Catalog' : '800-53 Rev5 Catalog';
     retNode.included = false;
     retNode.open = false;
     retNode.nodeType = TreeNodeType.Catalog;
@@ -330,7 +367,7 @@ export class CatalogService {
       console.log(`Tree Group Reuse!!! `);
       return this.treeCats;
     } else {
-      const returnGroups4Tree: TreeItemEntry = this.createMasterCatNode();
+      const returnGroups4Tree: TreeItemEntry = this.createTopCatNode(this.isRev4);
       console.log(`Return Groups: a G.I. = ${groupsInfo}`);
       if (groupsInfo) { // The case of 800-53
         groupsInfo.forEach((catGroup, catGroupId) => {
@@ -377,7 +414,7 @@ export class CatalogService {
       console.log(`Tree Group Reuse!!! `);
       return this.treeCats;
     } else {
-      const returnGroups4Tree: TreeItemEntry = this.createMasterCatNode();
+      const returnGroups4Tree: TreeItemEntry = this.createTopCatNode(this.isRev4);
       console.log(`Return Groups: a G.I. = ${groupsInfo}`);
       if (groupsInfo) { // The case of 800-53
         groupsInfo.controls.forEach((catGroup: ControlGroup, catGroupId) => {
