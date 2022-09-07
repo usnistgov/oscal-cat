@@ -20,4 +20,8 @@ export class CatSettingsPage implements OnInit {
 
   ngOnInit(): void {
   }
+
+  onClearStorage() {
+    this.storageService.resetStorageCompletely();
+  }
 }

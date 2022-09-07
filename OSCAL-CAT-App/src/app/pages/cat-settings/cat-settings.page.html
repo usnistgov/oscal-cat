@@ -35,9 +35,32 @@
   <ion-header>
     <ion-title>Application Settings</ion-title>
   </ion-header>
+  <ion-grid>
 
-  <!-- <oscal-settings-element *ngFor="let entry of this.asyncEntries | async; index as idx" [storeEntry]="entry"> -->
-  <oscal-settings-element *ngFor="let entry of this.entries; index as idx" [storeEntry]="entry">
-  </oscal-settings-element>
+    <!-- <oscal-settings-element *ngFor="let entry of this.asyncEntries | async; index as idx" [storeEntry]="entry"> -->
+    <oscal-settings-element *ngFor="let entry of this.entries; index as idx" [storeEntry]="entry">
+    </oscal-settings-element>
+
+    <ion-row>
+      <hr />
+    </ion-row>
+
+
+    <ion-row>
+      <ion-col size="8">
+        <ion-item>
+          <ion-label color="danger">Clear OSCAL-CAT storage (!!!This will wipe out all settings and previously
+            persisted work!!!)</ion-label>
+        </ion-item>
+
+      </ion-col>
+      <ion-col>
+        <ion-button color="danger" (click)="onClearStorage()">
+          Clear State Store
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
 
 </ion-content>
