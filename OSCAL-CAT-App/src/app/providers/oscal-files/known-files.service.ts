@@ -385,6 +385,10 @@ export class KnownOscalFilesService {
         return KnownOscalFilesService.knownCatFiles[KnownOscalFilesService.activeItemIndex];
     }
 
+    getActiveIndex(): number {
+        return KnownOscalFilesService.activeItemIndex;
+    }
+
     setActive(newIndex: number): void {
         KnownOscalFilesService.activeItemIndex = newIndex;
     }

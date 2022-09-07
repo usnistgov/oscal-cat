@@ -92,7 +92,8 @@ export class ActionSettingsElementComponent implements OnInit {
     if (this.isBoolean()) {
       console.log(this.valueBinFalse);
       console.log(this.valueBinTrue);
-      this.storeEntry.value = this.valueBinTrue.value;
+      this.storeEntry.value = this.strBinValue === 'true';
+      this.value = this.strBinValue === 'true';
       //this.value = this.valueBin.checked;
       this.storeService.setStorageValue(this.storeEntry);
     }
@@ -111,6 +112,8 @@ export class ActionSettingsElementComponent implements OnInit {
     console.log(this.storeEntry.value);
     console.log(this.value);
   }
+
+
 
   isBoolean(): boolean {
     return 'boolean' == typeof (this.storeEntry.firstValue);

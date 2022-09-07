@@ -59,8 +59,7 @@ export class CatSettingsStoreService extends KvServiceBase {
   private static storedSettings: Array<StorePersistedSettings> = [
     {
       storedName: 'cat-expiration-hours',
-      expirationDays: 180,
-      firstValue: 12,
+      firstValue: 8,
       value: 8,
 
       title: 'Offer to Update Catalogs, Profiles, and Schemas in:',
@@ -70,9 +69,8 @@ export class CatSettingsStoreService extends KvServiceBase {
     },
     {
       storedName: 'cat-is-demo-flag',
-      expirationDays: 180,
       firstValue: false,
-      value: true,
+      value: false,
 
       title: 'Extend Functionality in Meta for Demo:',
       toolTip: 'Extends Demo Functionality to save Typing',
