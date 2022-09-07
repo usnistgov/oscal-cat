@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { IonCheckbox, IonInput } from '@ionic/angular';
+import { IonCheckbox, IonInput, IonRadio } from '@ionic/angular';
 import { CatSettingsStoreService, StorePersistedSettings } from 'src/app/providers/app-state/state-nav-cat/cat-settings-store.service';
 
 @Component({
@@ -12,6 +12,7 @@ export class ActionSettingsElementComponent implements OnInit {
   @Input() storeEntry: StorePersistedSettings;
   fallBack: StorePersistedSettings;
   value: string | number | boolean;
+  strBinValue: string
   // @Input() title: string;
   // @Input() buttonTitle: string;
   // @Input() toolTip?: string;
@@ -23,6 +24,8 @@ export class ActionSettingsElementComponent implements OnInit {
   @ViewChild("valueStr") valueStr: IonInput;
   @ViewChild("valueNum") valueNum: IonInput;
   @ViewChild("valueBin") valueBin: IonCheckbox;
+  @ViewChild("valueBinTrue") valueBinTrue: IonRadio;
+  @ViewChild("valueBinFalse") valueBinFalse: IonRadio;
 
 
   constructor(public storeService: CatSettingsStoreService) {
@@ -33,6 +36,12 @@ export class ActionSettingsElementComponent implements OnInit {
     // Load the value from cookies
     this.value = this.storeEntry.value;
     console.log(this.storeEntry.value);
+    console.log(this.storeEntry);
+    if (this.isBoolean()) {
+      console.log(this.storeEntry.value);
+      this.strBinValue = this.storeEntry.value.toString();
+      console.log(this.strBinValue);
+    }
   }
 
   getUnitName(): string {
@@ -52,10 +61,25 @@ export class ActionSettingsElementComponent implements OnInit {
   }
 
   getValue() {
-    const item = this.storeService.getItemByName(this.storeEntry.storedName);
-    this.value = item ? item.value : '';
+    // const item = this.storeService.getItemByName(this.storeEntry.storedName);
+    const item = this.storeEntry;
+    this.value = this.storeEntry ? item.value : '';
+    // Chrome true/false != checked/unchecked. :(
+    // console.log(this.value);
+    // console.log(typeof (this.storeEntry.firstValue));
+    // if (this.isBoolean()) {
+    //   console.log(this.value);
+    //   return this.value ? 'checked' : undefined;
+    // }
     return this.value;
   }
+
+  radioGroupChange($event) {
+    console.log($event);
+    this.value = ($event.detail.value === 'true');
+    this.storeEntry.value = ($event.detail.value === 'true');
+  }
+
 
   onClick() {
     // Save the value into cookies
@@ -63,10 +87,13 @@ export class ActionSettingsElementComponent implements OnInit {
     console.log(this.valueNum);
     console.log(this.valueStr);
     console.log(this.value);
+    console.log(this.storeEntry.value);
 
     if (this.isBoolean()) {
-      this.storeEntry.value = Boolean(this.valueBin.checked);
-      this.value = Boolean(this.valueBin.checked);
+      console.log(this.valueBinFalse);
+      console.log(this.valueBinTrue);
+      this.storeEntry.value = this.valueBinTrue.value;
+      //this.value = this.valueBin.checked;
       this.storeService.setStorageValue(this.storeEntry);
     }
 

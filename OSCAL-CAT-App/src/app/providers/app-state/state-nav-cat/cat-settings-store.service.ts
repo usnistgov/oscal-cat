@@ -88,7 +88,7 @@ export class CatSettingsStoreService extends KvServiceBase {
     super(theStorage, platform);
     this.init().then(
       () => {
-        // this.storage.clear().then(x => { return; });
+        //
         this.refreshSettings();
       }
     );
@@ -102,6 +102,10 @@ export class CatSettingsStoreService extends KvServiceBase {
 
   getSettings(): Array<StorePersistedSettings> {
     return CatSettingsStoreService.storedSettings;
+  }
+
+  resetStorageCompletely() {
+    this.storage.clear().then(x => { return; });
   }
 
   refreshSettings() {
@@ -131,7 +135,7 @@ export class CatSettingsStoreService extends KvServiceBase {
                     case ('number'):
                       CatSettingsStoreService.storedSettings[itemIndex].value = Number(str_value);
                     case ('boolean'):
-                      CatSettingsStoreService.storedSettings[itemIndex].value = Boolean(str_value);
+                      CatSettingsStoreService.storedSettings[itemIndex].value = Boolean(str_value === 'true');
                     default:
                       CatSettingsStoreService.storedSettings[itemIndex].value = str_value;
                   }
