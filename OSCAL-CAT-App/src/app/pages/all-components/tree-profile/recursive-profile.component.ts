@@ -26,6 +26,7 @@
 import { Component, Input, OnChanges, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { RouterModule, Router, NavigationExtras, } from '@angular/router';
 import { AlertController, } from '@ionic/angular';
+import { Control } from 'src/app/interfaces/oscal-types/oscal-catalog.types';
 
 import { TreeItemEntry, TreeNodeType } from './../../../providers/app-state/app-tree/tree-elements';
 
@@ -40,6 +41,7 @@ export class RecursiveProfileComponent {
     @Input() children: Array<TreeItemEntry>;
     @Input() parent: TreeItemEntry;
 
+    showItemExtra: boolean
 
     self = this;
     private alertControl = new AlertController();
@@ -147,4 +149,17 @@ export class RecursiveProfileComponent {
         });
         await alert.present();
     }
+
+
+
+
+    editParameters(item: any) {
+        this.showItemExtra = !this.showItemExtra;
+
+    }
+
+    editControls(control: Control) {
+        this.showItemExtra = !this.showItemExtra;
+    }
+
 }

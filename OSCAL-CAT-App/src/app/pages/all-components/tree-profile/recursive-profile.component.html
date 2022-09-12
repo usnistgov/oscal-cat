@@ -2,6 +2,7 @@
 
     <ion-item *ngIf="item.hasSomeIncluded()" class="node_style" class="node_style"
         title="{{item.toolTip || item.getNodeToolTip(item)}}">
+
         <!--   *ngIf="showInProfile(item)" *ngIf="profileMode === 0 || item.included"-->
         <!-- ion-button *ngIf="item.children" ></ion-button style="height:50px;margin:1px; padding: 0px; width: 60em; border: 1px solid #ccc;"-->
         <ion-item (click)="closeOpen(item)" class="ion-no-padding">
@@ -11,10 +12,12 @@
             </ion-icon>
         </ion-item>
         &nbsp;
+
         <ion-label>{{ item.label }}</ion-label>
 
         <ion-item>
             <ion-item>
+
                 <ion-badge *ngIf="item.children && item.partsCount>0 && item.isCatalog() " color="medium">
                     {{item.partsCount}} Groups
                 </ion-badge>
@@ -24,11 +27,14 @@
                 <ion-badge *ngIf="item.partsCount>0 && item.isControl()" color="primary">{{item.partsCount}} Params
                 </ion-badge>
             </ion-item>
+            <ion-button *ngIf="item.partsCount>0 && item.isControl()" (click)="editParameters(item)">Edit Parameters
+                <ion-icon slot="end" icon="chatbox-outline"></ion-icon>
+            </ion-button>
+            <ion-button (click)="presentPrompt(item)">Edit Control
+                <ion-icon slot="end" icon="chatbox-outline"></ion-icon>
+            </ion-button>
         </ion-item>
 
-        <ion-button (click)="presentPrompt(item)">Modify
-            <ion-icon slot="end" icon="chatbox-outline"></ion-icon>
-        </ion-button>
         <!-- a class="nav-link active" routerLink="['/', 'cat-control', id1,id2]" routerLinkActive="active"
                 routerLinkActiveOptions="{exact: true}"></a -->
         <!--             
@@ -42,7 +48,21 @@
 
     </ion-item>
 
+    <div *ngIf="this.showItemExtra">
+        <div>1. OUT-SIDE-ITEM-{{ item.label }}</div>
+        <div>2. OUT-SIDE-ITEM-{{ item.label }}</div>
+        <div>3. OUT-SIDE-ITEM-{{ item.label }}</div>
+        <div>4. OUT-SIDE-ITEM-{{ item.label }}</div>
+        <div>5. OUT-SIDE-ITEM-{{ item.label }}</div>
+        <div>6. OUT-SIDE-ITEM-{{ item.label }}</div>
+        <oscal-cat-params></oscal-cat-params>
+    </div>
+
     <ul recursive-tree-profile *ngIf="item.hasSomeIncluded()" xxx=" && item.children" [children]="item.children"
         [parent]="item.parent" [class.hidden]="!item.open" [level]="level != undefined ? level + 1 : 0">
     </ul>
+
+    <oscal-cat-controls controls="this.cat">
+    </oscal-cat-controls>
+
 </li>

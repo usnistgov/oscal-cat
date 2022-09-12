@@ -156,7 +156,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     // this.db = new AppDbInProgressService(new Platform(), new SQLite(), new HttpClient(new HttpHandler()), new SQLitePorter());
 
     // console.log(`x-x-x: EL = ${db.entitiesList}`);
-    console.log(`Before Async`);
+    // console.log(`Before Async`);
     // const x = { first: 1, second: 'second' };
     // AppDbKvInProgressService.getKeyValue('v-x').resolve().then(
     //   (value) => {
