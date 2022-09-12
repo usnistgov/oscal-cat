@@ -268,6 +268,7 @@ export class OscalRemoteFile<ResultType> extends OsFileOperations /* extends KvS
         public urlFile?: string,
         public localFile?: string,
         public schema?: any,
+
     ) {
         super(httpClient, storage, platform);
         this.entitySchema = schema;

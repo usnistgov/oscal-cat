@@ -29,6 +29,9 @@ import { Component, Input, SimpleChanges, OnChanges, OnInit } from '@angular/cor
 
 import { CatalogService, } from './../../../providers/oscal-data/catalog.service';
 import { TreeItemEntry } from './../../../providers/app-state/app-tree/tree-elements';
+import { Control } from 'src/app/interfaces/oscal-types/oscal-catalog.types';
+import { CatParamsComponent } from '../action-commons/action-cat-params/action-cat-params.component';
+import { CatControlsComponent } from '../action-commons/action-cat-controls/action-cat-controls.component';
 
 @Component({
   selector: 'oscal-tree-profile',
@@ -38,6 +41,9 @@ import { TreeItemEntry } from './../../../providers/app-state/app-tree/tree-elem
 export class TreeProfileComponent implements OnInit, OnChanges {
   @Input() treeNodes: Array<TreeItemEntry>;
   @Input() theCat: CatalogService;
+
+  controls: CatControlsComponent;
+  params: CatParamsComponent;
 
   cat: CatalogService;
   name = 'ProfileTreeView';
