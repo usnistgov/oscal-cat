@@ -25,7 +25,7 @@
  */
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { MenuController, Platform, ToastController } from '@ionic/angular';
+import { AlertController, MenuController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 
 
@@ -44,6 +44,8 @@ const theme_dark = 'dark';
 })
 export class AppComponent implements OnInit {
 
+  userWarningAcceptedName = 'Application-Warning-Accepted';
+  userAcceptanceYes = 'Warning Accepted';
   dark = true;
   appPartsPages = [
     {
@@ -66,12 +68,13 @@ export class AppComponent implements OnInit {
       title: 'Selected Controls',
       url: '/pro-edit',
       icon: 'filter', // color-fill
-    }, {
-      sequence: 1,
-      title: 'Regroup Controls',
-      url: '/pro-group',
-      icon: 'list-circle', // funnel
     },
+    // {
+    //   sequence: 1,
+    //   title: 'Regroup Controls',
+    //   url: '/pro-group',
+    //   icon: 'list-circle', // funnel
+    // },
     // {
     //   sequence: 1,
     //   title: 'Back Matter',
@@ -108,6 +111,7 @@ export class AppComponent implements OnInit {
 
 
   constructor(
+    public alertControl: AlertController,
     private menu: MenuController,
     private platform: Platform,
     private router: Router,
@@ -152,9 +156,60 @@ export class AppComponent implements OnInit {
     this.platform.ready().then(() => {
       // this.statusBar.styleDefault();
       // this.splashScreen.hide();
+      if (this.storage) {
+        this.storage.create();
+        this.storage.get(this.userWarningAcceptedName)
+          .then(
+            (data) => {
+              console.log(data);
+              if (data != this.userAcceptanceYes) {
+                this.presentPersistanceWarning()
+              }
+            }
+          );
+      }
     });
   }
 
+
+  /**
+  * Function generates the Alert pop-up
+  */
+  async presentPersistanceWarning() {
+    // const name = (item.fullName) ? item.fullName : item.name;
+    // const uuid = item.uuid;
+    const summaryHtml: string =
+      `<h1>OSCAL-CAT Is a Serverless Application!</h1>`
+      + `<div> <h3>Your work is saved only in your browser!`
+      + ` If you want to persist your work between work sessions - please, save your work locally.<h3></div>`
+      + `<h4> Warning! </h4>`
+      + `<h5>If you clean your browser cache or history, your work will be deleted`
+      + ` - that's the constraint of serverless web applications</h5>`;
+    const alert = await this.alertControl.create({
+      header: `!!! Application Persistance Warning !!!`,
+      //subHeader: `Are You Sure?`,
+      message: summaryHtml,
+      cssClass: 'delete-alert-global-class',
+      buttons: [
+        {
+          text: 'Accept Limitations',
+          handler: () => {
+            this.storage.set(this.userWarningAcceptedName, this.userAcceptanceYes);
+            return true;
+          }
+        },
+        {
+          text: 'Cancel (Remind Again)',
+          role: 'cancel',
+          handler: data => {
+            this.storage.set(this.userWarningAcceptedName, 'Nope! Remind Again!');
+            return false;
+          }
+        },
+      ]
+    });
+    await alert.present();
+  }
 
   openTutorial() {
     this.menu.enable(false);
