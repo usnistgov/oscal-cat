@@ -55,7 +55,7 @@ export enum NamedSessionNodes {
     OSCAL_CAT_SETTINGS = 'OSCAL-CAT-SETTINGS',
 }
 
-export class SessionEntry {
+export class SessionBrief {
     public uuid: string;
     public name: string;
     public fullName?: string;
@@ -66,7 +66,7 @@ export class SessionEntry {
         this.name = name;
     }
 }
-export class SessionData extends SessionEntry {
+export class SessionData extends SessionBrief {
 
     constructor(uuid: string, name: string, index: number) {
         super(uuid, name);
@@ -90,11 +90,11 @@ export class SessionData extends SessionEntry {
 })
 export class CurrentSessionData extends KvServiceBase {
 
-    private static currentActiveEntry: SessionEntry;    // The shallow init object to pull out session uuids
+    private static currentActiveEntry: SessionBrief;    // The shallow init object to pull out session uuids
     private static currentActiveSession: SessionData;   // The deeper version of the session with actual objects in it 
     private static currentSessionUUID: string;
 
-    static sessionEntries: Array<SessionEntry>;
+    static sessionEntries: Array<SessionBrief>;
 
     session_id: string;
     savedSessions: string[] = [];
