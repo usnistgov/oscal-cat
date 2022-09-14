@@ -107,7 +107,6 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
             } else {
               this.savedWork = Array<SessionData>();
             }
-
             /*        // Helps to save time when debugging session initialization   
                       else {
                         this.savedWork = undefined;
