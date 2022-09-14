@@ -35,6 +35,7 @@ import {
     CatSampleFileLocation, CatSampleIntendedUse, KnownCatalogNames
 } from './../../interfaces/known-locations';
 import { Catalog, Profile } from 'src/app/interfaces/oscal-types/oscal-catalog.types';
+import { CatSettingsStoreService } from '../app-state/state-nav-cat/cat-settings-store.service';
 
 
 
@@ -251,7 +252,12 @@ export class KnownOscalFilesService {
         */
     ];
 
-    constructor(httpClient: HttpClient, storage: Storage, platform: Platform,) {
+    constructor(
+        private httpClient: HttpClient,
+        private storage: Storage,
+        private platform: Platform,
+        private settings: CatSettingsStoreService
+    ) {
         console.log(`Loading Schemas`);
         this.loadSchemas(httpClient, storage, platform);
 
@@ -354,8 +360,12 @@ export class KnownOscalFilesService {
      * @memberof KnownOscalFilesService
      */
     isCatInfoStale(catInfo: KnownOscalFileLocation): boolean {
-        const deltaX = 15.000 / 3600.0;
+
+        // const deltaX = 15.000 / 3600.0; // This is 15 seconds time-out
+        const catExpiresInHours = this.settings.getItemByName('cat-expiration-hours');
+        const deltaX = catExpiresInHours.value as number;
         let isStale = !!catInfo && !!catInfo.content_cat && catInfo.content_cat.isStale(deltaX);
+
         if (catInfo && catInfo.cat_baselines && catInfo.cat_baselines.length > 0) {
             catInfo.cat_baselines.forEach(
                 baseline => {

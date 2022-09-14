@@ -114,18 +114,19 @@ export class CatSettingsStoreService extends KvServiceBase {
     } else {
       console.log('DATA EXISTS!!! Refreshing !!!');
 
-      const storeValues = this.readAllSettings() // Async data pull from Storage as Promise
+      const storedAppSettings = this.readAllSettings() // Async data pull from Storage as Promise
 
-      storeValues.then(
+      // Resolve the Promise for settings
+      storedAppSettings.then(
         (data: Array<StorePersistedSettings>) => {
           // console.log(`DATA::`);
           // console.log(data);
           if (data && data.length > 0) {
-            data.forEach(
 
-              (info: StorePersistedSettings) => {
-                const itemIndex = this.getIndexByName(info.storedName);
-                const str_value = info.value;
+            data.forEach(
+              (storedInfoEntry: StorePersistedSettings) => {
+                const itemIndex = this.getIndexByName(storedInfoEntry.storedName);
+                const str_value = storedInfoEntry.value;
 
                 if (itemIndex >= 0 && str_value && str_value != '') {
                   // console.log(`Found Stored Value ${info.storedName} = [${str_value}]`);
@@ -138,7 +139,7 @@ export class CatSettingsStoreService extends KvServiceBase {
                       CatSettingsStoreService.storedSettings[itemIndex].value = str_value;
                   }
                 } else {
-                  const itemIndex = this.getIndexByName(info.storedName);
+                  const itemIndex = this.getIndexByName(storedInfoEntry.storedName);
                   // console.log(`[${info.storedName}]-Not Found`);
                   // console.log(itemIndex);
                   if (itemIndex > 0) {
