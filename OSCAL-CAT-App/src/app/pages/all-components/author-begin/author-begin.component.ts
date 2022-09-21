@@ -631,6 +631,10 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
     return !!fileInfo.cat_baselines && fileInfo.cat_baselines.length > 0;
   }
 
+  getDraftsTitle(): string {
+    return `Continue with the Previously Saved Work`;
+  }
+
 }
 
 

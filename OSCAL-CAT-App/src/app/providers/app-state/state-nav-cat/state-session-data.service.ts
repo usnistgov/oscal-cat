@@ -90,6 +90,7 @@ export class SessionBrief {
     static getSessionKeyName(uuid: string): string {
         return `${uuid}:${NamedSessionNodes.SESSION_DATA}`;
     }
+
 }
 export class SessionData extends SessionBrief {
 
