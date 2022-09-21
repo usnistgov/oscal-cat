@@ -41,18 +41,20 @@ import { KnownCatalogNames, KnownOscalFileLocation } from "src/app/interfaces/kn
 
 
 export enum NamedSessionNodes {
-    SAVED_SESSIONS = 'ALL-OSCAL-SESSIONS',
-    URL_LOADED_FILES = 'PREVIOUSLY-LOADED-FILES',
-    URL_LOADED_SCHEMAS = 'PREVIOUSLY-LOADED-SCHEMAS',
-    ACTIVE_SESSION = 'OSCAL-CURRENT-SESSION',
-    SAVED_ENTRIES = 'ALL-OSCAL-ENTRY-SESSION',
-    ACTIVE_ENTIRE = 'OSCAL-CURRENT-ENTIRE-SESSION',
+    SESSION_BRIEFS = 'OC:All-Briefs',
+    ACTIVE_BRIEF = 'OC:Active-Brief',
+
+    SAVED_SESSIONS = 'OC:All-Sessions',
+    ACTIVE_SESSION = 'OC:Active-Session',
+
+    URL_LOADED_FILES = 'OC:Loaded-Files',
+    URL_LOADED_SCHEMAS = 'OC:Loaded-Schemas',
     // Suffixes for other
-    SAVED_META = 'OSCAL-SAVED-META',
-    SAVED_INCLUDE = 'OSCAL-SAVED-INCLUDES',
-    SAVED_MODS = 'OSCAL-SAVED-MODS',
-    SAVED_GROUPS = 'OSCAL-SAVED_GROUPS',
-    OSCAL_CAT_SETTINGS = 'OSCAL-CAT-SETTINGS',
+    SAVED_META = 'OC:Meta',
+    SAVED_INCLUDE = 'OC:Includes',
+    SAVED_MODS = 'OC:Mods',
+    SAVED_GROUPS = 'OC:Re-Groups',
+    OSCAL_CAT_SETTINGS = 'OC:App-Settings',
 }
 
 export class SessionBrief {
@@ -60,16 +62,19 @@ export class SessionBrief {
     public name: string;
     public fullName?: string;
     public catType?: KnownCatalogNames;
+    public index: number;
 
-    constructor(uuid: string, name: string) {
+    constructor(uuid: string, name: string, index: number) {
         this.uuid = uuid;
         this.name = name;
+        this.index = index;
     }
+
 }
 export class SessionData extends SessionBrief {
 
     constructor(uuid: string, name: string, index: number) {
-        super(uuid, name);
+        super(uuid, name, index);
         this.index = index;
     }
 
@@ -82,7 +87,7 @@ export class SessionData extends SessionBrief {
     public catTree?: TreeItemEntry;
     public proTree?: TreeItemEntry;
     public regroupTree?: TreeItemEntry;
-    public index: number;
+
 }
 
 @Injectable({
@@ -90,7 +95,7 @@ export class SessionData extends SessionBrief {
 })
 export class CurrentSessionData extends KvServiceBase {
 
-    private static currentActiveEntry: SessionBrief;    // The shallow init object to pull out session uuids
+    private static currentActiveBrief: SessionBrief;    // The shallow init object to pull out session uuids
     private static currentActiveSession: SessionData;   // The deeper version of the session with actual objects in it 
     private static currentSessionUUID: string;
 
@@ -148,10 +153,13 @@ export class CurrentSessionData extends KvServiceBase {
 
     public set ActiveSession(session: SessionData) {
         this.setKeyValueObject<SessionData>(
-            this.getStoreEntryName(session.uuid, NamedSessionNodes.ACTIVE_SESSION),
-            session);
-        CurrentSessionData.currentActiveSession = session;
-        CurrentSessionData.currentSessionUUID = session.uuid;
+            this.getStoreUuidEntryName(session.uuid, NamedSessionNodes.ACTIVE_SESSION), session)
+            .then
+            ((data: SessionData) => {
+                CurrentSessionData.currentActiveSession = data;
+                CurrentSessionData.currentSessionUUID = data.uuid;
+
+            });
     }
 
     public get ActiveSession(): SessionData {
@@ -160,9 +168,13 @@ export class CurrentSessionData extends KvServiceBase {
         } else {
             var id;
             if (CurrentSessionData.currentSessionUUID) {
-                id = this.getStoreEntryName(CurrentSessionData.currentSessionUUID, NamedSessionNodes.ACTIVE_SESSION)
+                id = this.getStoreUuidEntryName(
+                    CurrentSessionData.currentSessionUUID,
+                    NamedSessionNodes.ACTIVE_SESSION)
             } else if (CurrentSessionData.currentActiveSession && CurrentSessionData.currentActiveSession.uuid) {
-                id = this.getStoreEntryName(CurrentSessionData.currentActiveSession.uuid, NamedSessionNodes.ACTIVE_SESSION)
+                id = this.getStoreUuidEntryName(
+                    CurrentSessionData.currentActiveSession.uuid,
+                    NamedSessionNodes.ACTIVE_SESSION)
             }
             this.getKeyValueObject<SessionData>(id).then(
                 (X: SessionData) => { CurrentSessionData.currentActiveSession = X; }
@@ -172,17 +184,71 @@ export class CurrentSessionData extends KvServiceBase {
         }
     }
 
+    activateBrief(brief: SessionBrief) {
+        this.ActiveBrief = brief;
+    }
+
+    public set ActiveBrief(brief: SessionBrief) {
+        this.setKeyValueObject<SessionBrief>(
+            NamedSessionNodes.ACTIVE_BRIEF, brief)
+            .then(
+                (brief) => {
+                    this.ActivateBriefState(brief);
+                });
+    }
+
+    public get ActiveBrief(): SessionBrief {
+        if (CurrentSessionData.currentActiveBrief) {
+            return CurrentSessionData.currentActiveBrief;
+        } else {
+            this.getKeyValueObject<SessionBrief>(NamedSessionNodes.ACTIVE_BRIEF)
+                .then(
+                    (brief) => {
+                        this.ActivateBriefState(brief);
+                    }
+                ).catch(
+                    (error) => {
+                        console.log(`Error reading the Active-Brief`);
+                        console.log(error);
+                    });
+        }
+
+    }
+
+    public getBriefByUUID(uuid: string, setAsActive: boolean = false): SessionBrief {
+        let brief: SessionBrief;
+        if (setAsActive) {
+            this.ActivateBriefState(brief);
+        }
+        return
+    }
+
+    private ActivateBriefState(brief: SessionBrief) {
+        if (brief) {
+            CurrentSessionData.currentActiveBrief = brief;
+            if (brief.uuid) {
+                CurrentSessionData.currentSessionUUID = brief.uuid
+            }
+        }
+    }
+
+    private
+
+
 
     setEntry<Type>(nodeName: NamedSessionNodes, value: Type): void {
 
     }
 
-    getStoreEntryName(uuid: string, namedNode: NamedSessionNodes) {
-        return `${uuid}--${namedNode}`
+    getStoreUuidEntryName(uuid: string, namedNode: NamedSessionNodes) {
+        return `${uuid}-${namedNode}`
     }
 
     getEntry<Type>(uuid: string, namedNode: NamedSessionNodes): Type {
-        const storeEntryName = this.getStoreEntryName(uuid, namedNode)
+        const storeEntryName = this.getStoreUuidEntryName(
+            uuid,
+            namedNode
+        );
         this.getKeyValueObject<Type>(storeEntryName)
             .then((data: Type) => {
                 return data;

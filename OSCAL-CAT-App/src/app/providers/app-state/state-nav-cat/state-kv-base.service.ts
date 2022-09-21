@@ -62,14 +62,19 @@ export class KvServiceBase {
      * @memberof KvServiceBase
      */
     async setKeyValueObject<T>(key: string, value: T): Promise<any> {
-        // Pack up the object from JSON to Stringified version
-        console.log(value);
-        let strValue = '';
-        if (value) {
-            strValue = JSON.stringify(value);
-            console.log(`Saving Key:${key}\nas Str:${strValue}`)
+        if (key) {
+            // Pack up the object from JSON to Stringified version
+            console.log(`Key`);
+            console.log(key);
+            console.log(`Value`);
+            console.log(value);
+            let strValue = '';
+            if (value) {
+                strValue = JSON.stringify(value);
+                console.log(`Saving Key:${key}\nas Str:${strValue}`)
+            }
+            return await this.storage.set(key, strValue);
         }
-        return await this.storage.set(key, strValue);
     }
 
     async setKeyValueString(key: string, value: string): Promise<string> {
