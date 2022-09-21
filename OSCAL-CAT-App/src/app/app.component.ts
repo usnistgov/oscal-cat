@@ -44,7 +44,7 @@ const theme_dark = 'dark';
 })
 export class AppComponent implements OnInit {
 
-  userWarningAcceptedName = 'Application-Warning-Accepted';
+  userWarningAcceptedName = 'OC:App-Warning-Accepted';
   userAcceptanceYes = 'Warning Accepted';
   dark = true;
   appPartsPages = [

@@ -50,12 +50,11 @@ export class StorePersistedSettings {
 })
 export class CatSettingsStoreService extends KvServiceBase {
 
-  private getThisStoreKeyName(name: string = CatSettingsStoreService.entityStoredName): string {
-    const keyName = `${NamedSessionNodes.OSCAL_CAT_SETTINGS}-${name}`;
+  private getThisStoreKeyName(): string {
+    const keyName = `${NamedSessionNodes.OSCAL_CAT_SETTINGS}`;
     return keyName;
   }
   private isUpdated: boolean;
-  private static entityStoredName = 'OSCAL-CAT-Application-Config-Values';
   private static storedSettings: Array<StorePersistedSettings> = [
     {
       storedName: 'cat-expiration-hours',

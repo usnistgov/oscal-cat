@@ -51,21 +51,26 @@
                 </div>
             </ion-grid>
         </div>
-        <br />
-        <div *ngIf="!this.newDraft && this.hasSavedWork()">
 
-            <ion-grid *ngIf="this.savedWork && this.savedWork.length>0">
+        <br />
+        <!-- 
+        <div>Has Saved Work {{this.hasSavedWork()}}</div>
+        <div>Not New Draft {{!this.newDraft}} {{this.getDraftsTitle()}}</div>
+         -->
+        <div *ngIf="!this.newDraft && this.hasSavedWork()">
+            <!-- <div>Saved Work Length: {{this.savedWork.length}}</div> -->
+            <ion-grid *ngIf="this.savedWork ">
                 <ion-row>
                     <ion-col>
-                        <ion-title>&nbsp;&nbsp;Continue with the Previously Saved Work</ion-title>
+                        <ion-title>&nbsp;&nbsp;{{this.getDraftsTitle()}}</ion-title>
                     </ion-col>
                 </ion-row>
                 <!-- Continue working with the previously saved item(s) -->
-                <ion-row *ngFor="let workItem of this.savedWork; let savedIndex = index">
+                <ion-row *ngFor="let workItem of this.savedWorkPromise | async; let savedIndex = index">
                     <ion-col>
 
                         <ion-item>
-                            <ion-radio value="{{2+savedIndex}}"></ion-radio>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <ion-radio value="{{this.getCatListSize()+savedIndex}}"></ion-radio>&nbsp;&nbsp;&nbsp;&nbsp;
                             <ion-label>{{workItem.name}} [{{workItem.uuid}}]</ion-label>
 
                             <ion-button [title]="'Press to remove '.concat(workItem.name)" color="danger"
