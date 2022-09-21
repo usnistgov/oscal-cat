@@ -269,12 +269,14 @@ export class KnownOscalFilesService {
         if (!KnownOscalFilesService.cat_schema) {
             KnownOscalFilesService.cat_schema = new SchemaFile(
                 httpClient, storage, platform,
-                KnownOscalFilesService.cat_url, KnownOscalFilesService.cat_local,);
+                KnownOscalFilesService.cat_url,
+                KnownOscalFilesService.cat_local,);
         }
         if (!KnownOscalFilesService.pro_schema) {
             KnownOscalFilesService.pro_schema = new SchemaFile(
                 httpClient, storage, platform,
-                KnownOscalFilesService.pro_url, KnownOscalFilesService.pro_local,);
+                KnownOscalFilesService.pro_url,
+                KnownOscalFilesService.pro_local,);
         }
         if (KnownOscalFilesService.cat_schema && !KnownOscalFilesService.cat_schema.schema) {
             KnownOscalFilesService.cat_schema.loadSchema();
@@ -362,6 +364,7 @@ export class KnownOscalFilesService {
     isCatInfoStale(catInfo: KnownOscalFileLocation): boolean {
 
         // const deltaX = 15.000 / 3600.0; // This is 15 seconds time-out
+        // Get "stale cat setting" value form store 'cat-expiration-hours'
         const catExpiresInHours = this.settings.getItemByName('cat-expiration-hours');
         const deltaX = catExpiresInHours.value as number;
         let isStale = !!catInfo && !!catInfo.content_cat && catInfo.content_cat.isStale(deltaX);

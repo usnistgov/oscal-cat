@@ -30,7 +30,7 @@ import { AlertController, ModalController } from '@ionic/angular';
 import { v4 as UUIDv4 } from 'uuid';
 
 import {
-  CurrentSessionData, NamedSessionNodes, SessionData
+  CurrentSessionData, NamedSessionNodes, SessionBrief, SessionData
 } from './../../../providers/app-state/state-nav-cat/state-session-data.service';
 import { OscalCatAuthorViewComponent } from '../action-commons/action-oscal-cat-author-view/action-oscal-cat-author-view.component';
 
@@ -42,8 +42,13 @@ import { OscalCatAuthorViewComponent } from '../action-commons/action-oscal-cat-
 })
 export class AuthorBeginComponent implements OnInit, OnDestroy {
 
-  savedWork: Array<SessionData>;
-  chosenSession: SessionData;
+  savedWork: Array<SessionBrief>;
+  savedWorkPromise: Promise<Array<SessionBrief>>;
+  activeBrief: SessionBrief;
+  activeBriefPromise: Promise<SessionBrief>;
+
+  chosenBrief: SessionBrief;
+  chosenSessionId: string;
   oscalFiles: Array<KnownOscalFileLocation>;
   chosenOscalCat: KnownOscalFileLocation;
   newDraft: boolean;
@@ -59,15 +64,22 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
 
     this.oscalFiles = knownFiles.getAllKnownFiles();
     this.activeIndex = this.knownFiles.getActiveIndex();
+    this.activeRadioCat = -1;
+    this.readSavedBriefs();
+    this.readActiveBrief();
   }
 
   ngOnInit() {
-    // Pull up to UI the previously Saved Work-Items
-    this.readSavedWork();
-    this.readInSessionCats();
-    this.activeRadioCat = -1;
+    // Pull up to UI the previously Saved Work-Items  
+
   }
 
+  /**
+   * Handles refresh of the files by pulling them online again
+   *
+   * @param {number} index - T^he array index of the KnownFile to be refreshed
+   * @memberof AuthorBeginComponent
+   */
   handleCatRefresh(index: number) {
     const resArray = this.catDetails.formCommitArray();
     const entityChecks = resArray[0];
@@ -87,45 +99,53 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     this.knownFiles.refreshCat(cat);
     console.log(cat);
   }
-  //
 
-  readInSessionCats() {
-    // Read the previously pulled-in Cats from Session
-    this.session.getKeyValueObject<Array<SessionData>>(NamedSessionNodes.SAVED_SESSIONS)
-      .then(
-    )
+  /**
+   *
+   *
+   * @returns {number}Sizes the known files array
+   * @memberof AuthorBeginComponent
+   */
+  getCatListSize(): number {
+    return this.oscalFiles.length;
   }
 
-  readSavedWork() {
-    if (this.session.isKeyValuePresent(NamedSessionNodes.SAVED_SESSIONS)) {
-      this.session.getKeyValueObject<Array<SessionData>>(NamedSessionNodes.SAVED_SESSIONS)
-        .then( // Resolve Promise
-          (value: Array<SessionData>) => {
-            if (value && Array.isArray(value) && value.length > 0) {
-              this.savedWork = value;
 
-            } else {
-              this.savedWork = Array<SessionData>();
-            }
-            /*        // Helps to save time when debugging session initialization   
-                      else {
-                        this.savedWork = undefined;
-                        // [];
-                        const emptyWork: Array<SessionData> =
-                          [
-                            {
-                              name: 'Work item 1',
-                              uuid: UUIDv4(),
-                            },
-                            {
-                              name: 'Work Item 1001',
-                              uuid: UUIDv4(),
-                            }];
-                        this.session.setKeyValueObject<Array<SessionData>>(
-                          NamedSessionNodes.SAVED_SESSIONS, emptyWork);
-                      } 
-            */
-          });
+  readSavedBriefs() {
+    // Read the previously pulled-in Cats from Session
+    if (this.session.isKeyValuePresent(
+      NamedSessionNodes.SESSION_BRIEFS)
+    ) {
+      this.savedWorkPromise = this.session.getKeyValueObject<Array<SessionBrief>>(NamedSessionNodes.SESSION_BRIEFS);
+      this.savedWorkPromise.then(
+        (newValue: Array<SessionBrief>) => {
+          if (newValue && Array.isArray(newValue) && newValue.length > 0) {
+            this.savedWork = newValue;
+          } else {
+            this.savedWork = Array<SessionBrief>();
+          }
+          console.log(`Saved Work:`)
+          console.log(this.savedWork);
+        });
+    }
+  }
+
+
+  readActiveBrief() {
+    if (this.session.isKeyValuePresent(
+      NamedSessionNodes.ACTIVE_BRIEF)
+    ) {
+      this.activeBriefPromise = this.session.getKeyValueObject<SessionBrief>(NamedSessionNodes.ACTIVE_BRIEF);
+      this.activeBriefPromise.then(
+        (newValue: SessionBrief) => {
+          if (newValue && Array.isArray(newValue) && newValue.length > 0) {
+            this.activeBrief = newValue;
+          } else {
+            this.activeBrief = undefined;
+          }
+          console.log(`Active Brief:`)
+          console.log(this.activeBrief);
+        });
     }
   }
 
@@ -139,13 +159,13 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     // console.log(value);
     this.knownFiles.setActive(value);
     this.oscalFiles
-    if (value > 1) {
+    if (value > this.getCatListSize() - 1) {
       this.chosenOscalCat = undefined;
-      this.chosenSession = this.savedWork[value - 2];
+      this.chosenBrief = this.savedWork[value - 2];
       this.activeRadioCat = -1;
     } else {
       this.chosenOscalCat = this.oscalFiles[value];
-      this.chosenSession = undefined;
+      this.chosenBrief = undefined;
       this.activeRadioCat = value;
     }
     // this.activateSession(false);
@@ -178,61 +198,105 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   editWorkItemName($event, theItemIndex: number) {
   }
 
+  //This is a routed page hook on PageWillLeave Event
   parentIonViewWillLeave(): void {
     // Does not work to hook up the 
-    console.log('!!!!!!======!!!!!! Begin-Page Will Leave!!!!!!');
-    if (this.chosenOscalCat) {
-      console.log(`Leaving with new Cat (new Session)`);
-    } else if (this.chosenSession) {
-      console.log(`Leaving with Existing Session`);
-    }
+
+    // console.log('!!!!!!======!!!!!! Begin-Page Will Leave!!!!!!');
+    // if (this.chosenOscalCat) {
+    //   console.log(`Leaving with new Cat (new Session)`);
+    // } else if (this.chosenSession) {
+    //   console.log(`Leaving with Existing Session`);
+    // }
     this.activateSession();
+  }
+
+  createNewBrief(newSessionUUID: string): SessionBrief {
+    const newBrief: SessionBrief = {
+      name: `Profile Draft Based on ${this.chosenOscalCat.cat_suffix}`,
+      uuid: newSessionUUID,
+      index: this.activeIndex, // KnownOscalFilesService.getIndexForCat(this.chosenOscalCat),
+      catType: this.chosenOscalCat.cat_enum,
+      // knownCat: this.chosenOscalCat,
+      // catalog: this.chosenOscalCat.content_cat.loadedEntity,
+    };
+    console.log(`New-Brief`);
+    console.log(newBrief);
+    return newBrief;
+  }
+
+  createNewSession(newBrief: SessionBrief): SessionData {
+    const newSession: SessionData = {
+      name: newBrief.name,
+      uuid: newBrief.uuid,
+      index: newBrief.index, // KnownOscalFilesService.getIndexForCat(this.chosenOscalCat),
+      catType: this.chosenOscalCat.cat_enum,
+
+      knownCat: this.chosenOscalCat,
+      catalog: this.chosenOscalCat.content_cat.loadedEntity,
+    };
+    console.log(`New-Session`);
+    console.log(newSession);
+
+    return newSession;
   }
 
   activateSession(addSessionToList = true) {
     console.log(this.chosenOscalCat);
     if (this.chosenOscalCat) {
-      // Need to create a new persisted session
-      console.log(`Cat-Activate - Chosen-Cat`);
+      // Need to create a new persisted session & new Persisted Brief
+      const newSessionUUID = UUIDv4()
+      console.log(`Cat-Activate - Chosen-Cat - Creating UUID`);
+      console.log(newSessionUUID)
 
-      const newSession: SessionData = {
-        name: `Profile Draft Based on ${this.chosenOscalCat.cat_suffix}`,
-        uuid: UUIDv4(),
-        index: KnownOscalFilesService.getIndexForCat(this.chosenOscalCat),
-        catType: this.chosenOscalCat.cat_enum,
-        knownCat: this.chosenOscalCat,
-        catalog: this.chosenOscalCat.content_cat.loadedEntity,
-      }
+      const newBrief = this.createNewBrief(newSessionUUID);
+      const newSession = this.createNewSession(newBrief);
 
-      console.log(newSession);
-
+      // TODO: Add list scanning of the briefs to see if session already exists
       if (addSessionToList) {
         if (!this.savedWork) {
           console.log(`Creating savedWork Array`);
-          this.savedWork = new Array<SessionData>();
+          this.savedWork = new Array<SessionBrief>();
         }
-        this.savedWork.push(newSession);
+        this.savedWork.push(newBrief);
 
         console.log(`savedWork Array has Length:${this.savedWork.length}`);
         console.log(`Saved work Array ${this.savedWork}`);
         console.log(this.savedWork);
+
         // TODO: Fix the below with better wrapper
-        this.session.setKeyValueObject<Array<SessionData>>(NamedSessionNodes.SAVED_SESSIONS, this.savedWork)
+        this.session.setKeyValueObject<Array<SessionBrief>>(
+          NamedSessionNodes.SESSION_BRIEFS,
+          this.savedWork
+        )
           .then(
             x => {
-              this.session.ActiveSession = newSession;
+              console.log(`this.session.ActiveSession`);
+              if (this.session.ActiveBrief !== newBrief) {
+                this.session.activateBrief(newBrief);
+              }
+              console.log(this.session.ActiveBrief);
             }
           ).catch(
-            e => { console.log(e); }
-          );
+            (e) => {
+              this.genericPromiseCatch(e);
+            });
       }
-      // !!!==- This line can cause cascading circular reference -==!!!
-      // this.session.ActiveSession = newSession;
-      //
-    } else if (!this.chosenOscalCat && this.chosenSession) {
+    } else if (!this.chosenOscalCat && this.chosenBrief) {
       // Session was already persisted
-      this.session.ActiveSession = this.chosenSession;
+      this.session.activateBrief(this.chosenBrief);
+      console.log(`Chosen-ActiveSession`);
+      console.log(this.session.ActiveSession);
     }
+  }
+
+  genericPromiseCatch(e, extraInfo: string = undefined) {
+    if (extraInfo) {
+      console.log(`${extraInfo}`);
+    } else {
+      console.log(`Error`);
+    }
+    console.log(e);
   }
 
   ngOnDestroy(): void {
@@ -248,9 +312,9 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       console.log(`Item Index ${theItemIndex} Event Target:${$event.target}`);
       this.savedWork.splice(theItemIndex, 1);
       if (this.savedWork.length > 0) {
-        this.session.setKeyValueObject(NamedSessionNodes.SAVED_SESSIONS, this.savedWork);
+        this.session.setKeyValueObject(NamedSessionNodes.SESSION_BRIEFS, this.savedWork);
       } else {
-        this.session.setKeyValueObject(NamedSessionNodes.SAVED_SESSIONS, null);
+        this.session.setKeyValueObject(NamedSessionNodes.SESSION_BRIEFS, null);
         this.savedWork = null;
       }
 
@@ -261,6 +325,9 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   * Function generates the Alert pop-up
   */
   async presentDeleteWarning($event: Event, itemIndex: number) {
+    console.log(itemIndex);
+    console.log(this.savedWork);
+    console.log(this.savedWork[itemIndex]);
     const item = this.savedWork[itemIndex]
     const name = (item.fullName) ? item.fullName : item.name;
     const uuid = item.uuid;
@@ -329,6 +396,10 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   hasBaseLines(fileInfo: KnownOscalFileLocation) {
     console.log(fileInfo.cat_baselines);
     return !!fileInfo.cat_baselines && fileInfo.cat_baselines.length > 0;
+  }
+
+  getDraftsTitle(): string {
+    return `Continue with the Previously Saved Work`;
   }
 
 }
