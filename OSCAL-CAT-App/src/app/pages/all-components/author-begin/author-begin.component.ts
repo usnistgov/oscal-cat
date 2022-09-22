@@ -26,7 +26,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { KnownOscalFilesService } from './../../../providers/oscal-files/known-files.service';
 import { KnownCatalogNames, KnownOscalFileLocation } from 'src/app/interfaces/known-locations';
-import { AlertController, ModalController } from '@ionic/angular';
+import { AlertController, IonRadioGroup, ModalController } from '@ionic/angular';
 import { v4 as UUIDv4 } from 'uuid';
 
 import {
@@ -54,8 +54,10 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   newDraft: boolean;
   activeRadioCat: number;
   activeIndex: number;
+  activeItemString: string;
   //alertControl: AlertController;
   @ViewChild('catDetails') catDetails: OscalCatAuthorViewComponent;
+  @ViewChild('mainRadioGroup') radioGroup: IonRadioGroup;
 
   constructor(
     private knownFiles: KnownOscalFilesService,
@@ -64,14 +66,15 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
 
     this.oscalFiles = knownFiles.getAllKnownFiles();
     this.activeIndex = this.knownFiles.getActiveIndex();
-    this.activeRadioCat = -1;
+    this.activeIndex = -1;
     this.readSavedBriefs();
     this.readActiveBrief();
   }
 
   ngOnInit() {
     // Pull up to UI the previously Saved Work-Items  
-
+    this.readSavedBriefs();
+    this.readActiveBrief();
   }
 
   /**
@@ -110,17 +113,45 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     return this.oscalFiles.length;
   }
 
+  markActiveBrief(): string {
+    console.log('Mark-Active-Brief');
+    if (!!this.activeBrief) {
+      // if (this.activeBrief.index < this.getCatListSize()) {
+      //   this.activeRadioCat = this.activeBrief.index;
+      //   console.log(`AC-ORIG:${this.activeRadioCat}`);
+      // } else {
+      this.activeItemString = this.activeBrief.uuid;
+      // (this.getIndexByUUID(this.activeBrief.uuid)
+      //   + this.getCatListSize()).toString();
+      console.log(`AC-UUID:${this.activeItemString}`);
+      // }
+    } else {
+      this.activeItemString = '0';
+    }
+    console.log(this.activeItemString);
+    this.radioGroup.value = this.activeItemString;
+    return this.activeItemString;
+  }
+
+  getIndexByUUID(uuid: string): number {
+    const index = this.savedWork.findIndex(
+      (x: SessionBrief) => {
+        return x.uuid === uuid;
+      });
+    return index;
+  }
 
   readSavedBriefs() {
     // Read the previously pulled-in Cats from Session
     if (this.session.isKeyValuePresent(
       NamedSessionNodes.SESSION_BRIEFS)
     ) {
-      this.savedWorkPromise = this.session.getKeyValueObject<Array<SessionBrief>>(NamedSessionNodes.SESSION_BRIEFS);
+      this.savedWorkPromise = this.session
+        .getKeyValueObject<Array<SessionBrief>>(NamedSessionNodes.SESSION_BRIEFS);
       this.savedWorkPromise.then(
-        (newValue: Array<SessionBrief>) => {
-          if (newValue && Array.isArray(newValue) && newValue.length > 0) {
-            this.savedWork = newValue;
+        (savedValue: Array<SessionBrief>) => {
+          if (savedValue && Array.isArray(savedValue) && savedValue.length > 0) {
+            this.savedWork = savedValue;
           } else {
             this.savedWork = Array<SessionBrief>();
           }
@@ -130,16 +161,17 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     }
   }
 
-
   readActiveBrief() {
     if (this.session.isKeyValuePresent(
       NamedSessionNodes.ACTIVE_BRIEF)
     ) {
-      this.activeBriefPromise = this.session.getKeyValueObject<SessionBrief>(NamedSessionNodes.ACTIVE_BRIEF);
+      this.activeBriefPromise = this.session
+        .getKeyValueObject<SessionBrief>(NamedSessionNodes.ACTIVE_BRIEF);
       this.activeBriefPromise.then(
-        (newValue: SessionBrief) => {
-          if (newValue && Array.isArray(newValue) && newValue.length > 0) {
-            this.activeBrief = newValue;
+        (savedValue: SessionBrief) => {
+          if (savedValue) {
+            this.activeBrief = savedValue;
+            this.radioGroup.value = this.markActiveBrief();
           } else {
             this.activeBrief = undefined;
           }
@@ -155,8 +187,8 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   handleRadioChange($event: Event) {
     const value = ($event as CustomEvent).detail.value;
     const cats = ['', ''];
-    // console.log($event);    
-    // console.log(value);
+    console.log($event);
+    console.log(value);
     this.knownFiles.setActive(value);
     this.oscalFiles
     if (value > this.getCatListSize() - 1) {
@@ -312,12 +344,22 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       console.log(`Item Index ${theItemIndex} Event Target:${$event.target}`);
       this.savedWork.splice(theItemIndex, 1);
       if (this.savedWork.length > 0) {
-        this.session.setKeyValueObject(NamedSessionNodes.SESSION_BRIEFS, this.savedWork);
+        this.session.setKeyValueObject(NamedSessionNodes.SESSION_BRIEFS, this.savedWork)
+          .then(
+            (newData) => {
+              this.savedWork = newData;
+              this.readSavedBriefs();
+              this.readActiveBrief();
+            }
+          ).catch(
+            (error) => {
+              console.log(error);
+            }
+          );
       } else {
         this.session.setKeyValueObject(NamedSessionNodes.SESSION_BRIEFS, null);
         this.savedWork = null;
       }
-
     }
   }
 
@@ -327,6 +369,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   async presentDeleteWarning($event: Event, itemIndex: number) {
     console.log(itemIndex);
     console.log(this.savedWork);
+
     console.log(this.savedWork[itemIndex]);
     const item = this.savedWork[itemIndex]
     const name = (item.fullName) ? item.fullName : item.name;

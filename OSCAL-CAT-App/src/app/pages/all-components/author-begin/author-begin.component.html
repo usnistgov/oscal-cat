@@ -16,7 +16,8 @@
 </div>
 <br />
 <div>
-    <ion-radio-group (ionChange)="handleRadioChange($event)" [(ngModel)]="this.activeIndex">
+    <ion-radio-group #mainRadioGroup (ionChange)="handleRadioChange($event)" value="this.activeItemString"
+        [(ngModel)]="this.activeItemString">
         <div *ngIf="true">
             <!-- Start with a new document (from scratch) -->
             <ion-grid>
@@ -66,20 +67,21 @@
                     </ion-col>
                 </ion-row>
                 <!-- Continue working with the previously saved item(s) -->
-                <ion-row *ngFor="let workItem of this.savedWorkPromise | async; let savedIndex = index">
+                <ion-row *ngFor="let workItem of this.savedWorkPromise | async; let runningSavedIndex = index">
                     <ion-col>
 
                         <ion-item>
-                            <ion-radio value="{{this.getCatListSize()+savedIndex}}"></ion-radio>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <ion-radio value="{{workItem.uuid}}"></ion-radio>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <!-- <ion-radio value="{{this.getCatListSize() + runningSavedIndex }}"></ion-radio>&nbsp;&nbsp;&nbsp;&nbsp; -->
                             <ion-label>{{workItem.name}} [{{workItem.uuid}}]</ion-label>
 
                             <ion-button [title]="'Press to remove '.concat(workItem.name)" color="danger"
-                                (click)="presentDeleteWarning($event,savedIndex)">
+                                (click)="presentDeleteWarning($event,runningSavedIndex)">
                                 <ion-icon icon='trash-outline'></ion-icon>
                             </ion-button>
 
                             <ion-button [title]="'Press to edit '.concat(workItem.name)"
-                                (click)="editWorkItemName($event,savedIndex)" disabled="true">
+                                (click)="editWorkItemName($event,runningSavedIndex)" disabled="true">
                                 <ion-icon icon='pencil-outline'></ion-icon>
                             </ion-button>
 
