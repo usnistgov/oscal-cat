@@ -52,7 +52,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   oscalFiles: Array<KnownOscalFileLocation>;
   chosenOscalCat: KnownOscalFileLocation;
   newDraft: boolean;
-  activeRadioCat: number;
+  activeRadioOscalCatForStaleness: number;
   activeIndex: number;
   activeItemString: string;
   //alertControl: AlertController;
@@ -143,25 +143,30 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
 
   readSavedBriefs() {
     // Read the previously pulled-in Cats from Session
-    if (this.session.isKeyValuePresent(
-      NamedSessionNodes.SESSION_BRIEFS)
-    ) {
-      this.savedWorkPromise = this.session
-        .getKeyValueObject<Array<SessionBrief>>(NamedSessionNodes.SESSION_BRIEFS);
-      this.savedWorkPromise.then(
-        (savedValue: Array<SessionBrief>) => {
-          if (savedValue && Array.isArray(savedValue) && savedValue.length > 0) {
-            this.savedWork = savedValue;
-          } else {
-            this.savedWork = Array<SessionBrief>();
-          }
-          console.log(`Saved Work:`)
-          console.log(this.savedWork);
-        });
+    if (!!CurrentSessionData.savedBriefs) {
+      this.savedWork = CurrentSessionData.savedBriefs;
+    } else {
+      if (this.session.isKeyValuePresent(
+        NamedSessionNodes.SESSION_BRIEFS)
+      ) {
+        this.savedWorkPromise = this.session
+          .getKeyValueObject<Array<SessionBrief>>(NamedSessionNodes.SESSION_BRIEFS);
+        this.savedWorkPromise.then(
+          (savedValue: Array<SessionBrief>) => {
+            if (savedValue && Array.isArray(savedValue) && savedValue.length > 0) {
+              this.savedWork = savedValue;
+            } else {
+              this.savedWork = Array<SessionBrief>();
+            }
+            console.log(`Saved Work:`)
+            console.log(this.savedWork);
+          });
+      }
     }
   }
 
   readActiveBrief() {
+    // Read the persisted Active-Brief
     if (this.session.isKeyValuePresent(
       NamedSessionNodes.ACTIVE_BRIEF)
     ) {
@@ -182,6 +187,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   }
 
   handleRemoteLocalCacheRadio($event: Event) {
+    // THis is for User-Added files
   }
 
   handleRadioChange($event: Event) {
@@ -194,11 +200,11 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       this.knownFiles.setActive(value);
       this.chosenOscalCat = this.oscalFiles[value];
       this.chosenBrief = undefined;
-      this.activeRadioCat = value;
+      this.activeRadioOscalCatForStaleness = value;
     } else {
       this.chosenOscalCat = undefined;
-      this.chosenBrief = this.savedWork[value - 2];
-      this.activeRadioCat = -1;
+      this.chosenBrief = this.savedWork[this.getIndexByUUID(value)];
+      this.activeItemString = value;
     }
   }
 
@@ -208,7 +214,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       this.knownFiles.isCatInfoStale(
         this.knownFiles.getAllKnownFiles()[idx])
     ) {
-      return idx == this.activeRadioCat;
+      return idx == this.activeRadioOscalCatForStaleness;
     }
   }
 
@@ -270,8 +276,8 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     if (this.chosenOscalCat) {
       // User chose BASE CATALOG. We need to :
       // 1. Update session Briefs (Used Only in UI Here so far)
-      // 2. Create a new persisted session with UUID (Will be used as an Active-Session persisted Entity)
-      // 3. Change the ActiveBrief to the new One [Persist It as Well!]
+      // 2. Change the ActiveBrief to the new One [Persist It as Well!]
+      // 3. Create a new persisted session with UUID (Will be used as an Active-Session persisted Entity)
       const newSessionUUID = UUIDv4()
       console.log(`Cat-Activate - Chosen-Cat - Creating UUID`);
       console.log(newSessionUUID)
@@ -292,8 +298,9 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
         console.log(`Saved work Array ${this.savedWork}`);
         console.log(this.savedWork);
 
-        this.persistSavedBriefs(newBrief); // 1. 
-        // this.persist
+        this.persistSavedBriefs(newBrief); // 1. Update session Briefs... & 2. Change the ActiveBrief ...
+        this.activeItemString = newBrief.uuid; // Reflect in UI the Newly-Created ActiveBrief
+        this.session.createNewActiveSession(newBrief);
       }
     } else if (!this.chosenOscalCat && this.chosenBrief) {
       // In the case of the chosen Brief-Work-Item need to :

@@ -98,11 +98,12 @@ export class SessionData extends SessionBrief {
 })
 export class CurrentSessionData extends KvServiceBase {
 
+    private static activeSessionName: string;
     private static currentActiveBrief: SessionBrief;    // The shallow init object to pull out session uuids
     private static currentActiveSession: SessionData;   // The deeper version of the session with actual objects in it 
     private static currentSessionUUID: string;
 
-    static sessionEntries: Array<SessionBrief>;
+    static savedBriefs: Array<SessionBrief>;
 
     session_id: string;
     savedSessions: string[] = [];
@@ -235,11 +236,7 @@ export class CurrentSessionData extends KvServiceBase {
         }
     }
 
-    private
-
-
-
-    setEntry<Type>(nodeName: NamedSessionNodes, value: Type): void {
+    private setEntry<Type>(nodeName: NamedSessionNodes, value: Type): void {
 
     }
 
@@ -265,12 +262,18 @@ export class CurrentSessionData extends KvServiceBase {
         return undefined;
     }
 
-    activateNewSession(name: string, index: number): string {
+    public createNewActiveSession(brief: SessionBrief) {
+        const newSession = new SessionData(brief.uuid, brief.name, brief.originalIndexKF);
+        this.ActiveSession = newSession;
+
+    }
+
+    private activateNewSession(name: string, index: number): string {
 
         const uuid = this.getNewSessionUUID();
         const newSession = new SessionData(uuid, name, index);
-        this.ActiveSession = newSession
-        return this.session_id
+        this.ActiveSession = newSession;
+        return this.session_id;
     }
 
 }
