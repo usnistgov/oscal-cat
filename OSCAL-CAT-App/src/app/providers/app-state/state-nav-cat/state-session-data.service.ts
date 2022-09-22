@@ -45,7 +45,7 @@ export enum NamedSessionNodes {
     ACTIVE_BRIEF = 'OC:Active-Brief',
 
     SAVED_SESSIONS = 'OC:All-Sessions',
-    ACTIVE_SESSION = 'OC:Active-Session',
+    ACTIVE_SESSION_NAME = 'OC:Active-Session-Name',
     SESSION_DATA = 'Session-Data',
 
     URL_LOADED_FILES = 'OC:Loaded-Files',
@@ -59,16 +59,18 @@ export enum NamedSessionNodes {
 }
 
 export class SessionBrief {
+
     public uuid: string;
     public name: string;
     public fullName?: string;
     public catType?: KnownCatalogNames;
     public originalIndexKF: number;
-
+    public sessionDataName: string;
     constructor(uuid: string, name: string, index: number) {
         this.uuid = uuid;
         this.name = name;
         this.originalIndexKF = index;
+        this.sessionDataName = `${uuid}:${NamedSessionNodes.SESSION_DATA}`;
     }
 
 }
@@ -98,10 +100,11 @@ export class SessionData extends SessionBrief {
 })
 export class CurrentSessionData extends KvServiceBase {
 
-    private static activeSessionName: string;
-    private static currentActiveBrief: SessionBrief;    // The shallow init object to pull out session uuids
-    private static currentActiveSession: SessionData;   // The deeper version of the session with actual objects in it 
-    private static currentSessionUUID: string;
+    private static activeBrief: SessionBrief;       // The shallow init object to pull out session uuids
+
+    private static activeSessionName: string;       // The UUID-Session-Data format name of the session if exists 
+    private static activeSessionUUID: string;
+    private static activeSession: SessionData;      // The deeper version of the session with actual objects in it 
 
     static savedBriefs: Array<SessionBrief>;
 
@@ -127,6 +130,13 @@ export class CurrentSessionData extends KvServiceBase {
         return UUIDv4();
     }
 
+    getStoreUuidEntryName(uuid: string, namedNode: NamedSessionNodes) {
+        return `${uuid}:${namedNode}`
+    }
+
+    getSessionName(uuid: string) {
+        return `${uuid}:${NamedSessionNodes.SESSION_DATA}`;
+    }
 
     getSavedSessions(): Array<string> {
         this.getKeyValueObject<Array<SessionData>>(NamedSessionNodes.SAVED_SESSIONS)
@@ -139,52 +149,61 @@ export class CurrentSessionData extends KvServiceBase {
         return undefined;
     }
 
-    readActiveSession(): SessionData {
-        this.getKeyValueObject<SessionData>(NamedSessionNodes.ACTIVE_SESSION)
-            .then((data: SessionData) => {
-                CurrentSessionData.currentActiveSession = data;
+    readActiveSessionName(): string {
+        this.getKeyValueObject<string>(NamedSessionNodes.ACTIVE_SESSION_NAME)
+            .then((data: string) => {
+                CurrentSessionData.activeSessionName = data;
                 return data;
             })
             .catch((error) => {
                 console.log(
                     `Promise of the ` +
-                    `NamedSessionNodes.ACTIVE_SESSION:` +
-                    `${NamedSessionNodes.ACTIVE_SESSION}` +
+                    `NamedSessionNodes.ACTIVE_SESSION_NAME:` +
+                    `${NamedSessionNodes.ACTIVE_SESSION_NAME}` +
                     ` is not found ${JSON.stringify(error)}`);
             })
         return undefined;
     }
 
     public set ActiveSession(session: SessionData) {
-        this.setKeyValueObject<SessionData>(
-            this.getStoreUuidEntryName(session.uuid, NamedSessionNodes.ACTIVE_SESSION), session)
+        this.setKeyValueObject<SessionData>(session.sessionDataName, session)
             .then
-            ((data: SessionData) => {
-                CurrentSessionData.currentActiveSession = data;
-                CurrentSessionData.currentSessionUUID = data.uuid;
-
+            ((sessionData: SessionData) => {
+                CurrentSessionData.activeSession = sessionData;
+                CurrentSessionData.activeSessionUUID = sessionData.uuid;
+                CurrentSessionData.activeSessionName = sessionData.sessionDataName;
             });
     }
 
     public get ActiveSession(): SessionData {
-        if (CurrentSessionData.currentActiveSession) {
-            return CurrentSessionData.currentActiveSession;
+        if (CurrentSessionData.activeSession) {
+            return CurrentSessionData.activeSession;
         } else {
             var id;
-            if (CurrentSessionData.currentSessionUUID) {
+            if (CurrentSessionData.activeBrief) {
+                id = CurrentSessionData.activeBrief.sessionDataName
+            } else if (CurrentSessionData.activeSessionName) {
+                id = CurrentSessionData.activeSessionName;
+            } else if (CurrentSessionData.activeSessionUUID) {
                 id = this.getStoreUuidEntryName(
-                    CurrentSessionData.currentSessionUUID,
-                    NamedSessionNodes.ACTIVE_SESSION)
-            } else if (CurrentSessionData.currentActiveSession && CurrentSessionData.currentActiveSession.uuid) {
-                id = this.getStoreUuidEntryName(
-                    CurrentSessionData.currentActiveSession.uuid,
-                    NamedSessionNodes.ACTIVE_SESSION)
+                    CurrentSessionData.activeSessionUUID,
+                    NamedSessionNodes.SESSION_DATA)
+            } else {
+                id = this.readActiveSessionName();
             }
-            this.getKeyValueObject<SessionData>(id).then(
-                (X: SessionData) => { CurrentSessionData.currentActiveSession = X; }
-            ).catch(
-                () => { console.log(`Could not read Session-Value ${id}`) }
-            );
+            if (!!id) {
+                this.getKeyValueObject<SessionData>(id).then(
+                    (sessionData: SessionData) => {
+                        CurrentSessionData.activeSession = sessionData;
+                        CurrentSessionData.activeSessionUUID = sessionData.uuid;
+                        CurrentSessionData.activeSessionName = sessionData.sessionDataName;
+                    }
+                ).catch(
+                    () => { console.log(`Could not read Session-Value ${id}`) }
+                );
+            } else {
+                console.log(`No active session nor Active Session UUID were found`);
+            }
         }
     }
 
@@ -202,8 +221,8 @@ export class CurrentSessionData extends KvServiceBase {
     }
 
     public get ActiveBrief(): SessionBrief {
-        if (CurrentSessionData.currentActiveBrief) {
-            return CurrentSessionData.currentActiveBrief;
+        if (CurrentSessionData.activeBrief) {
+            return CurrentSessionData.activeBrief;
         } else {
             this.getKeyValueObject<SessionBrief>(NamedSessionNodes.ACTIVE_BRIEF)
                 .then(
@@ -229,9 +248,9 @@ export class CurrentSessionData extends KvServiceBase {
 
     private ActivateBriefState(brief: SessionBrief) {
         if (brief) {
-            CurrentSessionData.currentActiveBrief = brief;
+            CurrentSessionData.activeBrief = brief;
             if (brief.uuid) {
-                CurrentSessionData.currentSessionUUID = brief.uuid
+                CurrentSessionData.activeSessionUUID = brief.uuid
             }
         }
     }
@@ -240,9 +259,7 @@ export class CurrentSessionData extends KvServiceBase {
 
     }
 
-    getStoreUuidEntryName(uuid: string, namedNode: NamedSessionNodes) {
-        return `${uuid}-${namedNode}`
-    }
+
 
     getEntry<Type>(uuid: string, namedNode: NamedSessionNodes): Type {
         const storeEntryName = this.getStoreUuidEntryName(
@@ -260,6 +277,14 @@ export class CurrentSessionData extends KvServiceBase {
                     ` is not complete ${JSON.stringify(error)}`);
             })
         return undefined;
+    }
+
+    public activateSession(brief: SessionBrief) {
+        if (this.isKeyValuePresent(
+            NamedSessionNodes.ACTIVE_BRIEF)
+        ) { } else {
+
+        }
     }
 
     public createNewActiveSession(brief: SessionBrief) {
