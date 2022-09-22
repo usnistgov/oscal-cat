@@ -72,6 +72,7 @@ export class SessionBrief {
         this.setUuid(uuid);
         this.name = name;
         this.originalIndexKF = index;
+        this.sessionDataName = `${uuid}:${NamedSessionNodes.SESSION_DATA}`;
     }
 
 

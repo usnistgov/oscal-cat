@@ -632,7 +632,11 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
   }
 
   getDraftsTitle(): string {
-    return `Continue with the Previously Saved Work`;
+    if (this.savedWork && this.savedWork.length > 0) {
+      return `Continue with the Previously Saved Work`;
+    } else {
+      return '';
+    }
   }
 
 }
