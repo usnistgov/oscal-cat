@@ -46,6 +46,7 @@ export enum NamedSessionNodes {
 
     SAVED_SESSIONS = 'OC:All-Sessions',
     ACTIVE_SESSION = 'OC:Active-Session',
+    SESSION_DATA = 'Session-Data',
 
     URL_LOADED_FILES = 'OC:Loaded-Files',
     URL_LOADED_SCHEMAS = 'OC:Loaded-Schemas',
@@ -62,12 +63,12 @@ export class SessionBrief {
     public name: string;
     public fullName?: string;
     public catType?: KnownCatalogNames;
-    public index: number;
+    public originalIndexKF: number;
 
     constructor(uuid: string, name: string, index: number) {
         this.uuid = uuid;
         this.name = name;
-        this.index = index;
+        this.originalIndexKF = index;
     }
 
 }
@@ -75,8 +76,10 @@ export class SessionData extends SessionBrief {
 
     constructor(uuid: string, name: string, index: number) {
         super(uuid, name, index);
-        this.index = index;
+        this.originalIndexKF = index;
     }
+
+
 
     public knownCat?: KnownOscalFileLocation;
     public catalog?: Catalog;
