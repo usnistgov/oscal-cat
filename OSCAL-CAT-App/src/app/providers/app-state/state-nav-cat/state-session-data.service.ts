@@ -99,6 +99,8 @@ export class SessionData extends SessionBrief {
         this.originalIndexKF = index;
     }
 
+
+
     public knownCat?: KnownOscalFileLocation;
     public catalog?: Catalog;
     public profile?: Profile;
