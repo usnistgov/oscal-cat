@@ -240,32 +240,30 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   }
 
   createNewBrief(newSessionUUID: string): SessionBrief {
-    const newBrief: SessionBrief = {
-      name: `Profile Draft Based on ${this.chosenOscalCat.cat_suffix}`,
-      uuid: newSessionUUID,
-      originalIndexKF: this.activeIndex, // KnownOscalFilesService.getIndexForCat(this.chosenOscalCat),
-      catType: this.chosenOscalCat.cat_enum,
-      // knownCat: this.chosenOscalCat,
-      // catalog: this.chosenOscalCat.content_cat.loadedEntity,
-    };
+    const newBrief = new SessionBrief(
+      newSessionUUID,
+      `Profile Draft Based on ${this.chosenOscalCat.cat_suffix}`,
+      this.activeIndex
+    );
+    newBrief.catType = this.chosenOscalCat.cat_enum;
+
     console.log(`New-Brief`);
     console.log(newBrief);
     return newBrief;
   }
 
   createNewSession(newBrief: SessionBrief): SessionData {
-    const newSession: SessionData = {
-      name: newBrief.name,
-      uuid: newBrief.uuid,
-      originalIndexKF: newBrief.originalIndexKF, // KnownOscalFilesService.getIndexForCat(this.chosenOscalCat),
-      catType: this.chosenOscalCat.cat_enum,
+    const newSession = new SessionData(
+      newBrief.uuid,
+      newBrief.name,
+      newBrief.originalIndexKF,
+    );
+    newSession.catType = this.chosenOscalCat.cat_enum;
+    newSession.knownCat = this.chosenOscalCat;
+    newSession.catalog = this.chosenOscalCat.content_cat.loadedEntity;
 
-      knownCat: this.chosenOscalCat,
-      catalog: this.chosenOscalCat.content_cat.loadedEntity,
-    };
     console.log(`New-Session`);
     console.log(newSession);
-
     return newSession;
   }
 
@@ -311,6 +309,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       console.log(`Chosen-ActiveSession`);
       console.log(this.session.ActiveSession);
       this.session.activateBrief(this.chosenBrief);
+      this.session.activateSession(this.chosenBrief);
     }
   }
 
@@ -455,7 +454,11 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   }
 
   getDraftsTitle(): string {
-    return `Continue with the Previously Saved Work`;
+    if (this.savedWork && this.savedWork.length > 0) {
+      return `Continue with the Previously Saved Work`;
+    } else {
+      return '';
+    }
   }
 
 }
