@@ -186,22 +186,20 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
 
   handleRadioChange($event: Event) {
     const value = ($event as CustomEvent).detail.value;
-    const cats = ['', ''];
-    console.log($event);
-    console.log(value);
-    this.knownFiles.setActive(value);
-    this.oscalFiles
-    if (value > this.getCatListSize() - 1) {
-      this.chosenOscalCat = undefined;
-      this.chosenBrief = this.savedWork[value - 2];
-      this.activeRadioCat = -1;
-    } else {
+    // console.log($event);
+    // console.log(value);
+    // console.log(`value < this.getCatListSize() : ${value < this.getCatListSize()}`);
+
+    if (value < this.getCatListSize()) {
+      this.knownFiles.setActive(value);
       this.chosenOscalCat = this.oscalFiles[value];
       this.chosenBrief = undefined;
       this.activeRadioCat = value;
+    } else {
+      this.chosenOscalCat = undefined;
+      this.chosenBrief = this.savedWork[value - 2];
+      this.activeRadioCat = -1;
     }
-    // this.activateSession(false);
-    // this.readSavedWork();
   }
 
 
@@ -232,14 +230,6 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
 
   //This is a routed page hook on PageWillLeave Event
   parentIonViewWillLeave(): void {
-    // Does not work to hook up the 
-
-    // console.log('!!!!!!======!!!!!! Begin-Page Will Leave!!!!!!');
-    // if (this.chosenOscalCat) {
-    //   console.log(`Leaving with new Cat (new Session)`);
-    // } else if (this.chosenSession) {
-    //   console.log(`Leaving with Existing Session`);
-    // }
     this.activateSession();
   }
 
@@ -247,7 +237,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     const newBrief: SessionBrief = {
       name: `Profile Draft Based on ${this.chosenOscalCat.cat_suffix}`,
       uuid: newSessionUUID,
-      index: this.activeIndex, // KnownOscalFilesService.getIndexForCat(this.chosenOscalCat),
+      originalIndexKF: this.activeIndex, // KnownOscalFilesService.getIndexForCat(this.chosenOscalCat),
       catType: this.chosenOscalCat.cat_enum,
       // knownCat: this.chosenOscalCat,
       // catalog: this.chosenOscalCat.content_cat.loadedEntity,
@@ -261,7 +251,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     const newSession: SessionData = {
       name: newBrief.name,
       uuid: newBrief.uuid,
-      index: newBrief.index, // KnownOscalFilesService.getIndexForCat(this.chosenOscalCat),
+      originalIndexKF: newBrief.originalIndexKF, // KnownOscalFilesService.getIndexForCat(this.chosenOscalCat),
       catType: this.chosenOscalCat.cat_enum,
 
       knownCat: this.chosenOscalCat,
@@ -274,9 +264,14 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   }
 
   activateSession(addSessionToList = true) {
+    console.log(`ChosenOscalCat & ChosenBrief`);
     console.log(this.chosenOscalCat);
+    console.log(this.chosenBrief);
     if (this.chosenOscalCat) {
-      // Need to create a new persisted session & new Persisted Brief
+      // User chose BASE CATALOG. We need to :
+      // 1. Update session Briefs (Used Only in UI Here so far)
+      // 2. Create a new persisted session with UUID (Will be used as an Active-Session persisted Entity)
+      // 3. Change the ActiveBrief to the new One [Persist It as Well!]
       const newSessionUUID = UUIDv4()
       console.log(`Cat-Activate - Chosen-Cat - Creating UUID`);
       console.log(newSessionUUID)
@@ -286,8 +281,9 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
 
       // TODO: Add list scanning of the briefs to see if session already exists
       if (addSessionToList) {
+
         if (!this.savedWork) {
-          console.log(`Creating savedWork Array`);
+          // console.log(`Creating new savedWork Array`);
           this.savedWork = new Array<SessionBrief>();
         }
         this.savedWork.push(newBrief);
@@ -296,30 +292,40 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
         console.log(`Saved work Array ${this.savedWork}`);
         console.log(this.savedWork);
 
-        // TODO: Fix the below with better wrapper
-        this.session.setKeyValueObject<Array<SessionBrief>>(
-          NamedSessionNodes.SESSION_BRIEFS,
-          this.savedWork
-        )
-          .then(
-            x => {
-              console.log(`this.session.ActiveSession`);
-              if (this.session.ActiveBrief !== newBrief) {
-                this.session.activateBrief(newBrief);
-              }
-              console.log(this.session.ActiveBrief);
-            }
-          ).catch(
-            (e) => {
-              this.genericPromiseCatch(e);
-            });
+        this.persistSavedBriefs(newBrief); // 1. 
+        // this.persist
       }
     } else if (!this.chosenOscalCat && this.chosenBrief) {
-      // Session was already persisted
-      this.session.activateBrief(this.chosenBrief);
+      // In the case of the chosen Brief-Work-Item need to :
+      // 1. Change the ActiveBrief in Session (Activate Brief) to the Chosen-One 
+      // 2. Persist ActiveBrief in Storage as Well!
+      //    ** Session-Briefs-Array does not change (Only Selection does)
+      // 3. Read and Assign the ActiveSession form UUID-*SessionData* field
       console.log(`Chosen-ActiveSession`);
       console.log(this.session.ActiveSession);
+      this.session.activateBrief(this.chosenBrief);
     }
+  }
+
+
+
+  private persistSavedBriefs(newBrief: SessionBrief) {
+    this.session.setKeyValueObject<Array<SessionBrief>>(
+      NamedSessionNodes.SESSION_BRIEFS,
+      this.savedWork
+    )
+      .then(
+        x => {
+          console.log(`this.session.ActiveSession`);
+          if (this.session.ActiveBrief !== newBrief) {
+            this.session.activateBrief(newBrief);
+          }
+          console.log(this.session.ActiveBrief);
+        }
+      ).catch(
+        (e) => {
+          this.genericPromiseCatch(e);
+        });
   }
 
   genericPromiseCatch(e, extraInfo: string = undefined) {
