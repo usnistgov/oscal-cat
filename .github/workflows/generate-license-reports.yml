@@ -37,7 +37,7 @@ jobs:
         key: cat-${{ runner.os }}-${{ steps.store-git-metadata.outputs.commit_id }}
       id: restore-cache-build
     - name: Set up NodeJS
-      uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
+      uses: actions/setup-node@969bd2663942d722d85b6a8626225850c2f7be4b
       with:
         node-version-file: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/.nvmrc'
         cache: 'npm'
