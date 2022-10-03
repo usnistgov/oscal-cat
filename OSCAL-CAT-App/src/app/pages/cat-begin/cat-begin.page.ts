@@ -41,9 +41,15 @@ export class CatBeginPage implements OnInit {
   }
 
   ionViewWillLeave(): void {
-    console.log(`<<<!!!>>>Begin Page ()=>{ Will Leave } @${Date.now()}`);
+    console.log(`<<<!!!>>>ionViewWillLeave=>{ Will Leave } @${Date.now()}`);
     // The call into the handler of the on Leaving event of the component
     this.beginComponent.parentIonViewWillLeave();
+  }
+
+  ionViewDidEnter(): void {
+    console.log(`<<<!!!>>>ionViewDidEnter=>{ Will Leave } @${Date.now()}`);
+    // The call into the handler of the on Leaving event of the component
+    // this.beginComponent.parentIonViewWillLeave();
   }
 
   stakeSession() {
