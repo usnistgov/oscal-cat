@@ -100,8 +100,6 @@ export class SessionData extends SessionBrief {
         this.originalIndexKF = index;
     }
 
-
-
     public knownCat?: KnownOscalFileLocation;
     public catalog?: Catalog;
     public profile?: Profile;
@@ -224,6 +222,18 @@ export class CurrentSessionData extends KvServiceBase {
         console.log(`SessionID: ${sessionID}`);
         console.log(CurrentSessionData.activeSession);
         return CurrentSessionData.activeSession;
+    }
+
+    private readActivateSession(id: string) {
+        this.getKeyValueObject<SessionData>(id).then(
+            (sessionData: SessionData) => {
+                CurrentSessionData.activeSession = sessionData;
+                CurrentSessionData.activeSessionUUID = sessionData.uuid;
+                CurrentSessionData.activeSessionName = sessionData.sessionDataName;
+            }
+        ).catch(
+            () => { console.log(`Could not read Session-Value ${id}`) }
+        );
     }
 
     private readActivateSession(id: string) {
