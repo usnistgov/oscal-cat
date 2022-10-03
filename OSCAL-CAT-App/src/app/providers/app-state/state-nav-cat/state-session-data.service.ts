@@ -38,6 +38,7 @@ import {
     Profile
 } from "src/app/interfaces/oscal-types/oscal-catalog.types";
 import { KnownCatalogNames, KnownOscalFileLocation } from "src/app/interfaces/known-locations";
+import { KnownOscalFilesService } from "../../oscal-files/known-files.service";
 
 
 export enum NamedSessionNodes {
@@ -80,8 +81,6 @@ export class SessionData extends SessionBrief {
         super(uuid, name, index);
         this.originalIndexKF = index;
     }
-
-
 
     public knownCat?: KnownOscalFileLocation;
     public catalog?: Catalog;
@@ -192,19 +191,23 @@ export class CurrentSessionData extends KvServiceBase {
                 id = this.readActiveSessionName();
             }
             if (!!id) {
-                this.getKeyValueObject<SessionData>(id).then(
-                    (sessionData: SessionData) => {
-                        CurrentSessionData.activeSession = sessionData;
-                        CurrentSessionData.activeSessionUUID = sessionData.uuid;
-                        CurrentSessionData.activeSessionName = sessionData.sessionDataName;
-                    }
-                ).catch(
-                    () => { console.log(`Could not read Session-Value ${id}`) }
-                );
+                this.readActivateSession(id);
             } else {
                 console.log(`No active session nor Active Session UUID were found`);
             }
         }
+    }
+
+    private readActivateSession(id: string) {
+        this.getKeyValueObject<SessionData>(id).then(
+            (sessionData: SessionData) => {
+                CurrentSessionData.activeSession = sessionData;
+                CurrentSessionData.activeSessionUUID = sessionData.uuid;
+                CurrentSessionData.activeSessionName = sessionData.sessionDataName;
+            }
+        ).catch(
+            () => { console.log(`Could not read Session-Value ${id}`) }
+        );
     }
 
     activateBrief(brief: SessionBrief) {
@@ -228,6 +231,7 @@ export class CurrentSessionData extends KvServiceBase {
                 .then(
                     (brief) => {
                         this.ActivateBriefState(brief);
+
                     }
                 ).catch(
                     (error) => {
@@ -251,9 +255,17 @@ export class CurrentSessionData extends KvServiceBase {
             CurrentSessionData.activeBrief = brief;
             if (brief.uuid) {
                 CurrentSessionData.activeSessionUUID = brief.uuid
+                CurrentSessionData.activeSessionName = brief.sessionDataName;
+
             }
         }
     }
+
+    public appendBriefToStore(brief: SessionBrief, activate: boolean = false) {
+        CurrentSessionData.savedBriefs
+
+    }
+
 
     private setEntry<Type>(nodeName: NamedSessionNodes, value: Type): void {
 
@@ -280,15 +292,25 @@ export class CurrentSessionData extends KvServiceBase {
     }
 
     public activateSession(brief: SessionBrief) {
-        if (this.isKeyValuePresent(
-            NamedSessionNodes.ACTIVE_BRIEF)
-        ) { } else {
+        if (this.isKeyValuePresent(NamedSessionNodes.ACTIVE_BRIEF)
+        ) {
+            if (this.isKeyValuePresent(brief.sessionDataName)) {
+                this.readActivateSession(brief.sessionDataName);
+            } else {
+                this.createNewActiveSession(brief, undefined);
+            }
+        } else {
 
         }
     }
 
-    public createNewActiveSession(brief: SessionBrief) {
+
+
+    public createNewActiveSession(brief: SessionBrief, cat: Catalog) {
         const newSession = new SessionData(brief.uuid, brief.name, brief.originalIndexKF);
+        if (!!cat) {
+            newSession.catalog = cat;
+        }
         this.ActiveSession = newSession;
 
     }
