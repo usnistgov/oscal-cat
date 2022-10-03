@@ -121,6 +121,9 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       //   console.log(`AC-ORIG:${this.activeRadioCat}`);
       // } else {
       this.activeItemString = this.activeBrief.uuid;
+      if (!(this.activeItemString < this.getCatListSize().toString())) {
+        this.chosenBrief = this.activeBrief
+      }
       // (this.getIndexByUUID(this.activeBrief.uuid)
       //   + this.getCatListSize()).toString();
       console.log(`AC-UUID:${this.activeItemString}`);
@@ -298,7 +301,8 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
 
         this.persistSavedBriefs(newBrief); // 1. Update session Briefs... & 2. Change the ActiveBrief ...
         this.activeItemString = newBrief.uuid; // Reflect in UI the Newly-Created ActiveBrief
-        this.session.createNewActiveSession(newBrief);
+        const theCat = this.getCatalog(newBrief);
+        this.session.createNewActiveSession(newBrief, theCat);
       }
     } else if (!this.chosenOscalCat && this.chosenBrief) {
       // In the case of the chosen Brief-Work-Item need to :
@@ -313,7 +317,19 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     }
   }
 
-
+  private getCatalog(brief: SessionBrief) {
+    if (this.oscalFiles) {
+      if (brief.originalIndexKF < this.oscalFiles.length) {
+        if (!!this.oscalFiles
+          && !!this.oscalFiles[brief.originalIndexKF]
+          && !!this.oscalFiles[brief.originalIndexKF].content_cat
+          && !!this.oscalFiles[brief.originalIndexKF].content_cat.loadedEntity
+        )
+          return this.oscalFiles[brief.originalIndexKF].content_cat.loadedEntity;
+      }
+      return undefined;
+    }
+  }
 
   private persistSavedBriefs(newBrief: SessionBrief) {
     this.session.setKeyValueObject<Array<SessionBrief>>(
