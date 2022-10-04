@@ -483,6 +483,7 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
     if (!!this.savedWork) {
       // console.log(`Item Index ${theItemIndex} Event Target:${$event.target}`);
       const item = this.savedWork[theItemIndex]
+
       this.savedWork.splice(theItemIndex, 1);
       // **********************************************
       // Delete the HEAVY-WEIGHT session object by UUID
