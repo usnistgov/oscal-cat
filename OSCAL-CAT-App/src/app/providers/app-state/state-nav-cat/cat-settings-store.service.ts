@@ -108,10 +108,10 @@ export class CatSettingsStoreService extends KvServiceBase {
   refreshSettings() {
     this.isUpdated = false;
     if (!this.isKeyValuePresent(this.getThisStoreKeyName())) {
-      console.log('NO DATA yet!!! Saving All Settings!!!');
+      // console.log('NO DATA yet!!! Saving All Settings!!!');
       this.saveAllSettings();
     } else {
-      console.log('DATA EXISTS!!! Refreshing !!!');
+      // console.log('DATA EXISTS!!! Refreshing !!!');
 
       const storedAppSettings = this.readAllSettings() // Async data pull from Storage as Promise
 
@@ -237,7 +237,7 @@ export class CatSettingsStoreService extends KvServiceBase {
       this.refreshSettings();
       // console.log(CatSettingsStoreService.storedSettings);
     } else {
-      console.log(`Index Was not Found for [${info.storedName}]`)
+      // console.log(`Index Was not Found for [${info.storedName}]`)
     }
   }
 

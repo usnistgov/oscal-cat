@@ -181,13 +181,13 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
 
 
   initMetaInfo() {
-    console.log(`Init Meta Info!`);
-    console.log(`Active Session:`);
-    console.log(this.session.ActiveSession);
-    console.log(`Active Brief:`);
-    console.log(this.session.ActiveBrief);
+    // console.log(`Init Meta Info!`);
+    // console.log(`Active Session:`);
+    // console.log(this.session.ActiveSession);
+    // console.log(`Active Brief:`);
+    // console.log(this.session.ActiveBrief);
     if (!!this.session.ActiveSession) {
-      console.log(`Active Session Found!`);
+      // console.log(`Active Session Found!`);
       this.activeSession = this.session.ActiveSession;
       if (!!this.activeSession.meta) {
         this.metaInfo = this.activeSession.meta;
@@ -203,7 +203,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
         this.metaInfo = this.activeSession.meta;
       }
       if (this.activeSession && this.activeSession.uuid) {
-        console.log(`Active-Session ID: [${this.activeSession.uuid}]`);
+        // console.log(`Active-Session ID: [${this.activeSession.uuid}]`);
       }
     }
 
@@ -220,8 +220,8 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
       this.updateMetaFromSession();
     }
 
-    console.log('Beginning Meta Component');
-    console.log(this.metaInfo);
+    // console.log('Beginning Meta Component');
+    // console.log(this.metaInfo);
 
     this.formBuilder = new FormBuilder();
     this.metaForm = this.formBuilder.group({
@@ -268,8 +268,8 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
 
   ngAfterViewInit() {
     // console.log(`@ngAfterViewInit.VCR: ${this.VCR}`);
-    const a = 5;
-    console.log(`A = ${a}`)
+    // const a = 5;
+    // console.log(`A = ${a}`)
   }
 
   getPartiesControlsArray(theData: Array<PartyOrganizationOrPerson> = null): FormArray {
@@ -311,12 +311,12 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
 
   setTimeToNow(): void {
     const dts = this.formatDateLabel(new Date());
-    console.log(`setTimeToNow DateFormatted as: ${dts}`);
+    // console.log(`setTimeToNow DateFormatted as: ${dts}`);
     this.metaForm.patchValue({ last_modified: dts });
   }
 
   patchFormatDate(dtv: string): void {
-    console.log(`THe Picked Date: ${dtv}`);
+    // console.log(`The Picked Date: ${dtv}`);
     const dtValue = this.formatDateLabel(parseISO(dtv));
     this.metaForm.patchValue({ last_modified: dtValue });
   }
@@ -331,7 +331,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
   autoUpdateLater(): void {
     this.autoUpdateDates = !this.autoUpdateDates;
     this.setTimeToNow();
-    console.log(`A-u:${this.autoUpdateDates}`);
+    // console.log(`A-u:${this.autoUpdateDates}`);
   }
 
   getAutoUpdateColor(): string {
@@ -373,7 +373,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     // let v3: Array<Address> = new Array<Address>();
     // v2 = 'null';
     const emptyPOoP = OscalCatalogEmpties.getEmptyPOoP(typeName);
-    console.log(` New or Old = ${!paramPOoP} `);
+    // console.log(` New or Old = ${!paramPOoP} `);
     // this.LMS.logData(emptyPOoP);
 
     const modal = await this.modalController.create({
@@ -397,7 +397,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     //   });
     modal.onDidDismiss().then(
       (data) => {
-        console.log(`oDD-Data = ${data}`);
+        // console.log(`oDD-Data = ${data}`);
         this.LMS.logData(data);
       });
     return await modal.present();
@@ -474,7 +474,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
         theArray.splice(indexToRemove, 1);
       }
     } else {
-      console.log(`!-!-! Array is <EMPTY>`);
+      // console.log(`!-!-! Array is <EMPTY>`);
     }
   }
 
@@ -737,15 +737,15 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
   addPOoP(newEntity: PartyOrganizationOrPerson) {
     this.activeEntityAddTabName = '';
     if (!!newEntity) {
-      console.log(`The POoP = ${newEntity.type}`);
-      console.log(`The POoP = ${newEntity.name}`);
-      console.log(`The POoP = ${newEntity.uuid}`);
+      // console.log(`The POoP = ${newEntity.type}`);
+      // console.log(`The POoP = ${newEntity.name}`);
+      // console.log(`The POoP = ${newEntity.uuid}`);
       if (!this.metaInfo.parties) {
         this.metaInfo.parties = new Array<PartyOrganizationOrPerson>();
       }
       this.metaInfo.parties.push(newEntity);
     } else {
-      console.log(`Add POoP => CANCELLED!`);
+      // console.log(`Add POoP => CANCELLED!`);
     }
   }
 
@@ -753,9 +753,9 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     this.activeEditState = EditingState.Off;
     this.activeEntityAddTabName = '';
     if (!!editedRole) {
-      console.log(`Role-Title = ${editedRole.title}`);
-      console.log(`Role-ID = ${editedRole.id}`);
-      console.log(`Role-Short = ${editedRole.shortName}`);
+      // console.log(`Role-Title = ${editedRole.title}`);
+      // console.log(`Role-ID = ${editedRole.id}`);
+      // console.log(`Role-Short = ${editedRole.shortName}`);
       if (!this.metaInfo.parties) {
         this.metaInfo.roles = new Array<Role>();
       }
@@ -763,7 +763,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
         this.metaInfo.roles[this.activeEditIndex] = editedRole;
       }
     } else {
-      console.log(`Add POoP => CANCELLED!`);
+      // console.log(`Add POoP => CANCELLED!`);
     }
     this.currentEditedRole = undefined;
   }
@@ -772,9 +772,9 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     this.activeEditState = EditingState.Off;
     this.activeEntityAddTabName = '';
     if (!!editedParty) {
-      console.log(`The POoP = ${editedParty.type}`);
-      console.log(`The POoP = ${editedParty.name}`);
-      console.log(`The POoP = ${editedParty.uuid}`);
+      // console.log(`The POoP = ${editedParty.type}`);
+      // console.log(`The POoP = ${editedParty.name}`);
+      // console.log(`The POoP = ${editedParty.uuid}`);
       if (!this.metaInfo.parties) {
         this.metaInfo.parties = new Array<PartyOrganizationOrPerson>();
       }
@@ -782,7 +782,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
         this.metaInfo.parties[this.activeEditIndex] = editedParty;
       }
     } else {
-      console.log(`Save Edited POoP => CANCELLED!`);
+      // console.log(`Save Edited POoP => CANCELLED!`);
     }
     this.currentEditedParty = undefined;
   }
@@ -791,8 +791,8 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     this.activeEditState = EditingState.Off;
     this.activeEntityAddTabName = '';
     if (!!editedRespParty) {
-      console.log(`The RoleID = ${editedRespParty.roleID}`);
-      console.log(`The UUIDs = ${editedRespParty.partyUuids}`);
+      // console.log(`The RoleID = ${editedRespParty.roleID}`);
+      // console.log(`The UUIDs = ${editedRespParty.partyUuids}`);
       if (!this.metaInfo.responsibleParties) {
         this.metaInfo.responsibleParties = new Array<ResponsibleParty>();
       }
@@ -801,7 +801,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
         this.activeEditIndex = -1;
       }
     } else {
-      console.log(`Save Edited POoP => CANCELLED!`);
+      // console.log(`Save Edited POoP => CANCELLED!`);
     }
     this.currentEditedRespParty = undefined;
   }
@@ -828,11 +828,11 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
         this.metaInfo.roles = new Array<Role>();
       }
       this.metaInfo.roles.push(newRole);
-      console.log(`+++Add Role => ADDED! Len=${this.metaInfo.roles.length}`);
-      console.log(`+++Role-Title = ${newRole.title}`);
-      console.log(`+++Role-ID = ${newRole.id}`);
+      // console.log(`+++Add Role => ADDED! Len=${this.metaInfo.roles.length}`);
+      // console.log(`+++Role-Title = ${newRole.title}`);
+      // console.log(`+++Role-ID = ${newRole.id}`);
     } else {
-      console.log(`Add Role => CANCELLED!`);
+      // console.log(`Add Role => CANCELLED!`);
     }
   }
 
@@ -945,15 +945,15 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
         this.metaInfo.responsibleParties.push(newRespParty);
       }
       const none = 'None';
-      console.log(`+==Id=${newRespParty.roleID} Len=${newRespParty.partyUuids.length}; Links#=${newRespParty.links ? newRespParty.links.length : none}; Props# = ${newRespParty.props ? newRespParty.props.length : none} `);
-      console.log(`+== Add Resp => ADDED! Len = ${this.metaInfo.responsibleParties.length} `);
-      console.log(`+== Resp - Id = ${newRespParty.roleID} `);
+      // console.log(`+==Id=${newRespParty.roleID} Len=${newRespParty.partyUuids.length}; Links#=${newRespParty.links ? newRespParty.links.length : none}; Props# = ${newRespParty.props ? newRespParty.props.length : none} `);
+      // console.log(`+== Add Resp => ADDED! Len = ${this.metaInfo.responsibleParties.length} `);
+      // console.log(`+== Resp - Id = ${newRespParty.roleID} `);
       const last = this.metaInfo.responsibleParties[this.metaInfo.responsibleParties.length - 1];
       if (last.links) {
-        console.log(`Value=${last.links[0].href}`);
+        // console.log(`Value=${last.links[0].href}`);
       }
     } else {
-      console.log(`Add Responsible Party => CANCELLED!`);
+      // console.log(`Add Responsible Party => CANCELLED!`);
     }
   }
 
