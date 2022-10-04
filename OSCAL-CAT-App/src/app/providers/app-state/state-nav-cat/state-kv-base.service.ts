@@ -33,6 +33,7 @@ import { Storage } from '@ionic/storage';
 })
 export class KvServiceBase {
     isReady: boolean = false;
+
     constructor(
         public storage: Storage,
         public platform: Platform,
@@ -107,6 +108,9 @@ export class KvServiceBase {
         return theValue;
     }
 
+    async removeItemByKey(keyValue: string): Promise<any> {
+        return this.storage.remove(keyValue);
+    }
 
     async isKeyValuePresent(keyValue: string): Promise<boolean> {
         const value = await this.storage.get(keyValue);
