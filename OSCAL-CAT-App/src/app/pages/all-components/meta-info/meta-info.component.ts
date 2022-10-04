@@ -152,9 +152,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     // private CFR: ComponentFactoryResolver,
     // private db: AppDbInProgressService,
   ) {
-
     // this.db = new AppDbInProgressService(new Platform(), new SQLite(), new HttpClient(new HttpHandler()), new SQLitePorter());
-
     // console.log(`x-x-x: EL = ${db.entitiesList}`);
     // console.log(`Before Async`);
     // const x = { first: 1, second: 'second' };
@@ -179,7 +177,6 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     }
   }
 
-
   initMetaInfo() {
     // console.log(`Init Meta Info!`);
     // console.log(`Active Session:`);
@@ -192,9 +189,11 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
       if (!!this.activeSession.meta) {
         this.metaInfo = this.activeSession.meta;
       } else {
-        if (this.activeSession.catalog)
+        if (this.activeSession.catalog) {
+          console.log(this.activeSession.catalog);
           this.metaInfo = this.activeSession.catalog.metadata;
-        this.activeSession.meta = this.activeSession.catalog.metadata;
+          this.activeSession.meta = this.activeSession.catalog.metadata;
+        }
       }
     } else if
       (this.session.isKeyValuePresent(NamedSessionNodes.ACTIVE_SESSION_NAME)) {
@@ -361,7 +360,6 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     }
   }
 
-
   /**
    * Presents POoP Pop-Up
    */
@@ -408,13 +406,10 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
    * @param mode: the mode of the pop-Up to create {editExisting, createNew}
    */
   async presentGenericPopup(popUpType: number, mode: number) {
-
   }
 
   onResetToNow() {
-
   }
-
 
   isPartyTabActive(): boolean {
     return this.partyNames.includes(this.activeEntityAddTabName);
