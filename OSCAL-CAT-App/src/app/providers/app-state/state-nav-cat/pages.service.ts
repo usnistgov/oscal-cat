@@ -144,12 +144,12 @@ export class PagesService {
   }
 
   getCurrentNextState(urlTail: string): PrevCurrentNext {
-    console.log(`urlTail:${urlTail}`);
+    // console.log(`urlTail:${urlTail}`);
     const currentPage = this.getCurrentPage(urlTail);
     if (currentPage) {
-      console.log(`CurrentGroup=[${currentPage.pageGroup}]; Current UrlTail=${urlTail}`);
+      // console.log(`CurrentGroup=[${currentPage.pageGroup}]; Current UrlTail=${urlTail}`);
       const currentSection = this.getPagesForGroup(currentPage.pageGroup);
-      currentSection.forEach(m => console.log(`Group: ${currentPage.pageGroup} @${m.url} #${m.sequence}`));
+      // currentSection.forEach(m =>console.log(`Group: ${currentPage.pageGroup} @${m.url} #${m.sequence}`));
 
       const nextNum = currentPage.sequence + 1;
       const prevNum = currentPage.sequence - 1;

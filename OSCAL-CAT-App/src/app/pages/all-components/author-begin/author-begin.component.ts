@@ -88,7 +88,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     const entityChecks = resArray[0];
     const baselineChecks = resArray[1];
     const cat = this.knownFiles.getAllKnownFiles()[index];
-    console.log(cat);
+    // console.log(cat);
     if (cat && entityChecks[0]) {
       cat.needsRefresh = entityChecks[0];
     }
@@ -100,7 +100,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       }
     }
     this.knownFiles.refreshCat(cat);
-    console.log(cat);
+    // console.log(cat);
   }
 
   /**
@@ -114,7 +114,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   }
 
   markActiveBrief(): string {
-    console.log('Mark-Active-Brief');
+    // console.log('Mark-Active-Brief');
     if (!!this.activeBrief) {
       // if (this.activeBrief.index < this.getCatListSize()) {
       //   this.activeRadioCat = this.activeBrief.index;
@@ -126,12 +126,12 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       }
       // (this.getIndexByUUID(this.activeBrief.uuid)
       //   + this.getCatListSize()).toString();
-      console.log(`AC-UUID:${this.activeItemString}`);
+      // console.log(`AC-UUID:${this.activeItemString}`);
       // }
     } else {
       this.activeItemString = '0';
     }
-    console.log(this.activeItemString);
+    // console.log(this.activeItemString);
     this.radioGroup.value = this.activeItemString;
     return this.activeItemString;
   }
@@ -161,8 +161,8 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
             } else {
               this.savedWork = Array<SessionBrief>();
             }
-            console.log(`Saved Work:`)
-            console.log(this.savedWork);
+            // console.log(`Saved Work:`)
+            // console.log(this.savedWork);
           });
       }
     }
@@ -183,8 +183,8 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
           } else {
             this.activeBrief = undefined;
           }
-          console.log(`Active Brief:`)
-          console.log(this.activeBrief);
+          // console.log(`Active Brief:`)
+          // console.log(this.activeBrief);
         });
     }
   }
@@ -250,8 +250,8 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     );
     newBrief.catType = this.chosenOscalCat.cat_enum;
 
-    console.log(`New-Brief`);
-    console.log(newBrief);
+    // console.log(`New-Brief`);
+    // console.log(newBrief);
     return newBrief;
   }
 
@@ -265,23 +265,23 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     newSession.knownCat = this.chosenOscalCat;
     newSession.catalog = this.chosenOscalCat.content_cat.loadedEntity;
 
-    console.log(`New-Session`);
-    console.log(newSession);
+    // console.log(`New-Session`);
+    // console.log(newSession);
     return newSession;
   }
 
   activateSession(addSessionToList = true) {
-    console.log(`ChosenOscalCat & ChosenBrief`);
-    console.log(this.chosenOscalCat);
-    console.log(this.chosenBrief);
+    // console.log(`ChosenOscalCat & ChosenBrief`);
+    // console.log(this.chosenOscalCat);
+    // console.log(this.chosenBrief);
     if (this.chosenOscalCat) {
       // User chose BASE CATALOG. We need to :
       // 1. Update session Briefs (Used Only in UI Here so far)
       // 2. Change the ActiveBrief to the new One [Persist It as Well!]
       // 3. Create a new persisted session with UUID (Will be used as an Active-Session persisted Entity)
       const newSessionUUID = UUIDv4()
-      console.log(`Cat-Activate - Chosen-Cat - Creating UUID`);
-      console.log(newSessionUUID)
+      // console.log(`Cat-Activate - Chosen-Cat - Creating UUID`);
+      // console.log(newSessionUUID)
 
       const newBrief = this.createNewBrief(newSessionUUID);
       const newSession = this.createNewSession(newBrief);
@@ -295,9 +295,9 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
         }
         this.savedWork.push(newBrief);
 
-        console.log(`savedWork Array has Length:${this.savedWork.length}`);
-        console.log(`Saved work Array ${this.savedWork}`);
-        console.log(this.savedWork);
+        // console.log(`savedWork Array has Length:${this.savedWork.length}`);
+        // console.log(`Saved work Array ${this.savedWork}`);
+        // console.log(this.savedWork);
 
         this.persistSavedBriefs(newBrief); // 1. Update session Briefs... & 2. Change the ActiveBrief ...
         this.activeItemString = newBrief.uuid; // Reflect in UI the Newly-Created ActiveBrief
@@ -310,8 +310,8 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       // 2. Persist ActiveBrief in Storage as Well!
       //    ** Session-Briefs-Array does not change (Only Selection does)
       // 3. Read and Assign the ActiveSession form UUID-*SessionData* field
-      console.log(`Chosen-ActiveSession`);
-      console.log(this.session.ActiveSession);
+      // console.log(`Chosen-ActiveSession`);
+      // console.log(this.session.ActiveSession);
       this.session.activateBrief(this.chosenBrief);
       this.session.activateSession(this.chosenBrief);
     }
@@ -338,11 +338,11 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     )
       .then(
         x => {
-          console.log(`this.session.ActiveSession`);
+          // console.log(`this.session.ActiveSession`);
           if (this.session.ActiveBrief !== newBrief) {
             this.session.activateBrief(newBrief);
           }
-          console.log(this.session.ActiveBrief);
+          // console.log(this.session.ActiveBrief);
         }
       ).catch(
         (e) => {
@@ -352,15 +352,15 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
 
   genericPromiseCatch(e, extraInfo: string = undefined) {
     if (extraInfo) {
-      console.log(`${extraInfo}`);
+      // console.log(`${extraInfo}`);
     } else {
-      console.log(`Error`);
+      // console.log(`Error`);
     }
-    console.log(e);
+    // console.log(e);
   }
 
   ngOnDestroy(): void {
-    console.log('Begin-Page Will Destroy!!!!!!');
+    // console.log('Begin-Page Will Destroy!!!!!!');
     this.activateSession();
   }
 
@@ -369,7 +369,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     // to verify that button press is not a mistake.
 
     if (!!this.savedWork) {
-      console.log(`Item Index ${theItemIndex} Event Target:${$event.target}`);
+      // console.log(`Item Index ${theItemIndex} Event Target:${$event.target}`);
       const item = this.savedWork[theItemIndex]
       this.savedWork.splice(theItemIndex, 1);
       if (this.savedWork.length > 0) {
@@ -398,14 +398,14 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   * Function generates the Alert pop-up
   */
   async presentDeleteWarning($event: Event, itemIndex: number) {
-    console.log(itemIndex);
-    console.log(this.savedWork);
+    // console.log(itemIndex);
+    // console.log(this.savedWork);
 
-    console.log(this.savedWork[itemIndex]);
+    // console.log(this.savedWork[itemIndex]);
     const item = this.savedWork[itemIndex]
     const name = (item.fullName) ? item.fullName : item.name;
     const uuid = item.uuid;
-    console.log(name);
+    // console.log(name);
     const summaryHtml: string =
       `<div>Are you sure you want to delete</div><br />`
       + `<div> <strong>Saved Work:</strong></div>`
@@ -452,13 +452,13 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
         {
           text: 'Cancel',
           handler: data => {
-            console.log('Cancel clicked');
+            // console.log('Cancel clicked');
           }
         },
         {
           text: 'Save',
           handler: data => {
-            console.log('Saved clicked');
+            // console.log('Saved clicked');
           }
         }
       ]
@@ -468,7 +468,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
 
 
   hasBaseLines(fileInfo: KnownOscalFileLocation) {
-    console.log(fileInfo.cat_baselines);
+    // console.log(fileInfo.cat_baselines);
     return !!fileInfo.cat_baselines && fileInfo.cat_baselines.length > 0;
   }
 
