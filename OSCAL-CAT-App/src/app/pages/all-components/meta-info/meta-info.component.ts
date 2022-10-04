@@ -288,7 +288,6 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     return null;
   }
 
-
   versionToString(): string {
     const ver = `${this.metaForm.controls.major.value}.${this.metaForm.controls.minor.value}`;
     return ver;
@@ -303,7 +302,6 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
       lastModified: new Date(Date.now()),
     };
   }
-
 
   formatDateLabel(originalDate: Date): string {
     return format(parseISO(format(originalDate, 'yyyy-MM-dd HH:mm')), 'MMM d, yyyy @ HH:mm (zzzz)');
