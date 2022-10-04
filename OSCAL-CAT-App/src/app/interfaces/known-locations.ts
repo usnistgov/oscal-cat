@@ -53,6 +53,7 @@ export enum CatSampleIntendedUse {
 }
 
 export interface KnownOscalFileLocation {
+    cat_store_name: string;
     cat_enum?: KnownCatalogNames;
     cat_id: string;
     cat_suffix?: string;

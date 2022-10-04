@@ -83,6 +83,7 @@ export class KnownOscalFilesService {
 
     private static knownCatFiles: Array<KnownOscalFileLocation> = [
         {
+            cat_store_name: 'Cat-0',
             cat_enum: KnownCatalogNames.NIST_800_53_Rev4,
             cat_id: 'NIST SP 800-53 Rev4 Catalog',
             cat_suffix: '800-53.Rev-4',
@@ -95,6 +96,7 @@ export class KnownOscalFilesService {
 
             cat_baselines: [
                 {
+                    cat_store_name: 'Cat-0-Lo',
                     cat_enum: KnownCatalogNames.NIST_Low_Rev4,
                     cat_id: 'NIST SP 800-53 Rev4 Low Baseline',
                     cat_suffix: 'Low',
@@ -113,6 +115,7 @@ export class KnownOscalFilesService {
                     pro_short_label: 'L',
                 },
                 {
+                    cat_store_name: 'Cat-0-Md',
                     cat_enum: KnownCatalogNames.NIST_Moderate_Rev4,
                     cat_id: 'NIST SP 800-53 Rev4 Moderate Baseline',
                     cat_suffix: 'Moderate',
@@ -131,6 +134,7 @@ export class KnownOscalFilesService {
                     pro_short_label: 'M',
                 },
                 {
+                    cat_store_name: 'Cat-0-Hi',
                     cat_enum: KnownCatalogNames.NIST_High_Rev4,
                     cat_id: 'NIST SP 800-53 Rev4 High Baseline',
                     cat_suffix: 'High',
@@ -152,6 +156,7 @@ export class KnownOscalFilesService {
         },
 
         {
+            cat_store_name: 'Cat-1',
             cat_id: '800-53 Rev5 Oscal Catalog',
             cat_label: 'Catalog 800-53 Revision 5',
             cat_suffix: '800-53.Rev-5',
@@ -163,6 +168,7 @@ export class KnownOscalFilesService {
             cat_use_as: CatSampleIntendedUse.CatalogSample,
             cat_baselines: [
                 {
+                    cat_store_name: 'Cat-1-Lo',
                     cat_enum: KnownCatalogNames.NIST_Low_Rev5,
                     cat_id: 'NIST SP 800-53 Rev5 Low Baseline',
                     cat_suffix: 'Low',
@@ -181,6 +187,7 @@ export class KnownOscalFilesService {
                     pro_short_label: 'L',
                 },
                 {
+                    cat_store_name: 'Cat-1-Md',
                     cat_enum: KnownCatalogNames.NIST_Moderate_Rev4,
                     cat_id: 'NIST SP 800-53 Rev5 Moderate Baseline',
                     cat_suffix: 'Moderate',
@@ -199,6 +206,7 @@ export class KnownOscalFilesService {
                     pro_short_label: 'M',
                 },
                 {
+                    cat_store_name: 'Cat-1-Hi',
                     cat_enum: KnownCatalogNames.NIST_High_Rev4,
                     cat_id: 'NIST SP 800-53 Rev5 High Baseline',
                     cat_suffix: 'High',
@@ -217,6 +225,7 @@ export class KnownOscalFilesService {
                     pro_short_label: 'H',
                 },
                 {
+                    cat_store_name: 'Cat-1-Pr',
                     cat_enum: KnownCatalogNames.NIST_Privacy_Rev5,
                     cat_id: 'NIST SP 800-53 Rev5 Privacy Baseline',
                     cat_suffix: 'Privacy',
@@ -295,21 +304,26 @@ export class KnownOscalFilesService {
                         httpClient, storage, platform,
                         cat.cat_url,
                         cat.cat_file,
-                        KnownOscalFilesService.cat_schema.schema
+                        KnownOscalFilesService.cat_schema.schema,
+                        cat.cat_store_name,
                     );
                     if (!cat.content_cat.loadedEntity) {
                         cat.content_cat.loadRemoteEntity();
                     }
+                    console.log(cat.cat_store_name);
                 }
                 if (cat.cat_baselines && cat.cat_baselines.length > 0) {
                     cat.cat_baselines.forEach(
                         catBaseline => {
+                            console.log(catBaseline.cat_store_name);
+
                             if (!cat.content_pro) {
                                 cat.content_pro = new OscalRemoteFile<Profile>(
                                     httpClient, storage, platform,
                                     catBaseline.pro_url,
                                     catBaseline.pro_file,
-                                    KnownOscalFilesService.pro_schema.schema
+                                    KnownOscalFilesService.pro_schema.schema,
+                                    catBaseline.cat_store_name,
                                 )
                             }
                             if (!cat.content_res_pro) {
@@ -317,10 +331,10 @@ export class KnownOscalFilesService {
                                     httpClient, storage, platform,
                                     catBaseline.pro_url_res,
                                     catBaseline.pro_file_res,
-                                    KnownOscalFilesService.cat_schema.schema
+                                    KnownOscalFilesService.cat_schema.schema,
+                                    catBaseline.cat_store_name + "-Res",
                                 )
                             }
-
                             if (!cat.content_pro.loadedEntity) {
                                 cat.content_pro.loadRemoteEntity();
                             }
