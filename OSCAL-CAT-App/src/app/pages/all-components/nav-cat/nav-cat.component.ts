@@ -53,11 +53,12 @@ export class NavCatComponent implements OnInit {
     const link = this.router.url;
     this.pageState = this.pageService.getCurrentNextState(link);
 
-    console.log(`OnInit => 
-                  Page: ${link}; 
-                  Next>${this.pageState.next ? this.pageState.next.url : 'none'} 
-                  & Prev<${this.pageState.prev ? this.pageState.prev.url : 'none'}`
-    );
+    // console.log(`OnInit => 
+    //               Page: ${link}; 
+    //               Next>${this.pageState.next ? this.pageState.next.url : 'none'} 
+    //               & Prev<${this.pageState.prev ? this.pageState.prev.url : 'none'}`
+    // );
+
     // this.store.dispatch(); // <- This is action of getting PageState from AppState instead of Service if needed
   }
 
