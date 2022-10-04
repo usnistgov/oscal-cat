@@ -371,6 +371,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     if (!!this.savedWork) {
       // console.log(`Item Index ${theItemIndex} Event Target:${$event.target}`);
       const item = this.savedWork[theItemIndex]
+
       this.savedWork.splice(theItemIndex, 1);
       if (this.savedWork.length > 0) {
         this.session.setKeyValueObject(NamedSessionNodes.SESSION_BRIEFS, this.savedWork)
@@ -380,7 +381,10 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
               this.readSavedBriefs();
               this.readActiveBrief();
               // Delete the session object by UUID
-              this.session.isKeyValuePresent
+              const sessionItem = SessionBrief.getSessionKeyName(item.uuid);
+              if (this.session.isKeyValuePresent(sessionItem)) {
+                this.session.removeSession(item.uuid);
+              }
             }
           ).catch(
             (error) => {
