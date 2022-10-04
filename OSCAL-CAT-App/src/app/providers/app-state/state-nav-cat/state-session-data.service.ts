@@ -71,9 +71,12 @@ export class SessionBrief {
         this.uuid = uuid;
         this.name = name;
         this.originalIndexKF = index;
-        this.sessionDataName = `${uuid}:${NamedSessionNodes.SESSION_DATA}`;
+        this.sessionDataName = SessionBrief.getSessionKeyName(uuid);
     }
 
+    static getSessionKeyName(uuid: string) {
+        return `${uuid}:${NamedSessionNodes.SESSION_DATA}`;
+    }
 }
 export class SessionData extends SessionBrief {
 
@@ -304,14 +307,30 @@ export class CurrentSessionData extends KvServiceBase {
         }
     }
 
-
-
     public createNewActiveSession(brief: SessionBrief, cat: Catalog) {
         const newSession = new SessionData(brief.uuid, brief.name, brief.originalIndexKF);
         if (!!cat) {
             newSession.catalog = cat;
         }
         this.ActiveSession = newSession;
+    }
+
+    public removeSession(uuid: string) {
+        const sessionKeyName = SessionBrief.getSessionKeyName(uuid);
+        if (this.isKeyValuePresent(sessionKeyName)) {
+            this.removeItemByKey(sessionKeyName)
+                .then(
+                    (result) => {
+                        console.log('Removing session from store');
+                        console.log(result);
+                    }
+                ).catch(
+                    (error) => {
+                        console.log('Error while removing session from store');
+                        console.log(error);
+                    }
+                );
+        }
 
     }
 

@@ -239,6 +239,18 @@ export class OsFileOperations /* extends KvServiceBase */ {
 
 }
 
+/**
+ * Two-tier logic for 
+ * 1. Pulling in the remote files form the central Schema repositories
+ *    with fallback on the local copies
+ * 2. Validate the pulled catalogs/profiles with the corresponding schemas
+ *    and populate corresponding flags indicating the validation results 
+ *
+ * @export
+ * @class OscalRemoteFile
+ * @extends {OsFileOperations}
+ * @template ResultType
+ */
 @Injectable({
     providedIn: 'root'
 })
@@ -268,7 +280,7 @@ export class OscalRemoteFile<ResultType> extends OsFileOperations /* extends KvS
         public urlFile?: string,
         public localFile?: string,
         public schema?: any,
-
+        public storeName?: string
     ) {
         super(httpClient, storage, platform);
         this.entitySchema = schema;
@@ -354,6 +366,10 @@ export class OscalRemoteFile<ResultType> extends OsFileOperations /* extends KvS
             );
     }
 
+    private saveCat() {
+
+    }
+
     public validateEntity(): FilePullResult<ResultType> {
         let validationAjv: AjvValidationResult;
         if (this.isRemoteFileDone || this.isLocalFileDone && !!this.entitySchema && !!this.loadedEntity) {
@@ -379,6 +395,14 @@ export class OscalRemoteFile<ResultType> extends OsFileOperations /* extends KvS
     }
 }
 
+/**
+ * Async promise-resolving class for pulling in the JSON-Schema 
+ * files for the Catalogs & Profiles into the users' browser
+ *
+ * @export 
+ * @class SchemaFile
+ * @extends {OsFileOperations}
+ */
 @Injectable({
     providedIn: 'root'
 })
