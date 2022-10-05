@@ -69,7 +69,7 @@ jobs:
         retention-days: 5
       id: upload-release-files
     - name: Create or Update Release
-      uses: ncipollo/release-action@58ae73b360456532aafd58ee170c045abbeaee37
+      uses: ncipollo/release-action@4c75f0f2e4ae5f3c807cf0904605408e319dcaac
       with:
         name: OSCAL CAT ${{ env.RELEASE_VERSION }} Release
         allowUpdates: false
