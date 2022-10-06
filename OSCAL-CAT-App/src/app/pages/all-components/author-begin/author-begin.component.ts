@@ -372,6 +372,12 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       // console.log(`Item Index ${theItemIndex} Event Target:${$event.target}`);
       const item = this.savedWork[theItemIndex]
       this.savedWork.splice(theItemIndex, 1);
+      // **********************************************
+      // Delete the HEAVY-WEIGHT session object by UUID
+      console.log('Deleting UUID Session');
+      console.log(item.uuid);
+      this.session.removeSession(item.uuid);
+      // **********************************************
       if (this.savedWork.length > 0) {
         this.session.setKeyValueObject(NamedSessionNodes.SESSION_BRIEFS, this.savedWork)
           .then(
@@ -379,12 +385,6 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
               this.savedWork = newData;
               this.readSavedBriefs();
               this.readActiveBrief();
-
-              // Delete the HEAVY-WEIGHT session object by UUID
-              const sessionItem = SessionBrief.getSessionKeyName(item.uuid);
-              if (this.session.isKeyValuePresent(sessionItem)) {
-                this.session.removeSession(item.uuid);
-              }
             }
           ).catch(
             (error) => {
@@ -392,7 +392,8 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
             }
           );
       } else {
-        this.session.setKeyValueObject(NamedSessionNodes.SESSION_BRIEFS, null);
+        this.session.removeItemByKey(NamedSessionNodes.SESSION_BRIEFS);
+        this.session.removeItemByKey(NamedSessionNodes.ACTIVE_BRIEF);
         this.savedWork = null;
       }
     }
