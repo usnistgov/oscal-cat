@@ -317,6 +317,11 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     return newSession;
   }
 
+  /**
+   * Activation of the session 
+   * @param {boolean} [addSessionToList=true]
+   * @memberof AuthorBeginComponent
+   */
   activateSession(addSessionToList = true) {
     // console.log(`ChosenOscalCat & ChosenBrief`);
     // console.log(this.chosenOscalCat);
@@ -364,6 +369,13 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Get catalog form the KnownFiles by brief 
+   * @private
+   * @param {SessionBrief} brief
+   * @returns
+   * @memberof AuthorBeginComponent
+   */
   private getCatalog(brief: SessionBrief) {
     if (this.oscalFiles) {
       if (brief.originalIndexKF < this.oscalFiles.length) {
@@ -378,6 +390,12 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Save modified briefs into the in-browser indexedDB
+   * @private
+   * @param {SessionBrief} newBrief
+   * @memberof AuthorBeginComponent
+   */
   private persistSavedBriefs(newBrief: SessionBrief) {
     this.session.setKeyValueObject<Array<SessionBrief>>(
       NamedSessionNodes.SESSION_BRIEFS,
@@ -393,17 +411,18 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
         }
       ).catch(
         (e) => {
-          this.genericPromiseCatch(e);
+          this.genericPromiseCatch(e, 'Catch-Error in persistSavedBriefs');
         });
   }
 
+
   genericPromiseCatch(e, extraInfo: string = undefined) {
     if (extraInfo) {
-      // console.log(`${extraInfo}`);
+      console.log(`${extraInfo}`);
     } else {
-      // console.log(`Error`);
+      console.log(`Error`);
     }
-    // console.log(e);
+    console.log(e);
   }
 
   ngOnDestroy(): void {
@@ -435,7 +454,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
             }
           ).catch(
             (error) => {
-              console.log(error);
+              this.genericPromiseCatch(error, 'Catch-Error in removeWorkItem');
             }
           );
       } else {
@@ -517,7 +536,6 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     });
     prompt.present();
   }
-
 
   hasBaseLines(fileInfo: KnownOscalFileLocation) {
     // console.log(fileInfo.cat_baselines);
