@@ -79,8 +79,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
 
   /**
    * Handles refresh of the files by pulling them online again
-   *
-   * @param {number} index - T^he array index of the KnownFile to be refreshed
+   * @param {number} index - The array index of the KnownFile to be refreshed
    * @memberof AuthorBeginComponent
    */
   handleCatRefresh(index: number) {
@@ -104,8 +103,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *
-   *
+   * Size up the this.oscalFiles array
    * @returns {number}Sizes the known files array
    * @memberof AuthorBeginComponent
    */
@@ -113,6 +111,11 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     return this.oscalFiles.length;
   }
 
+  /**
+   * Mark the radio of the active catalog
+   * @returns {string}
+   * @memberof AuthorBeginComponent
+   */
   markActiveBrief(): string {
     // console.log('Mark-Active-Brief');
     if (!!this.activeBrief) {
@@ -136,6 +139,12 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     return this.activeItemString;
   }
 
+  /**
+   * Identify index of the previously saved work by UUID
+   * @param {string} uuid
+   * @returns {number}
+   * @memberof AuthorBeginComponent
+   */
   getIndexByUUID(uuid: string): number {
     const index = this.savedWork.findIndex(
       (x: SessionBrief) => {
@@ -144,6 +153,10 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     return index;
   }
 
+  /**
+   * Read briefs from 'OC:All-Briefs' (NamedSessionNodes.SESSION_BRIEFS) for the UI & Session
+   * @memberof AuthorBeginComponent
+   */
   readSavedBriefs() {
     // Read the previously pulled-in Cats from Session
     if (!!CurrentSessionData.savedBriefs) {
@@ -168,6 +181,10 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Read briefs from 'OC:Active-Briefs' (NamedSessionNodes.ACTIVE_BRIEF) for the UI & Session
+   * @memberof AuthorBeginComponent
+   */
   readActiveBrief() {
     // Read the persisted Active-Brief
     if (this.session.isKeyValuePresent(
@@ -189,16 +206,16 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleRemoteLocalCacheRadio($event: Event) {
-    // THis is for User-Added files
-  }
-
+  /**
+   * Radio change handle function
+   * @param {Event} $event
+   * @memberof AuthorBeginComponent
+   */
   handleRadioChange($event: Event) {
     const value = ($event as CustomEvent).detail.value;
     // console.log($event);
     // console.log(value);
     // console.log(`value < this.getCatListSize() : ${value < this.getCatListSize()}`);
-
     if (value < this.getCatListSize()) {
       this.knownFiles.setActive(value);
       this.chosenOscalCat = this.oscalFiles[value];
@@ -211,11 +228,15 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     }
   }
 
-
+  /**
+   * Verify if the downloaded files became stale
+   * @param {number} idx
+   * @returns {boolean}
+   * @memberof AuthorBeginComponent
+   */
   showActiveCatInfo(idx: number): boolean {
     if (
-      this.knownFiles.isCatInfoStale(
-        this.knownFiles.getAllKnownFiles()[idx])
+      this.knownFiles.isCatInfoStale(this.knownFiles.getAllKnownFiles()[idx])
     ) {
       return idx == this.activeRadioOscalCatForStaleness;
     }
@@ -229,19 +250,39 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     // alert(`Alert:\n\t${data}\n\tItem Number ${idx}`);
   }
 
+  /**
+   * True if saved work exists
+   *
+   * @returns {boolean}
+   * @memberof AuthorBeginComponent
+   */
   hasSavedWork(): boolean {
     return (!!this.savedWork);
   }
 
-
+  /**
+   * Plug in editing pop-up for the Saved Items names
+   * @param {*} $event
+   * @param {number} theItemIndex
+   * @memberof AuthorBeginComponent
+   */
   editWorkItemName($event, theItemIndex: number) {
   }
 
-  //This is a routed page hook on PageWillLeave Event
+  /**
+   * This is a routed page hook on PageWillLeave Event
+   * @memberof AuthorBeginComponent
+   */
   parentIonViewWillLeave(): void {
     this.activateSession();
   }
 
+  /**
+   * Creates a brief object for the session-preserved object
+   * @param {string} newSessionUUID
+   * @returns {SessionBrief} new Session brief returned
+   * @memberof AuthorBeginComponent
+   */
   createNewBrief(newSessionUUID: string): SessionBrief {
     const newBrief = new SessionBrief(
       newSessionUUID,
@@ -249,12 +290,18 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       this.activeIndex
     );
     newBrief.catType = this.chosenOscalCat.cat_enum;
-
+    // Debug-information for console debugging
     // console.log(`New-Brief`);
     // console.log(newBrief);
     return newBrief;
   }
 
+  /**
+   * Create a new session object {UUID}:Session-Data
+   * @param {SessionBrief} newBrief
+   * @returns {SessionData}
+   * @memberof AuthorBeginComponent
+   */
   createNewSession(newBrief: SessionBrief): SessionData {
     const newSession = new SessionData(
       newBrief.uuid,
