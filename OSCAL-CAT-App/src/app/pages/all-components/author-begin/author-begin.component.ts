@@ -463,11 +463,11 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
    */
   genericPromiseCatch(e, extraInfo: string = undefined) {
     if (extraInfo) {
-      // console.log(`${extraInfo}`);
+      console.log(`${extraInfo}`);
     } else {
-      // console.log(`Error`);
+      console.log(`Error`);
     }
-    // console.log(e);
+    console.log(e);
   }
 
   ngOnDestroy(): void {
