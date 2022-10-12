@@ -444,24 +444,28 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       console.log(item.uuid);
       this.session.removeSession(item.uuid);
       // **********************************************
-      if (this.savedWork.length > 0) {
-        this.session.setKeyValueObject(NamedSessionNodes.SESSION_BRIEFS, this.savedWork)
-          .then(
-            (newData) => {
-              this.savedWork = newData;
-              this.readSavedBriefs();
-              this.readActiveBrief();
-            }
-          ).catch(
-            (error) => {
-              this.genericPromiseCatch(error, 'Catch-Error in removeWorkItem');
-            }
-          );
-      } else {
-        this.session.removeItemByKey(NamedSessionNodes.SESSION_BRIEFS);
-        this.session.removeItemByKey(NamedSessionNodes.ACTIVE_BRIEF);
-        this.savedWork = null;
-      }
+      this.updateSavedItems();
+    }
+  }
+
+  private updateSavedItems() {
+    if (this.savedWork.length > 0) {
+      this.session.setKeyValueObject(NamedSessionNodes.SESSION_BRIEFS, this.savedWork)
+        .then(
+          (newData) => {
+            this.savedWork = newData;
+            this.readSavedBriefs();
+            this.readActiveBrief();
+          }
+        ).catch(
+          (error) => {
+            this.genericPromiseCatch(error, 'Catch-Error in removeWorkItem');
+          }
+        );
+    } else {
+      this.session.removeItemByKey(NamedSessionNodes.SESSION_BRIEFS);
+      this.session.removeItemByKey(NamedSessionNodes.ACTIVE_BRIEF);
+      this.savedWork = null;
     }
   }
 
@@ -543,6 +547,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
             // console.log('Saved clicked');
             // console.log(data);
             this.savedWork[itemIndex].name = data.title;
+            this.updateSavedItems()
           }
         }
       ]
@@ -550,11 +555,22 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     prompt.present();
   }
 
+  /**
+   * Returns true if cat baselines are present
+   * @param {KnownOscalFileLocation} fileInfo
+   * @returns
+   * @memberof AuthorBeginComponent
+   */
   hasBaseLines(fileInfo: KnownOscalFileLocation) {
     // console.log(fileInfo.cat_baselines);
     return !!fileInfo.cat_baselines && fileInfo.cat_baselines.length > 0;
   }
 
+  /**
+   * Returns the List Title for SavedItems
+   * @returns {string}
+   * @memberof AuthorBeginComponent
+   */
   getDraftsTitle(): string {
     if (this.savedWork && this.savedWork.length > 0) {
       return `Continue with the Previously Saved Work`;
