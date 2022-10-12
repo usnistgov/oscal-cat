@@ -79,9 +79,9 @@
                                 (click)="presentDeleteWarning($event,runningSavedIndex)">
                                 <ion-icon icon='trash-outline'></ion-icon>
                             </ion-button>
-
+                            <!-- disabled="true" -->
                             <ion-button [title]="'Press to edit '.concat(workItem.name)"
-                                (click)="editWorkItemName($event,runningSavedIndex)" disabled="true">
+                                (click)="presentEditName($event,runningSavedIndex)">
                                 <ion-icon icon='pencil-outline'></ion-icon>
                             </ion-button>
 
