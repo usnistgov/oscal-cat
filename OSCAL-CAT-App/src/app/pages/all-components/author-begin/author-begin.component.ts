@@ -466,12 +466,14 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Function generates the Alert pop-up
-  */
+   * Present delete Alert pop-up warning with Yes-Delete/Cancel and hook-up lambda-events  
+   * @param {Event} $event
+   * @param {number} itemIndex
+   * @memberof AuthorBeginComponent
+   */
   async presentDeleteWarning($event: Event, itemIndex: number) {
     // console.log(itemIndex);
     // console.log(this.savedWork);
-
     // console.log(this.savedWork[itemIndex]);
     const item = this.savedWork[itemIndex]
     const name = (item.fullName) ? item.fullName : item.name;
@@ -507,16 +509,25 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     await alert.present();
   }
 
-
-  /// Rename work item Alert pop-up
+  /**
+   * Rename work item Alert pop-up
+   * @param {Event} $event
+   * @param {number} itemIndex
+   * @memberof AuthorBeginComponent
+   */
   async presentEditName($event: Event, itemIndex: number) {
+    const item = this.savedWork[itemIndex]
+    const name = (item.fullName) ? item.fullName : item.name;
+    const uuid = item.uuid;
     const prompt = await this.alertControl.create({
-      header: 'Rename Saved Work',
-      message: "Enter new name for the saved item",
+      cssClass: 'prompt-global-class',
+      header: `Rename ${name}`,
+      message: `Enter new name for the saved item<br/> ${uuid}`,
       inputs: [
         {
           name: 'title',
-          placeholder: 'Title'
+          placeholder: 'Title',
+          value: name,
         },
       ],
       buttons: [
@@ -530,6 +541,8 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
           text: 'Save',
           handler: data => {
             // console.log('Saved clicked');
+            // console.log(data);
+            this.savedWork[itemIndex].name = data.title;
           }
         }
       ]
