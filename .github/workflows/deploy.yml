@@ -67,7 +67,7 @@ jobs:
         path: ${{ github.workspace }}/${{ env.DEPLOY_REPO_CHECKOUT_PATH }}
       id: checkout-deploy-repo-no-commit-token
     - name: Set up NodeJS
-      uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
+      uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516
       with:
         node-version-file: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/.nvmrc'
         cache: 'npm'
