@@ -752,6 +752,7 @@ export class MetaInfoComponent extends CatTheBaseComponent implements OnInit, Af
   }
 
   startLinkEdit($event, theLink: Link) {
+
     if (!this.currentEditedLink) {
       this.cancelEditTab<Link>(undefined);
       this.currentEditedLink = this.startEntityEdit<Link>(theLink, this.metaInfo.links, EditingState.Link, this.currentEditedLink);
