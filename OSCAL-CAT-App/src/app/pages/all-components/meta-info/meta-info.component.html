@@ -362,14 +362,17 @@
                   <ion-icon icon="information-circle-outline"></ion-icon>
                   &nbsp;&nbsp;&nbsp;
                   <ion-label class="ion-text-wrap fixed-width-text">{{doc.identifier}}<br /> </ion-label>
+
                   <ion-button [title]="'Press to remove '.concat(doc.identifier, ' ', doc.scheme)" color="danger"
-                    (click)="removeDocId($event,doc)">
+                    (click)="removeDocId($event, doc)">
                     <ion-icon icon='trash-outline'></ion-icon>
                   </ion-button>
+
                   <ion-button [title]="'Press to edit '.concat(doc.identifier, ' ', doc.scheme)"
-                    (click)="startDocIdEdit($event,doc)">
+                    (click)="startDocIdEdit($event, doc)">
                     <ion-icon icon='pencil-outline'></ion-icon>
                   </ion-button>
+
                 </ion-item>
               </div>
             </ion-list>
@@ -406,10 +409,35 @@
           </div>
         </ion-col>
       </ion-row>
+
+      <!-- EDITING Document ID & Property -->
+      <ion-row class="tab-cell-row">
+
+        <ion-col class="tab-cell-row">
+          <div *ngIf="'Editing Document ID' === this.activeEditState" class="tab-cell-row-framed">
+            <oscal-array-document-ids parentEntity="Meta-Information" (closeTab)="cancelEditTab($event)"
+              [singleMode]="true" [hideAddElementButton]="true" listTitle="Document ID" inputName="Document ID"
+              [showAddCancelButtons]="true" (saveTab)="this.addEditDocID($event, true)" [idArray]="currentEditedDocId"
+              #editDocIdTab [ID]="'editDocId'">
+            </oscal-array-document-ids>
+          </div>
+
+          <div *ngIf="'Editing Property' === this.activeEditState" class="tab-cell-row-framed">
+            <oscal-array-properties listTitle="Property" actionName="Edit" iconName="pricetags-outline"
+              parentEntity="Meta-Information" inputName="Property" [singleMode]="true"
+              (closeTab)="cancelEditTab($event)" [hideAddElementButton]="true" [showAddCancelButtons]="true"
+              (saveTab)="this.addEditProperty($event, false)" #editPropertyTab [ID]="'editProperty'"
+              [propertiesArray]="this.currentEditedProperty">
+            </oscal-array-properties>
+          </div>
+        </ion-col>
+
+      </ion-row>
+
     </ion-grid>
 
-    <!-- Doc-ID & Property -->
 
+    <!-- Doc-ID & Property -->
     <ion-grid>
       <ion-row class="topless bottomless">
         <ion-col class="topless bottomless">
@@ -434,28 +462,31 @@
           </ion-toolbar>
         </ion-col>
       </ion-row>
+
       <!-- The controls for editing separate entries (second row) -->
       <ion-row class="tab-cell-row">
         <ion-col class="tab-cell-row">
+
           <div *ngIf="'DocID' === activeEntityAddTabName" class="tab-cell-row-framed">
-            <oscal-array-document-ids #propertyTab [ID]="'docId'" [idArray]="[undefined]" [singleMode]="true"
+            <oscal-array-document-ids #docIdTab [ID]="'docId'" [idArray]="[undefined]" [singleMode]="true"
               parentEntity="Meta-Information" listTitle="Document ID" inputName="Document ID" hideAddButton="true"
-              (closeTab)="cancelAddTab($event)" [hideAddElementButton]="true" [showAddCancelButtons]="true"
+              [hideAddElementButton]="true" [showAddCancelButtons]="true" (closeTab)="cancelAddTab($event)"
               (saveTab)="this.addEditDocID($event, false)">
             </oscal-array-document-ids>
           </div>
+
           <div *ngIf="'Property' === activeEntityAddTabName" class="tab-cell-row-framed">
             <oscal-array-properties #propertyTab [ID]="'metaProperty'" [propertiesArray]="[undefined]"
               listTitle="Property" actionName="Add" iconName="pricetags-outline" parentEntity="Meta-Information"
-              inputName="Property" [singleMode]="true" hideAddButton="true" (closeTab)="cancelAddTab($event)"
-              [hideAddElementButton]="true" [showAddCancelButtons]="true"
+              inputName="Property" [singleMode]="true" hideAddButton="true" [hideAddElementButton]="true"
+              [showAddCancelButtons]="true" (closeTab)="cancelAddTab($event)"
               (saveTab)="this.addEditProperty($event, false)">
             </oscal-array-properties>
           </div>
+
         </ion-col>
       </ion-row>
     </ion-grid>
-
 
     <!-- Existing Entities  haveDocIds() || haveProperties() || haveLinks() || haveLocations()  -->
     <hr />
@@ -520,6 +551,31 @@
           </div>
         </ion-col>
       </ion-row>
+
+      <!-- EDITING Link & Location-->
+      <ion-row class="tab-cell-row">
+        <ion-col class="tab-cell-row">
+
+          <div *ngIf="'Link' === activeEntityAddTabName" class="tab-cell-row-framed">
+            <!--  formArrayName="Links" -->
+            <oscal-array-links #editLinkTab [ID]="'editLinks'" [linksArray]="[undefined]" listTitle="Link"
+              actionName="Add" iconName="link-outline" parentEntity="Meta-Information" parentName="Meta-Information"
+              inputName="Link" singleMode="true" hideAddButton="true" hideAddElementButton="true"
+              showAddCancelButtons="true" (closeTab)="cancelAddTab($event)" (saveTab)="this.addEditLink($event, false)">
+            </oscal-array-links>
+          </div>
+
+          <div *ngIf="'Location' === activeEntityAddTabName" class="tab-cell-row-framed">
+            <!--  formArrayName="Location" -->
+            <oscal-location-info #editLocationTab [ID]="'editLocation'" [locationInfo]="undefined" actionName="Add"
+              iconName="pricetags-outline" parentName="Meta-Information" inputName="Location" singleMode="true"
+              hideAddButton="true" (closeTab)="cancelAddTab($event)" (saveTab)="this.addEditLink($event, false)">
+            </oscal-location-info>
+          </div>
+
+        </ion-col>
+      </ion-row>
+
     </ion-grid>
 
     <!-- Link & Location Add/Edit-->
@@ -549,6 +605,8 @@
           </ion-toolbar>
         </ion-col>
       </ion-row>
+
+      <!-- ADDING Link & Location-->
       <!-- UI-controls for EDITING separate entry of Link OR Location (second row in this layout) -->
       <ion-row class="tab-cell-row">
         <ion-col class="tab-cell-row">

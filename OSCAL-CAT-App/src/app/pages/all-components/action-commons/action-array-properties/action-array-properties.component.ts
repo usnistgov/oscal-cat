@@ -117,9 +117,10 @@ export class PropertiesArrayComponent
   ngOnInit() {
     super.ngOnInit();
 
-    for (const [key, value] of this.inputsMap) {
-      console.log(`Key=${key}, Val=${value}`);
-    }
+    // for (const [key, value] of this.inputsMap) {
+    //   console.log(key);
+    //   console.log(value);
+    // }
 
     this.subForm = this.formBuilder.group({
       entries: this.getControlsArray(),
