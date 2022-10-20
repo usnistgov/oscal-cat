@@ -136,9 +136,9 @@ export class ActionAncestorBaseComponent implements OnInit {
     const elementTitle = (!!this.inputName) ? this.inputName : this.defaultSingleTitle;
     const formArray = this.subForm.get('entries') as FormArray;
     const count = formArray.length;
-    if (count > 0) {
-      console.log(`FormArray-Len = ${count} Elem=${elementTitle}`);
-    }
+    // if (count > 0) {
+    //   console.log(`FormArray-Len = ${count} Elem=${elementTitle}`);
+    // }
     const prefix = ((count > 0) ? `` : `No`);
     const listTitle = (!this.listTitle && this.defaultPluralTitle) ?
       this.defaultPluralTitle :
@@ -213,7 +213,11 @@ export class ActionAncestorBaseComponent implements OnInit {
   getNewFormGroupByFieldToMap<Type>(data?: Type): FormGroup {
     const preparedGroup = {};
     for (const [key, value] of this.inputsMap) {
-      console.log(`Key=${key}, Val=${value}`);
+      console.log(key);
+      console.log(value);
+    }
+    for (const [key, value] of this.inputsMap) {
+      //console.log(`Key=${key}, Val=${value}`);
       preparedGroup[value.fieldToMap] = new FormControl(
         {
           value: (data ? data[value.fieldToMap] : ''),

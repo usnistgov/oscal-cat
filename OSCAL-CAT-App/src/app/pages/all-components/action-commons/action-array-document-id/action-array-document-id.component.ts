@@ -67,6 +67,8 @@ export class DocumentIDArrayComponent
         validateAs: [Validators.required],
         requiredField: true,
       });
+    this.defaultPluralTitle = 'Document IDs';
+    this.defaultSingleTitle = 'Document ID';
 
   }
 
@@ -80,7 +82,6 @@ export class DocumentIDArrayComponent
 
   ngOnInit() {
     super.ngOnInit();
-    this.defaultPluralTitle = 'Document IDs';
 
     // for (const [key, value] of this.inputsMap) {
     //   console.log(`Key=${key}, Val=${value}`);
@@ -90,16 +91,35 @@ export class DocumentIDArrayComponent
       entries: this.getControlsArray(),
     });
     this.localForm.addControl(this.ID, this.subForm);
+
+    console.log('ID-Array-Value');
+    console.log(this.idArray);
   }
 
-
+  getFormTitleLocal(): string {
+    const id = 'ID';
+    const defaultTitle = this.getFormTitle();
+    if (this.singleMode
+      &&
+      defaultTitle.indexOf('ID', 0) >= 0
+      &&
+      this.idArray.length > 0
+      &&
+      this.idArray[0]
+      &&
+      this.idArray[0].identifier
+    ) {
+      return defaultTitle.replace(id, `${id} ${this.idArray[0].identifier}`)
+    }
+    return defaultTitle
+  }
 
   getControlsArray() {
-    return this.getControlsArrayByKey<DocumentIdentifier>(this.idArray);
+    return this.getControlsArrayByFieldToMap<DocumentIdentifier>(this.idArray);
   }
 
   getNewFormGroup(data?: DocumentIdentifier): FormGroup {
-    return this.getNewFormGroupByKey<DocumentIdentifier>();
+    return this.getNewFormGroupByFieldToMap<DocumentIdentifier>();
   }
 
   /**
@@ -110,7 +130,7 @@ export class DocumentIDArrayComponent
    */
   onSave() {
     const savedDocId = OscalCatalogEmpties.getEmptyDocID();
-    const updatedDocId = this.getUpdatedElementByKey<DocumentIdentifier>(savedDocId);
+    const updatedDocId = this.getUpdatedElementByFieldToMap<DocumentIdentifier>(savedDocId);
     this.saveTab.emit(updatedDocId);
     this.closeTab.emit();
   }

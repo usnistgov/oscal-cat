@@ -97,9 +97,9 @@ export class ArrayLinksComponent
       this.linksArray = this.linksArray || [OscalCatalogEmpties.getEmptyLink()];
     }
 
-    for (const [key, value] of this.inputsMap) {
-      console.log(`LINK: Key=${key}, Val=${value}`);
-    }
+    // for (const [key, value] of this.inputsMap) {
+    //   console.log(`LINK: Key=${key}, Val=${value}`);
+    // }
 
     this.subForm = this.formBuilder.group({
       entries: this.getControlsArray(),

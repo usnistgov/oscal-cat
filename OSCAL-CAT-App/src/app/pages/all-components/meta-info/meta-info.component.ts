@@ -53,6 +53,9 @@ import {
   CurrentSessionData, NamedSessionNodes, SessionData
 } from './../../../providers/app-state/state-nav-cat/state-session-data.service';
 import { format, parseISO, getDate, getMonth, getYear } from 'date-fns';
+import { Console } from 'console';
+import { DocumentIDArrayComponent } from '../action-commons/action-array-document-id/action-array-document-id.component';
+import { PropertiesArrayComponent } from '../action-commons/action-array-properties/action-array-properties.component';
 
 export interface CloseAddEdit {
   closeAddEditPOoP: (controlKey: string, isValid: boolean, returnObject: PartyOrganizationOrPerson) => any;
@@ -98,7 +101,16 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
   @ViewChild('linkTab') linkTab: ArrayLinksComponent;
   @ViewChild('locationsTab') locationsTab: LocationsArrayComponent;
   @ViewChild('locationTab') locationTab: LocationInfoComponent;
-  @ViewChild('propertyTab') propertyTab: LocationsArrayComponent;
+  @ViewChild('propertyTab') propertyTab: PropertiesArrayComponent;
+  @ViewChild('docIdTab') docIdTab: DocumentIDArrayComponent;
+
+  @ViewChild('editEntityTab') editEntityTab: ActionPartyInfoComponent;
+  @ViewChild('editRoleTab') editRoleTab: ActionArrayRolesComponent;
+  @ViewChild('editLinkTab') editLinkTab: ArrayLinksComponent;
+  @ViewChild('editLocationsTab') editLocationsTab: LocationsArrayComponent;
+  @ViewChild('editLocationTab') editLocationTab: LocationInfoComponent;
+  @ViewChild('editPropertyTab') editPropertyTab: PropertiesArrayComponent;
+  @ViewChild('editDocIdTab') editDocIdTab: DocumentIDArrayComponent;
   @ViewChild('popoverDatetime', { static: true }) popoverDatetimeValue: IonDatetime;
 
   private formBuilder: FormBuilder;
@@ -140,8 +152,8 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
   currentEditedRole: Role;
   defaultRoles: Array<Role>;
   currentEditedRespParty: ResponsibleParty;
-  currentEditedDocId: DocumentIdentifier;
-  currentEditedProperty: Property;
+  currentEditedDocId: Array<DocumentIdentifier>;
+  currentEditedProperty: Array<Property>;
   currentEditedLink: Link;
   currentEditedLocation: Location;
 
@@ -629,9 +641,14 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     }
   }
 
-  startEntityEdit<Type>(theEntity: Type, theSourceArray: Array<Type>, theNewState: EditingState, currentEditedEntity?: Type): Type {
+  startEntityEdit<Type>(
+    theEntity: Type,
+    theSourceArray: Array<Type>,
+    theNewState: EditingState,
+    currentEditedEntity?: Type): Type {
+
     this.cancelEditTab<Type>(undefined);
-    currentEditedEntity = theEntity;
+    if (currentEditedEntity) { currentEditedEntity = theEntity; }
     this.activeEditState = theNewState;
     this.activeEditIndex = theSourceArray.indexOf(theEntity);
     return theEntity;
@@ -674,20 +691,21 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     }
   }
 
-  startDocIdEdit($event, theDocId: DocumentIdentifier) {
-    if (!this.currentEditedDocId) {
+  startDocIdEdit($event, editedDocId: DocumentIdentifier) {
+    if (!this.currentEditedDocId || !(this.activeEditState === EditingState.DocID)) {
       this.cancelEditTab<DocumentIdentifier>(undefined);
-      this.startEntityEdit<DocumentIdentifier>(theDocId, this.metaInfo.documentIDS, EditingState.DocID, this.currentEditedDocId);
+      this.currentEditedDocId = [this.startEntityEdit<DocumentIdentifier>(editedDocId, this.metaInfo.documentIDS, EditingState.DocID)];
     } else {
       this.currentEditedDocId = undefined;
-      this.cancelEditTab<DocumentIdentifier>(theDocId);
+      this.cancelEditTab<DocumentIdentifier>(editedDocId);
+
     }
   }
 
   startPropertyEdit($event, theProp: Property) {
-    if (!this.currentEditedProperty) {
+    if (!this.currentEditedProperty || !(this.activeEditState === EditingState.Property)) {
       this.cancelEditTab<Property>(undefined);
-      this.startEntityEdit<Property>(theProp, this.metaInfo.props, EditingState.Property, this.currentEditedProperty);
+      this.currentEditedProperty = [this.startEntityEdit<Property>(theProp, this.metaInfo.props, EditingState.Property)];
     } else {
       this.currentEditedProperty = undefined;
       this.cancelEditTab<Property>(theProp);
@@ -695,6 +713,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
   }
 
   startLinkEdit($event, theLink: Link) {
+
     if (!this.currentEditedLink) {
       this.cancelEditTab<Link>(undefined);
       this.startEntityEdit<Link>(theLink, this.metaInfo.links, EditingState.Link, this.currentEditedLink);
