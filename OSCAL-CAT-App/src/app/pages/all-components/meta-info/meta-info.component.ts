@@ -715,7 +715,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
   startLinkEdit($event, theLink: Link) {
     if (!this.currentEditedLink) {
       this.cancelEditTab<Link>(undefined);
-      this.startEntityEdit<Link>(theLink, this.metaInfo.links, EditingState.Link, this.currentEditedLink);
+      this.currentEditedLink = this.startEntityEdit<Link>(theLink, this.metaInfo.links, EditingState.Link, this.currentEditedLink);
     } else {
       this.currentEditedLink = undefined;
       this.cancelEditTab<Link>(theLink);
@@ -725,7 +725,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
   startLocationEdit($event, theLocation: Location) {
     if (!this.currentEditedLocation) {
       this.cancelEditTab<Location>(undefined);
-      this.startEntityEdit<Location>(theLocation, this.metaInfo.locations, EditingState.Location, this.currentEditedLocation);
+      this.currentEditedLocation = this.startEntityEdit<Location>(theLocation, this.metaInfo.locations, EditingState.Location, this.currentEditedLocation);
     } else {
       this.currentEditedLocation = undefined;
       this.cancelEditTab<Location>(theLocation);
@@ -822,7 +822,6 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     // Maybe we need to do something with them?
     // TODO or not ToDo: ?
     this.activeEditState = EditingState.Off;
-
   }
 
   cancelAddTab<Type>(returnType: Type) {
@@ -853,6 +852,8 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     isEditedDocID?: boolean
   ): Array<ListElementType> {
     this.activeEntityAddTabName = '';
+    this.cancelEditTab<ListElementType>(newEntry);
+
     console.log(newEntry);
     console.log(isEditedDocID);
     if (!!newEntry) {
@@ -914,44 +915,18 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     this.metaInfo.props = this.addEditArray<Property>(newProp, this.metaInfo.props, false);
   }
 
-  addEditProperty(newProp: Property, isEdited?: boolean) {
-    this.activeEntityAddTabName = '';
-    if (newProp) {
-      if (!isEdited) { // New Property
-        if (!this.metaInfo.props) {
-          this.metaInfo.props = new Array<Property>();
-        }
-        this.metaInfo.props.push(newProp);
-      } else if (isEdited) {
-
-      }
-    }
+  updateLink(newProp: Link) {
+    this.metaInfo.links = this.addEditArray<Link>(newProp, this.metaInfo.links, true);
+  }
+  addLink(newProp: Link) {
+    this.metaInfo.links = this.addEditArray<Link>(newProp, this.metaInfo.links, false);
   }
 
-  addEditLink(newLink?: Link, isEdited?: boolean) {
-    this.activeEntityAddTabName = '';
-    if (newLink) {
-      if (!isEdited) { // New Property
-        if (!this.metaInfo.links) {
-          this.metaInfo.links = new Array<Link>();
-        }
-        this.metaInfo.links.push(newLink);
-      } else if (isEdited) {
-      }
-    }
+  updateLocation(newProp: Location) {
+    this.metaInfo.locations = this.addEditArray<Location>(newProp, this.metaInfo.locations, true);
   }
-
-  addEditLocation(newLocation?: Location, isEdited?: boolean) {
-    this.activeEntityAddTabName = '';
-    if (newLocation) {
-      if (!isEdited) { // New Property
-        if (!this.metaInfo.locations) {
-          this.metaInfo.locations = new Array<Location>();
-        }
-        this.metaInfo.locations.push(newLocation);
-      } else if (isEdited) {
-      }
-    }
+  addLocation(newProp: Location) {
+    this.metaInfo.locations = this.addEditArray<Location>(newProp, this.metaInfo.locations, false);
   }
 
   pushIntoOptionalArray<ElementType>(array: Array<ElementType>, newArray: Array<ElementType>): Array<ElementType> {
