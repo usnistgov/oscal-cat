@@ -395,14 +395,17 @@
                   <ion-icon icon="pricetags-outline"></ion-icon>
                   &nbsp;&nbsp;&nbsp;
                   <ion-label class="ion-text-wrap fixed-width-text">{{prop.name}} = {{prop.value}} </ion-label>
+
                   <ion-button [title]="'Press to remove '.concat(prop.name, '=', prop.value)" color="danger"
                     (click)="this.removeProperty($event,prop)">
                     <ion-icon icon='trash-outline'></ion-icon>
                   </ion-button>
+
                   <ion-button [title]="'Press to edit '.concat(prop.name, ' = ', prop.value)"
                     (click)="startPropertyEdit($event,prop)">
                     <ion-icon icon='pencil-outline'></ion-icon>
                   </ion-button>
+
                 </ion-item>
               </div>
             </ion-list>
@@ -491,6 +494,7 @@
     <hr />
     <ion-grid *ngIf=" haveLinks() || haveLocations() ">
       <ion-row>
+
         <!-- Links Entities List -->
         <ion-col>
           <ion-label *ngIf="!this.haveLinks()">
@@ -507,10 +511,12 @@
                   <ion-icon icon="link-outline"></ion-icon>
                   &nbsp;&nbsp;&nbsp;
                   <ion-label class="ion-text-wrap fixed-width-text">{{link.href}}</ion-label>
+
                   <ion-button [title]="'Press to remove link'.concat(link.href)" color="danger"
                     (click)="this.removeLink($event,link)">
                     <ion-icon icon='trash-outline'></ion-icon>
                   </ion-button>
+
                   <ion-button [title]="'Press to edit link '.concat(link.href)" (click)="startLinkEdit($event,link)">
                     <ion-icon icon='pencil-outline'></ion-icon>
                   </ion-button>
@@ -536,10 +542,12 @@
                   <ion-icon icon="location-outline"></ion-icon>
                   &nbsp;&nbsp;&nbsp;
                   <ion-label class="ion-text-wrap fixed-width-text">{{location_info.uuid}}</ion-label>
+
                   <ion-button [title]="'Press to remove location: '.concat(location_info.title)" color="danger"
                     (click)="this.removeLocation($event, location_info)">
                     <ion-icon icon='trash-outline'></ion-icon>
                   </ion-button>
+
                   <ion-button [title]="'Press to edit location: '.concat(location_info.title)"
                     (click)="startLocationEdit($event,location_info)">
                     <ion-icon icon='pencil-outline'></ion-icon>
@@ -555,20 +563,21 @@
       <ion-row class="tab-cell-row">
         <ion-col class="tab-cell-row">
 
-          <div *ngIf="'Link' === activeEntityAddTabName" class="tab-cell-row-framed">
+          <div *ngIf="'Editing Link' === this.activeEditState" class="tab-cell-row-framed">
             <!--  formArrayName="Links" -->
-            <oscal-array-links #editLinkTab [ID]="'editLinks'" [linksArray]="[undefined]" listTitle="Link"
+            <oscal-array-links #editLinkTab [ID]="'editLinks'" [linksArray]="[this.currentEditedLink]" listTitle="Link"
               actionName="Add" iconName="link-outline" parentEntity="Meta-Information" parentName="Meta-Information"
-              inputName="Link" singleMode="true" hideAddButton="true" hideAddElementButton="true"
-              showAddCancelButtons="true" (closeTab)="cancelAddTab($event)" (saveTab)="this.addEditLink($event, false)">
+              inputName="Link" [singleMode]="true" hideAddButton="true" [hideAddElementButton]="true"
+              [showAddCancelButtons]="true" (closeTab)="cancelEditTab($event)" (saveTab)="this.updateLink($event)">
             </oscal-array-links>
           </div>
 
-          <div *ngIf="'Location' === activeEntityAddTabName" class="tab-cell-row-framed">
+          <div *ngIf="'Editing Location' === this.activeEditState" class="tab-cell-row-framed">
             <!--  formArrayName="Location" -->
-            <oscal-location-info #editLocationTab [ID]="'editLocation'" [locationInfo]="undefined" actionName="Add"
-              iconName="pricetags-outline" parentName="Meta-Information" inputName="Location" singleMode="true"
-              hideAddButton="true" (closeTab)="cancelAddTab($event)" (saveTab)="this.addEditLink($event, false)">
+            <oscal-location-info #editLocationTab [ID]="'editLocation'" [locationInfo]="this.currentEditedLocation"
+              actionName="Add" iconName="pricetags-outline" parentName="Meta-Information" inputName="Location"
+              [singleMode]="true" hideAddButton="true" (closeTab)="cancelEditTab($event)" [singleMode]="true"
+              (saveTab)="this.updateLocation($event)" [showAddCancelButtons]="true">
             </oscal-location-info>
           </div>
 
@@ -612,19 +621,18 @@
           <div *ngIf="'Link' === activeEntityAddTabName" class="tab-cell-row-framed">
             <!--  formArrayName="Links" -->
             <!-- UI-controls for EDITING separate entry of Link (first column/second row in this layout) -->
-            <oscal-array-links #linkTab [ID]="'metaLinks'" [linksArray]="this.metaInfo.links" listTitle="Link"
-              actionName="Add" iconName="link-outline" parentEntity="Meta-Information" parentName="Meta-Information"
-              inputName="Link" [singleMode]="true" hideAddButton="true" [hideAddElementButton]="true"
-              [showAddCancelButtons]="true" (closeTab)="cancelAddTab($event)"
-              (saveTab)="this.addEditLink($event, false)">
+            <oscal-array-links #linkTab [ID]="'metaLinks'" [linksArray]="[undefined]" listTitle="Link" actionName="Add"
+              iconName="link-outline" parentEntity="Meta-Information" parentName="Meta-Information" inputName="Link"
+              [singleMode]="true" hideAddButton="true" [hideAddElementButton]="true" [showAddCancelButtons]="true"
+              (closeTab)="cancelAddTab($event)" (saveTab)="this.addLink($event)">
             </oscal-array-links>
           </div>
           <!-- UI-controls for EDITING separate entry of Location (second column/second row in this layout) -->
           <div *ngIf="'Location' === activeEntityAddTabName" class="tab-cell-row-framed">
-            <oscal-location-info #locationTab [ID]="'metaLocation'" [locationInfo]="this.metaInfo.locations"
-              actionName="Add" iconName="location-outline" parentName="Meta-Information" inputName="Location"
-              [singleMode]="true" hideAddButton="true" [hideAddElementButton]="true" [showAddCancelButtons]="true"
-              (closeTab)="cancelAddTab($event)" (saveTab)="this.addEditLocation($event, false)">
+            <oscal-location-info #locationTab [ID]="'metaLocation'" [locationInfo]="undefined" actionName="Add"
+              iconName="location-outline" parentName="Meta-Information" inputName="Location" [singleMode]="true"
+              hideAddButton="true" [hideAddElementButton]="true" [showAddCancelButtons]="true"
+              (closeTab)="cancelAddTab($event)" (saveTab)="this.addLocation($event)">
             </oscal-location-info>
           </div>
 
