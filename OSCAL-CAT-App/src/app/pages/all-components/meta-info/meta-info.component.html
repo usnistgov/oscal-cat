@@ -417,8 +417,8 @@
           <div *ngIf="'Editing Document ID' === this.activeEditState" class="tab-cell-row-framed">
             <oscal-array-document-ids parentEntity="Meta-Information" (closeTab)="cancelEditTab($event)"
               [singleMode]="true" [hideAddElementButton]="true" listTitle="Document ID" inputName="Document ID"
-              [showAddCancelButtons]="true" (saveTab)="this.addEditDocID($event, true)" [idArray]="currentEditedDocId"
-              #editDocIdTab [ID]="'editDocId'">
+              [showAddCancelButtons]="true" [idArray]="currentEditedDocId" #editDocIdTab [ID]="'editDocId'"
+              (saveTab)="this.updateDocId($event)">
             </oscal-array-document-ids>
           </div>
 
@@ -426,8 +426,8 @@
             <oscal-array-properties listTitle="Property" actionName="Edit" iconName="pricetags-outline"
               parentEntity="Meta-Information" inputName="Property" [singleMode]="true"
               (closeTab)="cancelEditTab($event)" [hideAddElementButton]="true" [showAddCancelButtons]="true"
-              (saveTab)="this.addEditProperty($event, false)" #editPropertyTab [ID]="'editProperty'"
-              [propertiesArray]="this.currentEditedProperty">
+              #editPropertyTab [ID]="'editProperty'" [propertiesArray]="this.currentEditedProperty"
+              (saveTab)="this.updateProp($event)">
             </oscal-array-properties>
           </div>
         </ion-col>
@@ -471,7 +471,7 @@
             <oscal-array-document-ids #docIdTab [ID]="'docId'" [idArray]="[undefined]" [singleMode]="true"
               parentEntity="Meta-Information" listTitle="Document ID" inputName="Document ID" hideAddButton="true"
               [hideAddElementButton]="true" [showAddCancelButtons]="true" (closeTab)="cancelAddTab($event)"
-              (saveTab)="this.addEditDocID($event, false)">
+              (saveTab)="this.addDocId($event)">
             </oscal-array-document-ids>
           </div>
 
@@ -479,8 +479,7 @@
             <oscal-array-properties #propertyTab [ID]="'metaProperty'" [propertiesArray]="[undefined]"
               listTitle="Property" actionName="Add" iconName="pricetags-outline" parentEntity="Meta-Information"
               inputName="Property" [singleMode]="true" hideAddButton="true" [hideAddElementButton]="true"
-              [showAddCancelButtons]="true" (closeTab)="cancelAddTab($event)"
-              (saveTab)="this.addEditProperty($event, false)">
+              [showAddCancelButtons]="true" (closeTab)="cancelAddTab($event)" (saveTab)="this.addProp($event)">
             </oscal-array-properties>
           </div>
 

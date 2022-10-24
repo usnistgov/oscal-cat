@@ -713,7 +713,6 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
   }
 
   startLinkEdit($event, theLink: Link) {
-
     if (!this.currentEditedLink) {
       this.cancelEditTab<Link>(undefined);
       this.startEntityEdit<Link>(theLink, this.metaInfo.links, EditingState.Link, this.currentEditedLink);
@@ -848,18 +847,71 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     }
   }
 
-  addEditDocID(newDocID: DocumentIdentifier, isEditedDocID?: boolean) {
+  addEditArray<ListElementType>(
+    newEntry: ListElementType,
+    targetArray: Array<ListElementType>,
+    isEditedDocID?: boolean
+  ): Array<ListElementType> {
     this.activeEntityAddTabName = '';
-    if (newDocID) {
+    console.log(newEntry);
+    console.log(isEditedDocID);
+    if (!!newEntry) {
+      if (!targetArray) {
+        targetArray = new Array<ListElementType>();
+      }
       if (!isEditedDocID) { // New DocID
-        if (!this.metaInfo.documentIDS) {
-          this.metaInfo.documentIDS = new Array<DocumentIdentifier>();
-        }
-        this.metaInfo.documentIDS.push(newDocID);
+        targetArray.push(newEntry);
       } else if (isEditedDocID) {
-
+        if (this.activeEditIndex > -1) {
+          targetArray[this.activeEditIndex] = newEntry;
+          this.activeEditIndex = -1;
+        }
+      } else {
+        console.log(`Error ${isEditedDocID ? "updating" : "adding"}`);
+        console.log(newEntry);
       }
     }
+    // console.log(targetArray);
+    return targetArray;
+  }
+
+  updateDocId(editedDocID: DocumentIdentifier) {
+    // this.addEditDocID(editedDocID, true);
+    this.metaInfo.documentIDS = this.addEditArray<DocumentIdentifier>(editedDocID, this.metaInfo.documentIDS, true);
+  }
+  addDocId(editedDocID: DocumentIdentifier) {
+    // this.addEditDocID(editedDocID, false);
+    this.metaInfo.documentIDS = this.addEditArray<DocumentIdentifier>(editedDocID, this.metaInfo.documentIDS, false);
+  }
+
+  addEditDocID(newDocID: DocumentIdentifier, isEditedDocID?: boolean) {
+    // this.activeEntityAddTabName = '';
+    // console.log(newDocID);
+    // console.log(isEditedDocID);
+    // if (!!newDocID) {
+    //   if (!this.metaInfo.documentIDS) {
+    //     this.metaInfo.documentIDS = new Array<DocumentIdentifier>();
+    //   }
+    //   if (!isEditedDocID) { // New DocID
+    //     this.metaInfo.documentIDS.push(newDocID);
+    //   } else if (isEditedDocID) {
+    //     if (this.activeEditIndex > -1) {
+    //       this.metaInfo.documentIDS[this.activeEditIndex] = newDocID;
+    //       this.activeEditIndex = -1;
+    //     }
+    //   } else {
+    //     console.log(`Error ${isEditedDocID ? "updating" : "adding"} Doc ID!`);
+    //   }
+    // }
+  }
+
+  updateProp(newProp: Property) {
+    //this.addEditProperty(newProp, true);
+    this.metaInfo.props = this.addEditArray<Property>(newProp, this.metaInfo.props, true);
+  }
+  addProp(newProp: Property) {
+    // this.addEditProperty(newProp, false);
+    this.metaInfo.props = this.addEditArray<Property>(newProp, this.metaInfo.props, false);
   }
 
   addEditProperty(newProp: Property, isEdited?: boolean) {
