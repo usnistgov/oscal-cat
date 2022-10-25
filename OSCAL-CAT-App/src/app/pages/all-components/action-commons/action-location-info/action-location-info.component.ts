@@ -191,7 +191,7 @@ export class LocationInfoComponent
 
 
   onSave() {
-    console.log('On-Save');
+    // console.log('On-Save');
     const emptyLocation = OscalCatalogEmpties.getEmptyLocation();
     // Get the regular atomic form-mapped fields:
     const savedLocation = this.getUpdatedElementByFieldToMap<Location>(emptyLocation);
@@ -204,19 +204,19 @@ export class LocationInfoComponent
     // console.log(savedLocation.emailAddresses);
 
     savedLocation.links = this.linksArray.formCommitArray();
-    console.log(` #3 Links`);
-    console.log(savedLocation.links);
+    // console.log(` #3 Links`);
+    // console.log(savedLocation.links);
 
     savedLocation.props = this.propsArray.formCommitArray();
-    console.log(` #4 Properties`);
-    console.log(savedLocation.props);
+    // console.log(` #4 Properties`);
+    // console.log(savedLocation.props);
 
     const addressHolder = this.addressesArray.formCommitArray();
-    console.log(` #5 Addresses`);
-    console.log(addressHolder);
+    // console.log(` #5 Addresses`);
+    // console.log(addressHolder);
     if (addressHolder && addressHolder.length > 0) {
       savedLocation.address = addressHolder[0];
-      console.log(savedLocation.address);
+      // console.log(savedLocation.address);
     }
     // console.log(`Rem:${this.localResponsible.remarks}; Model:${this.localResponsible.remarks}`);
     this.saveTab.emit(savedLocation);
