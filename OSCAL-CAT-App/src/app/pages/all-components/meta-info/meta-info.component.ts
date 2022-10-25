@@ -927,6 +927,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
   }
   addLocation(newProp: Location) {
     this.metaInfo.locations = this.addEditArray<Location>(newProp, this.metaInfo.locations, false);
+    console.log(this.metaInfo.locations);
   }
 
   pushIntoOptionalArray<ElementType>(array: Array<ElementType>, newArray: Array<ElementType>): Array<ElementType> {

@@ -35,6 +35,9 @@ import { ArrayLinksComponent } from '../action-array-links/action-array-links.co
 
 import { Link, Location, Property } from './../../../../interfaces/oscal-types/oscal-catalog.types';
 import { OscalCatalogEmpties } from '../../../../interfaces/oscal-types/oscal-catalog-factory';
+import { IMustCommitFormData, IMustCommitFormDataArray } from '../action-ancestor-base/action-ancestor-base.component';
+import { ArrayAddressesComponent } from '../action-array-addresses/action-array-addresses.component';
+import { Address } from 'cluster';
 
 @Component({
   selector: 'oscal-location-info',
@@ -44,7 +47,9 @@ import { OscalCatalogEmpties } from '../../../../interfaces/oscal-types/oscal-ca
     '../../action-all-common/ion-tabs-buttons.scss',
     '../../action-all-common/div-scroll.scss'],
 })
-export class LocationInfoComponent extends ActionAncestorSimpleArrayComponent implements OnInit {
+export class LocationInfoComponent
+  extends ActionAncestorSimpleArrayComponent
+  implements OnInit, IMustCommitFormData<Location> {
   @Input() locationInfo: Location;
   @Output() public closeTab: EventEmitter<Location>;
   @Output() public saveTab: EventEmitter<Location>;
@@ -54,9 +59,7 @@ export class LocationInfoComponent extends ActionAncestorSimpleArrayComponent im
   @ViewChild('linksArray') linksArray: ArrayLinksComponent;
   @ViewChild('propsArray') propsArray: PropertiesArrayComponent;
   @ViewChild('urlsArray') urlsArray: ArrayStringsComponent;
-
-
-
+  @ViewChild('addressesArray') addressesArray: ArrayAddressesComponent;
 
   constructor(
     public formBuilder: FormBuilder,
@@ -67,6 +70,11 @@ export class LocationInfoComponent extends ActionAncestorSimpleArrayComponent im
     this.listTitle = 'Location';
     this.defaultSingleTitle = 'Location';
   }
+
+  formCommit(): Location {
+    throw new Error('Method not implemented.');
+  }
+
 
   private buildInputsMap() {
     this.inputsMap.set('1-UUID',
@@ -183,16 +191,33 @@ export class LocationInfoComponent extends ActionAncestorSimpleArrayComponent im
 
 
   onSave() {
+    console.log('On-Save');
     const emptyLocation = OscalCatalogEmpties.getEmptyLocation();
+    // Get the regular atomic form-mapped fields:
     const savedLocation = this.getUpdatedElementByFieldToMap<Location>(emptyLocation);
-    console.log(` #2 UUID=${savedLocation.uuid}`);
-    savedLocation.emailAddresses = this.emailsArray.getStringArrayData();
-    console.log(` #3`);
-    savedLocation.links = this.linksArray.getResultArrayByFieldToMap<Link>(OscalCatalogEmpties.getEmptyLink);
-    console.log(` #4`);
-    savedLocation.props = this.propsArray.getResultArrayByFieldToMap<Property>(OscalCatalogEmpties.getEmptyProperty);
-    console.log(` #5`);
+    // Get the more complicated entities
+    // console.log(` #1 UUID=${savedLocation.uuid}`);
+    savedLocation.urls = this.urlsArray.formCommitArray();
+    savedLocation.telephoneNumbers = this.phonesArray.formCommitArray();
+    savedLocation.emailAddresses = this.emailsArray.formCommitArray();
+    // console.log(` #2 Emails`);
+    // console.log(savedLocation.emailAddresses);
 
+    savedLocation.links = this.linksArray.formCommitArray();
+    console.log(` #3 Links`);
+    console.log(savedLocation.links);
+
+    savedLocation.props = this.propsArray.formCommitArray();
+    console.log(` #4 Properties`);
+    console.log(savedLocation.props);
+
+    const addressHolder = this.addressesArray.formCommitArray();
+    console.log(` #5 Addresses`);
+    console.log(addressHolder);
+    if (addressHolder && addressHolder.length > 0) {
+      savedLocation.address = addressHolder[0];
+      console.log(savedLocation.address);
+    }
     // console.log(`Rem:${this.localResponsible.remarks}; Model:${this.localResponsible.remarks}`);
     this.saveTab.emit(savedLocation);
     this.closeTab.emit();

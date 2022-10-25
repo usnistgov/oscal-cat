@@ -9,14 +9,17 @@
 
     <div> <br *ngIf="showAddCancelButtons" />
       <ion-buttons *ngIf="showAddCancelButtons" class="even-ion-buttons bottomless" color="warning">
+
         <ion-button (click)="onCancel()" color="danger"
           title="Press to cancel changes to {{actionName}} {{entityName}}">
           <ion-icon slot="start" icon="close-circle-outline"></ion-icon>Cancel
         </ion-button>
-        <ion-button [disabled]="!subForm.valid" (click)="this.onSave()" [color]="!subForm.valid?'dark':'success'"
+
+        <ion-button [disabled]="!subForm.valid" (click)="onSave()" [color]="!subForm.valid?'dark':'success'"
           title="Press to {{actionName}} {{entityName}}">
           <ion-icon slot="start" icon="{{iconName}}"></ion-icon>{{this.getSaveButtonTitle()}}
         </ion-button>
+
       </ion-buttons>
 
     </div>
@@ -74,13 +77,15 @@
 
               <!-- Address [!=- Mandatory -=!]-->
               <ion-col *ngIf="mapKV.value.inputAs==='oscal-address-list'">
-                <oscal-address-list [isSingleMode]="true" [entryName]="this.defaultSingleTitle"></oscal-address-list>
+                <oscal-address-list #addressesArray [isSingleMode]="true" [entryName]="this.defaultSingleTitle"
+                  [addressList]="[this.locationInfo.address]">
+                </oscal-address-list>
               </ion-col>
 
               <!-- Phones for Location -->
               <ion-col *ngIf="mapKV.value.inputAs==='oscal-array-phones'">
                 <oscal-array-phones #phonesArray [parentEntity]="this.defaultSingleTitle"
-                  [isArrayOptionalText]="'(Optional)'">
+                  [isArrayOptionalText]="'(Optional)'" [phonesArray]="this.locationInfo.telephoneNumbers">
                 </oscal-array-phones>
               </ion-col>
 
@@ -89,7 +94,8 @@
                 <oscal-array-string #emailsArray [parentEntity]="this.defaultSingleTitle" [isArrayOptional]="true"
                   [ID]="'emailAddressesLocation'" [stringData]="[]" listTitle="Emails"
                   [parentEntity]="this.defaultSingleTitle" [parentName]="this.defaultSingleTitle" inputName="Email"
-                  [validateAs]="getEmailValidator()" [isArrayOptionalText]="'(Optional)'"></oscal-array-string>
+                  [validateAs]="getEmailValidator()" [isArrayOptionalText]="'(Optional)'"
+                  [stringData]="this.locationInfo.emailAddresses"></oscal-array-string>
               </ion-col>
 
               <!-- URLs -->
@@ -97,20 +103,21 @@
                 <oscal-array-string #urlsArray [parentEntity]="this.defaultSingleTitle" [isArrayOptional]="true"
                   [ID]="'emailAddressesLocation'" [stringData]="[]" listTitle="URLs"
                   [parentEntity]="this.defaultSingleTitle" [parentName]="this.defaultSingleTitle" inputName="URL"
-                  [validateAs]="getEmailValidator()" [isArrayOptionalText]="'(Optional)'"></oscal-array-string>
+                  [validateAs]="getEmailValidator()" [isArrayOptionalText]="'(Optional)'"
+                  [stringData]="this.locationInfo.urls"></oscal-array-string>
               </ion-col>
 
               <!-- Links-->
               <ion-col *ngIf="mapKV.value.inputAs==='oscal-array-links'">
                 <oscal-array-links #linksArray [parentEntity]="this.defaultSingleTitle"
-                  [isArrayOptionalText]="'(Optional)'">
+                  [linksArray]="this.locationInfo.links" [isArrayOptionalText]="'(Optional)'">
                 </oscal-array-links>
               </ion-col>
 
               <!-- Properties-->
               <ion-col *ngIf="mapKV.value.inputAs==='oscal-array-properties'">
                 <oscal-array-properties #propsArray [parentEntity]="this.defaultSingleTitle"
-                  [isArrayOptionalText]="'(Optional)'">
+                  [isArrayOptionalText]="'(Optional)'" [propertiesArray]="this.locationInfo.props">
                 </oscal-array-properties>
               </ion-col>
 
