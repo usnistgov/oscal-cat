@@ -566,7 +566,7 @@
           <div *ngIf="'Editing Link' === this.activeEditState" class="tab-cell-row-framed">
             <!--  formArrayName="Links" -->
             <oscal-array-links #editLinkTab [ID]="'editLinks'" [linksArray]="[this.currentEditedLink]" listTitle="Link"
-              actionName="Add" iconName="link-outline" parentEntity="Meta-Information" parentName="Meta-Information"
+              actionName="Edit" iconName="link-outline" parentEntity="Meta-Information" parentName="Meta-Information"
               inputName="Link" [singleMode]="true" hideAddButton="true" [hideAddElementButton]="true"
               [showAddCancelButtons]="true" (closeTab)="cancelEditTab($event)" (saveTab)="this.updateLink($event)">
             </oscal-array-links>
@@ -575,9 +575,9 @@
           <div *ngIf="'Editing Location' === this.activeEditState" class="tab-cell-row-framed">
             <!--  formArrayName="Location" -->
             <oscal-location-info #editLocationTab [ID]="'editLocation'" [locationInfo]="this.currentEditedLocation"
-              actionName="Add" iconName="pricetags-outline" parentName="Meta-Information" inputName="Location"
-              [singleMode]="true" hideAddButton="true" (closeTab)="cancelEditTab($event)" [singleMode]="true"
-              (saveTab)="this.updateLocation($event)" [showAddCancelButtons]="true">
+              actionName="Edit" iconName="pricetags-outline" parentName="Meta-Information" inputName="Location"
+              [singleMode]="true" hideAddButton="true" [singleMode]="true" [showAddCancelButtons]="true"
+              (closeTab)="cancelEditTab($event)" (saveTab)="this.updateLocation($event)">
             </oscal-location-info>
           </div>
 

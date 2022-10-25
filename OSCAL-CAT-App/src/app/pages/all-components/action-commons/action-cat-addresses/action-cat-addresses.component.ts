@@ -73,7 +73,7 @@ export class OscalCatAddressesComponent extends ActionAncestorSimpleArrayCompone
       {
         fieldToMap: 'addrLines',
         labelName: 'Address Lines',
-        inputTip: 'THe lines may include Organization Name/Person Name/Attention of + Street Name/Building Number + Office/Apartment etc.',
+        inputTip: 'The lines may include Organization Name/Person Name/Attention of + Street Name/Building Number + Office/Apartment etc.',
         complexInputType: true,
         inputAs: 'oscal-strings-list',
       });
