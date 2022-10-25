@@ -212,10 +212,11 @@ export class ActionAncestorBaseComponent implements OnInit {
 
   getNewFormGroupByFieldToMap<Type>(data?: Type): FormGroup {
     const preparedGroup = {};
-    for (const [key, value] of this.inputsMap) {
-      console.log(key);
-      console.log(value);
-    }
+    // // Debugging logging
+    // for (const [key, value] of this.inputsMap) {
+    //   console.log(key);
+    //   console.log(value);
+    // }
     for (const [key, value] of this.inputsMap) {
       //console.log(`Key=${key}, Val=${value}`);
       preparedGroup[value.fieldToMap] = new FormControl(
