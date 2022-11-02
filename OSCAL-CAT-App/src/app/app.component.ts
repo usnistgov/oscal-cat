@@ -93,12 +93,13 @@ export class AppComponent implements OnInit {
       url: '/save',
       icon: 'cloud-download',
     },
-    {
-      sequence: 2,
-      title: 'Upload File',
-      url: '/load',
-      icon: 'cloud-upload',
-    },
+    // Removed for the time being
+    // {
+    //   sequence: 2,
+    //   title: 'Upload File',
+    //   url: '/load',
+    //   icon: 'cloud-upload',
+    // },
 
     {
       sequence: 3,
