@@ -47,7 +47,11 @@ import { KnownOscalFilesService } from './providers/oscal-files/known-files.serv
   entryComponents: [],
   imports: [
     IonicModule.forRoot()
-    , IonicStorageModule.forRoot()
+    , IonicStorageModule.forRoot(
+      {
+        "name": 'Oscal-Cat-Db',
+      }
+    )
     , BrowserModule
     , AppRoutingModule
     , FormsModule
