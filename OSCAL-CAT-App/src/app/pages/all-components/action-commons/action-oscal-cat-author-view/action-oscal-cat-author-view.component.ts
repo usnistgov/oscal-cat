@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { CheckboxChangeEventDetail } from '@ionic/angular';
 import { KnobName } from '@ionic/core';
 import { KnownOscalFileLocation } from 'src/app/interfaces/known-locations';
 import { KnownOscalFilesService } from 'src/app/providers/oscal-files/known-files.service';
@@ -18,8 +19,8 @@ export class OscalCatAuthorViewComponent implements OnInit, IMustCommitFormDataA
 
   knownFiles: KnownOscalFilesService
 
-  private entityChecks: Array<boolean> /* = [false, false] */;
-  private baselineChecks: Array<boolean> /* = [false, false, false, false] */;
+  entityChecks: Array<boolean> /* = [false, false] */;
+  baselineChecks: Array<boolean> /* = [false, false, false, false] */;
 
   constructor(knownFiles: KnownOscalFilesService) {
     this.knownFiles = knownFiles;
@@ -44,7 +45,7 @@ export class OscalCatAuthorViewComponent implements OnInit, IMustCommitFormDataA
     return !!this.knownCat && !!this.knownCat.cat_baselines && this.knownCat.cat_baselines.length > 0 && this.entityChecks[1];
   }
 
-  onCheckEntityUpdate($event: CustomEvent, id: number = -1) {
+  onCheckEntityUpdate($event: CustomEvent<CheckboxChangeEventDetail>, id: number = -1) {
     if (id < 2 && id >= 0) {
       this.entityChecks[id] = $event.detail.checked; //!this.entityChecks[id];
     }

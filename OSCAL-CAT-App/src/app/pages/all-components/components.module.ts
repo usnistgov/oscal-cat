@@ -55,6 +55,7 @@ import { CatParamsComponent } from './action-commons/action-cat-params/action-ca
 import { CatControlsComponent } from './action-commons/action-cat-controls/action-cat-controls.component';
 import { OscalCatAuthorViewComponent } from './action-commons/action-oscal-cat-author-view/action-oscal-cat-author-view.component';
 import { ActionSettingsElementComponent } from './action-commons/action-settings-element/action-settings-element.component';
+import { CatTheBaseComponent } from './action-all-common/cat-the-base/cat-the-base.component';
 
 
 
@@ -64,14 +65,14 @@ import { ActionSettingsElementComponent } from './action-commons/action-settings
     BackMatterComponent, ControlComponent, MetaInfoComponent, AuthoringModeComponent, ActionPartyInfoComponent,
     PropertiesArrayComponent, DocumentIDArrayComponent, ActionArrayRolesComponent, ArrayPhonesComponent,
     ArrayExternalIDsComponent, ActionMapRolesComponent, AuthorBeginComponent, SelectBaselineComponent,
-    CatParamsComponent, CatControlsComponent, OscalCatAuthorViewComponent, ActionSettingsElementComponent,
+    CatParamsComponent, CatControlsComponent, OscalCatAuthorViewComponent, ActionSettingsElementComponent, CatTheBaseComponent,
   ],
   exports: [SelectFamiliesComponent, NavCatComponent, ActionWaitComponent, ActionAncestorBaseComponent,
     ArrayAddressesComponent, ArrayStringsComponent, ArrayLinksComponent, LocationInfoComponent, LocationsArrayComponent,
     BackMatterComponent, ControlComponent, MetaInfoComponent, AuthoringModeComponent, ActionPartyInfoComponent,
     PropertiesArrayComponent, DocumentIDArrayComponent, ActionArrayRolesComponent, ArrayPhonesComponent,
     ArrayExternalIDsComponent, ActionMapRolesComponent, AuthorBeginComponent, SelectBaselineComponent,
-    CatParamsComponent, CatControlsComponent, OscalCatAuthorViewComponent, ActionSettingsElementComponent,
+    CatParamsComponent, CatControlsComponent, OscalCatAuthorViewComponent, ActionSettingsElementComponent, CatTheBaseComponent,
   ],
 
   imports: [IonicModule, ReactiveFormsModule, FormsModule, CommonModule,
