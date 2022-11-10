@@ -61,20 +61,33 @@ export enum NamedSessionNodes {
 
 export class SessionBrief {
 
-    public uuid: string;
     public name: string;
     public fullName?: string;
     public catType?: KnownCatalogNames;
     public originalIndexKF: number;
+    public uuid: string;
     public sessionDataName: string;
+
     constructor(uuid: string, name: string, index: number) {
-        this.uuid = uuid;
+        this.setUuid(uuid);
         this.name = name;
         this.originalIndexKF = index;
-        this.sessionDataName = SessionBrief.getSessionKeyName(uuid);
     }
 
-    static getSessionKeyName(uuid: string) {
+
+    private setUuid(uuid: string) {
+        this.uuid = uuid;
+        this.sessionDataName = SessionBrief.getSessionKeyName(this.uuid);
+    }
+
+    public getSessionDataName(): string {
+        if (!this.sessionDataName) {
+            this.sessionDataName = SessionBrief.getSessionKeyName(this.uuid);
+        }
+        return this.sessionDataName;
+    }
+
+    static getSessionKeyName(uuid: string): string {
         return `${uuid}:${NamedSessionNodes.SESSION_DATA}`;
     }
 }
@@ -103,12 +116,12 @@ export class SessionData extends SessionBrief {
 export class CurrentSessionData extends KvServiceBase {
 
     private static activeBrief: SessionBrief;       // The shallow init object to pull out session uuids
+    static savedBriefs: Array<SessionBrief>;
 
     private static activeSessionName: string;       // The UUID-Session-Data format name of the session if exists 
     private static activeSessionUUID: string;
     private static activeSession: SessionData;      // The deeper version of the session with actual objects in it 
 
-    static savedBriefs: Array<SessionBrief>;
 
     session_id: string;
     savedSessions: string[] = [];
@@ -126,6 +139,7 @@ export class CurrentSessionData extends KvServiceBase {
         // Must make sure that database is created
         const store = await this.storage.create();
         this.storage = store;
+
     }
 
     getNewSessionUUID() {
@@ -152,22 +166,22 @@ export class CurrentSessionData extends KvServiceBase {
     }
 
     readActiveSessionName(): string {
-        this.getKeyValueObject<string>(NamedSessionNodes.ACTIVE_SESSION_NAME)
-            .then((data: string) => {
-                CurrentSessionData.activeSessionName = data;
-                return data;
+        this.getKeyValueObject<SessionBrief>(NamedSessionNodes.ACTIVE_BRIEF)
+            .then((data: SessionBrief) => {
+                CurrentSessionData.activeSessionName = data.sessionDataName;
+                return CurrentSessionData.activeSessionName;
             })
             .catch((error) => {
                 console.log(
                     `Promise of the ` +
-                    `NamedSessionNodes.ACTIVE_SESSION_NAME:` +
-                    `${NamedSessionNodes.ACTIVE_SESSION_NAME}` +
+                    `NamedSessionNodes.ACTIVE_BRIEF:` +
+                    `${NamedSessionNodes.ACTIVE_BRIEF}` +
                     ` is not found ${JSON.stringify(error)}`);
             })
         return undefined;
     }
 
-    public set ActiveSession(session: SessionData) {
+    public setActiveSession(session: SessionData) {
         this.setKeyValueObject<SessionData>(session.sessionDataName, session)
             .then
             ((sessionData: SessionData) => {
@@ -177,28 +191,35 @@ export class CurrentSessionData extends KvServiceBase {
             });
     }
 
-    public get ActiveSession(): SessionData {
+    public getActiveSession(): SessionData {
         if (CurrentSessionData.activeSession) {
             return CurrentSessionData.activeSession;
         } else {
-            var id;
+            var sessionID;
+            // MAKE SURE THAT SESSION BRIEF EXISTS
+            if (!CurrentSessionData.activeBrief) {
+                CurrentSessionData.activeBrief = this.getActiveBrief();
+            }
             if (CurrentSessionData.activeBrief) {
-                id = CurrentSessionData.activeBrief.sessionDataName
+                sessionID = CurrentSessionData.activeBrief.sessionDataName
             } else if (CurrentSessionData.activeSessionName) {
-                id = CurrentSessionData.activeSessionName;
+                sessionID = CurrentSessionData.activeSessionName;
             } else if (CurrentSessionData.activeSessionUUID) {
-                id = this.getStoreUuidEntryName(
+                sessionID = this.getStoreUuidEntryName(
                     CurrentSessionData.activeSessionUUID,
                     NamedSessionNodes.SESSION_DATA)
             } else {
-                id = this.readActiveSessionName();
+                sessionID = this.readActiveSessionName();
             }
-            if (!!id) {
-                this.readActivateSession(id);
+            if (!!sessionID) {
+                this.readActivateSession(sessionID);
             } else {
                 console.log(`No active session nor Active Session UUID were found`);
             }
         }
+        console.log(`SessionID: ${sessionID}`);
+        console.log(CurrentSessionData.activeSession);
+        return CurrentSessionData.activeSession;
     }
 
     private readActivateSession(id: string) {
@@ -214,10 +235,18 @@ export class CurrentSessionData extends KvServiceBase {
     }
 
     activateBrief(brief: SessionBrief) {
-        this.ActiveBrief = brief;
+        // CurrentSessionData.activeBrief = brief;
+        this.ActivateBriefState(brief);
+        this.setKeyValueObject<SessionBrief>(
+            NamedSessionNodes.ACTIVE_BRIEF, brief)
+            .then(
+                (brief) => {
+                    this.ActivateBriefState(brief);
+                    console.log(brief);
+                });
     }
 
-    public set ActiveBrief(brief: SessionBrief) {
+    public setActiveBrief(brief: SessionBrief) {
         this.setKeyValueObject<SessionBrief>(
             NamedSessionNodes.ACTIVE_BRIEF, brief)
             .then(
@@ -226,7 +255,7 @@ export class CurrentSessionData extends KvServiceBase {
                 });
     }
 
-    public get ActiveBrief(): SessionBrief {
+    public getActiveBrief(): SessionBrief {
         if (CurrentSessionData.activeBrief) {
             return CurrentSessionData.activeBrief;
         } else {
@@ -234,7 +263,7 @@ export class CurrentSessionData extends KvServiceBase {
                 .then(
                     (brief) => {
                         this.ActivateBriefState(brief);
-
+                        return brief;
                     }
                 ).catch(
                     (error) => {
@@ -242,7 +271,7 @@ export class CurrentSessionData extends KvServiceBase {
                         console.log(error);
                     });
         }
-
+        return CurrentSessionData.activeBrief;
     }
 
     public getBriefByUUID(uuid: string, setAsActive: boolean = false): SessionBrief {
@@ -259,7 +288,6 @@ export class CurrentSessionData extends KvServiceBase {
             if (brief.uuid) {
                 CurrentSessionData.activeSessionUUID = brief.uuid
                 CurrentSessionData.activeSessionName = brief.sessionDataName;
-
             }
         }
     }
@@ -312,7 +340,7 @@ export class CurrentSessionData extends KvServiceBase {
         if (!!cat) {
             newSession.catalog = cat;
         }
-        this.ActiveSession = newSession;
+        this.setActiveSession(newSession);
     }
 
     public removeSession(uuid: string) {
@@ -338,7 +366,7 @@ export class CurrentSessionData extends KvServiceBase {
 
         const uuid = this.getNewSessionUUID();
         const newSession = new SessionData(uuid, name, index);
-        this.ActiveSession = newSession;
+        this.setActiveSession(newSession);
         return this.session_id;
     }
 
