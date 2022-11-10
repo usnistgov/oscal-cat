@@ -33,6 +33,7 @@ import {
   CurrentSessionData, NamedSessionNodes, SessionBrief, SessionData
 } from './../../../providers/app-state/state-nav-cat/state-session-data.service';
 import { OscalCatAuthorViewComponent } from '../action-commons/action-oscal-cat-author-view/action-oscal-cat-author-view.component';
+import { CatTheBaseComponent } from '../action-all-common/cat-the-base/cat-the-base.component';
 
 
 @Component({
@@ -40,7 +41,7 @@ import { OscalCatAuthorViewComponent } from '../action-commons/action-oscal-cat-
   templateUrl: './author-begin.component.html',
   styleUrls: ['./author-begin.component.scss'],
 })
-export class AuthorBeginComponent implements OnInit, OnDestroy {
+export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit, OnDestroy {
 
   savedWork: Array<SessionBrief>;
   savedWorkPromise: Promise<Array<SessionBrief>>;
@@ -49,32 +50,37 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
 
   chosenBrief: SessionBrief;
   chosenSessionId: string;
-  oscalFiles: Array<KnownOscalFileLocation>;
   chosenOscalCat: KnownOscalFileLocation;
   newDraft: boolean;
   activeRadioOscalCatForStaleness: number;
-  activeIndex: number;
   activeItemString: string;
+
+
   //alertControl: AlertController;
   @ViewChild('catDetails') catDetails: OscalCatAuthorViewComponent;
   @ViewChild('mainRadioGroup') radioGroup: IonRadioGroup;
 
   constructor(
-    private knownFiles: KnownOscalFilesService,
-    private session: CurrentSessionData,
-    public alertControl: AlertController) {
+    public rootKnownFiles: KnownOscalFilesService,
+    public rootSessionService: CurrentSessionData,
+    public rootAlertControl: AlertController) {
 
-    this.oscalFiles = knownFiles.getAllKnownFiles();
-    this.activeIndex = this.knownFiles.getActiveIndex();
-    this.activeIndex = -1;
-    this.readSavedBriefs();
-    this.readActiveBrief();
+    super(rootKnownFiles, rootSessionService, rootAlertControl);
   }
 
   ngOnInit() {
+    console.log(`!!!!!! ng-Init !!!!!!`);
     // Pull up to UI the previously Saved Work-Items  
+    // this.radioGroup.value = this.markActiveBrief();
+
+    // this.readSavedBriefs();
+    // this.readAndSetActiveBrief();
+    this.initLists();
+  }
+
+  initLists() {
     this.readSavedBriefs();
-    this.readActiveBrief();
+    this.readAndSetActiveBrief();
   }
 
   /**
@@ -86,7 +92,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     const resArray = this.catDetails.formCommitArray();
     const entityChecks = resArray[0];
     const baselineChecks = resArray[1];
-    const cat = this.knownFiles.getAllKnownFiles()[index];
+    const cat = this.rootKnownFiles.getAllKnownFiles()[index];
     // console.log(cat);
     if (cat && entityChecks[0]) {
       cat.needsRefresh = entityChecks[0];
@@ -95,10 +101,10 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       const limit = Math.min(cat.cat_baselines.length, baselineChecks.length);
       for (let i = 0; i < limit; i++) {
         cat.cat_baselines[i].needsRefresh = baselineChecks[i];
-        this.knownFiles.refreshCat(cat.cat_baselines[i]);
+        this.rootKnownFiles.refreshCat(cat.cat_baselines[i]);
       }
     }
-    this.knownFiles.refreshCat(cat);
+    this.rootKnownFiles.refreshCat(cat);
     // console.log(cat);
   }
 
@@ -162,10 +168,10 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     if (!!CurrentSessionData.savedBriefs) {
       this.savedWork = CurrentSessionData.savedBriefs;
     } else {
-      if (this.session.isKeyValuePresent(
+      if (this.rootSessionService.isKeyValuePresent(
         NamedSessionNodes.SESSION_BRIEFS)
       ) {
-        this.savedWorkPromise = this.session
+        this.savedWorkPromise = this.rootSessionService
           .getKeyValueObject<Array<SessionBrief>>(NamedSessionNodes.SESSION_BRIEFS);
         this.savedWorkPromise.then(
           (savedValue: Array<SessionBrief>) => {
@@ -185,12 +191,12 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
    * Read briefs from 'OC:Active-Briefs' (NamedSessionNodes.ACTIVE_BRIEF) for the UI & Session
    * @memberof AuthorBeginComponent
    */
-  readActiveBrief() {
+  readAndSetActiveBrief() {
     // Read the persisted Active-Brief
-    if (this.session.isKeyValuePresent(
+    if (this.appSessionService.isKeyValuePresent(
       NamedSessionNodes.ACTIVE_BRIEF)
     ) {
-      this.activeBriefPromise = this.session
+      this.activeBriefPromise = this.appSessionService
         .getKeyValueObject<SessionBrief>(NamedSessionNodes.ACTIVE_BRIEF);
       this.activeBriefPromise.then(
         (savedValue: SessionBrief) => {
@@ -204,6 +210,8 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
           // console.log(this.activeBrief);
         });
     }
+    // console.log(`Active Brief:`)
+    // console.log(this.activeBrief);
   }
 
   /**
@@ -213,17 +221,39 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
    */
   handleRadioChange($event: Event) {
     const value = ($event as CustomEvent).detail.value;
-    // console.log($event);
-    // console.log(value);
-    // console.log(`value < this.getCatListSize() : ${value < this.getCatListSize()}`);
+    console.log($event);
+    console.log(value);
+    console.log(`value < this.getCatListSize() : ${value < this.getCatListSize()}`);
     if (value < this.getCatListSize()) {
-      this.knownFiles.setActive(value);
+      // Known files new template
+      this.activeIndex = value;
+      this.rootKnownFiles.setActive(value);
       this.chosenOscalCat = this.oscalFiles[value];
       this.chosenBrief = undefined;
       this.activeRadioOscalCatForStaleness = value;
+      this.chosenBrief = this.createNewBrief();
+      this.rootSessionService.activateBrief(this.chosenBrief);
+      this.rootSessionService.activateSession(this.chosenBrief);
+
     } else {
-      this.chosenOscalCat = undefined;
+      // Selected existing savedWork item
       this.chosenBrief = this.savedWork[this.getIndexByUUID(value)];
+      console.log('BEGIN: Activating brief');
+      console.log(this.chosenBrief);
+      if (!!this.chosenBrief) {
+        // Write down the selection!!!
+        this.rootSessionService.activateBrief(this.chosenBrief);
+        this.rootSessionService.activateSession(this.chosenBrief);
+        console.log('END: Activating brief');
+      }
+      if (!!this.chosenBrief
+        && !!this.chosenBrief.originalIndexKF
+        && this.chosenBrief.originalIndexKF >= 0) {
+        // Record the Known Files Index if available
+        this.chosenOscalCat = this.oscalFiles[this.chosenBrief.originalIndexKF];
+      } else {
+        this.chosenOscalCat = undefined
+      }
       this.activeItemString = value;
     }
   }
@@ -236,7 +266,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
    */
   showActiveCatInfo(idx: number): boolean {
     if (
-      this.knownFiles.isCatInfoStale(this.knownFiles.getAllKnownFiles()[idx])
+      this.rootKnownFiles.isCatInfoStale(this.rootKnownFiles.getAllKnownFiles()[idx])
     ) {
       return idx == this.activeRadioOscalCatForStaleness;
     }
@@ -270,6 +300,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * 
    * This is a routed page hook on PageWillLeave Event
    * @memberof AuthorBeginComponent
    */
@@ -283,7 +314,8 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
    * @returns {SessionBrief} new Session brief returned
    * @memberof AuthorBeginComponent
    */
-  createNewBrief(newSessionUUID: string): SessionBrief {
+  createNewBrief(): SessionBrief {
+    const newSessionUUID = UUIDv4();
     const newBrief = new SessionBrief(
       newSessionUUID,
       `Profile Draft Based on ${this.chosenOscalCat.cat_suffix}`,
@@ -331,12 +363,12 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       // 1. Update session Briefs (Used Only in UI Here so far)
       // 2. Change the ActiveBrief to the new One [Persist It as Well!]
       // 3. Create a new persisted session with UUID (Will be used as an Active-Session persisted Entity)
-      const newSessionUUID = UUIDv4()
       // console.log(`Cat-Activate - Chosen-Cat - Creating UUID`);
       // console.log(newSessionUUID)
 
-      const newBrief = this.createNewBrief(newSessionUUID);
+      const newBrief = this.createNewBrief();
       const newSession = this.createNewSession(newBrief);
+      const newSessionUUID = newSession.uuid;
 
       // TODO: Add list scanning of the briefs to see if session already exists
       if (addSessionToList) {
@@ -347,14 +379,14 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
         }
         this.savedWork.push(newBrief);
 
-        // console.log(`savedWork Array has Length:${this.savedWork.length}`);
-        // console.log(`Saved work Array ${this.savedWork}`);
-        // console.log(this.savedWork);
+        console.log(`savedWork Array has Length:${this.savedWork.length}`);
+        console.log(`Saved work Array ${this.savedWork}`);
+        console.log(this.savedWork);
 
         this.persistSavedBriefs(newBrief); // 1. Update session Briefs... & 2. Change the ActiveBrief ...
-        this.activeItemString = newBrief.uuid; // Reflect in UI the Newly-Created ActiveBrief
+        this.activeItemString = newSessionUUID; // Reflect in UI the Newly-Created ActiveBrief
         const theCat = this.getCatalog(newBrief);
-        this.session.createNewActiveSession(newBrief, theCat);
+        this.rootSessionService.createNewActiveSession(newBrief, theCat);
       }
     } else if (!this.chosenOscalCat && this.chosenBrief) {
       // In the case of the chosen Brief-Work-Item need to :
@@ -364,8 +396,8 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       // 3. Read and Assign the ActiveSession form UUID-*SessionData* field
       // console.log(`Chosen-ActiveSession`);
       // console.log(this.session.ActiveSession);
-      this.session.activateBrief(this.chosenBrief);
-      this.session.activateSession(this.chosenBrief);
+      this.rootSessionService.activateBrief(this.chosenBrief);
+      this.rootSessionService.activateSession(this.chosenBrief);
     }
   }
 
@@ -397,15 +429,16 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
    * @memberof AuthorBeginComponent
    */
   private persistSavedBriefs(newBrief: SessionBrief) {
-    this.session.setKeyValueObject<Array<SessionBrief>>(
+    this.rootSessionService.setKeyValueObject<Array<SessionBrief>>(
       NamedSessionNodes.SESSION_BRIEFS,
       this.savedWork
     )
       .then(
         x => {
           // console.log(`this.session.ActiveSession`);
-          if (this.session.ActiveBrief !== newBrief) {
-            this.session.activateBrief(newBrief);
+          if (this.rootSessionService.getActiveBrief() !== newBrief) {
+            this.rootSessionService.activateBrief(newBrief);
+            this.initLists();
           }
           // console.log(this.session.ActiveBrief);
         }
@@ -416,6 +449,13 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   }
 
 
+  /**
+   * Handles caught generic promise errors
+   *
+   * @param {*} e - the cought error
+   * @param {string} [extraInfo=undefined] - the error message for the context
+   * @memberof AuthorBeginComponent
+   */
   genericPromiseCatch(e, extraInfo: string = undefined) {
     if (extraInfo) {
       console.log(`${extraInfo}`);
@@ -428,11 +468,12 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     // console.log('Begin-Page Will Destroy!!!!!!');
     this.activateSession();
+    this.initLists();
   }
 
   private removeWorkItem($event: Event, theItemIndex: number) {
     // TODO: before killing existing work, it would be nice 
-    // to verify that button press is not a mistake.
+    // for user to verify that button press is not a mistake.
 
     if (!!this.savedWork) {
       // console.log(`Item Index ${theItemIndex} Event Target:${$event.target}`);
@@ -442,7 +483,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       // Delete the HEAVY-WEIGHT session object by UUID
       console.log('Deleting UUID Session');
       console.log(item.uuid);
-      this.session.removeSession(item.uuid);
+      this.rootSessionService.removeSession(item.uuid);
       // **********************************************
       this.updateSavedItems();
     }
@@ -450,7 +491,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
 
   private updateSavedItems() {
     if (this.savedWork.length > 0) {
-      this.session.setKeyValueObject(NamedSessionNodes.SESSION_BRIEFS, this.savedWork)
+      this.rootSessionService.setKeyValueObject(NamedSessionNodes.SESSION_BRIEFS, this.savedWork)
         .then(
           (newData) => {
             this.savedWork = newData;
@@ -463,8 +504,8 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
           }
         );
     } else {
-      this.session.removeItemByKey(NamedSessionNodes.SESSION_BRIEFS);
-      this.session.removeItemByKey(NamedSessionNodes.ACTIVE_BRIEF);
+      this.rootSessionService.removeItemByKey(NamedSessionNodes.SESSION_BRIEFS);
+      this.rootSessionService.removeItemByKey(NamedSessionNodes.ACTIVE_BRIEF);
       this.savedWork = null;
     }
   }
@@ -489,7 +530,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
       + `<div><strong>"${name}"<strong></div><br />`
       + `<div>With UUID:<div>`
       + ` <div><strong>[${uuid}]?</div></strong></div><br />`;
-    const alert = await this.alertControl.create({
+    const alert = await this.rootAlertControl.create({
       header: `Delete Saved Work ?`,
       //subHeader: `Are You Sure?`,
       message: summaryHtml,
@@ -523,7 +564,7 @@ export class AuthorBeginComponent implements OnInit, OnDestroy {
     const item = this.savedWork[itemIndex]
     const name = (item.fullName) ? item.fullName : item.name;
     const uuid = item.uuid;
-    const prompt = await this.alertControl.create({
+    const prompt = await this.rootAlertControl.create({
       cssClass: 'prompt-global-class',
       header: `Rename ${name}`,
       message: `Enter new name for the saved item<br/> ${uuid}`,

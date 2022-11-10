@@ -29,7 +29,7 @@ import {
   Input, OnInit, ViewChild, ViewContainerRef
 } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, FormArray } from '@angular/forms';
-import { ModalController, IonDatetime } from '@ionic/angular';
+import { ModalController, IonDatetime, AlertController } from '@ionic/angular';
 import { ActionPartyInfoComponent } from '../action-commons/action-party-info/action-party-info.component';
 import { v4 as UUIDv4 } from 'uuid';
 
@@ -50,12 +50,14 @@ import {
   DocumentIdentifier, Location, Role
 } from './../../../interfaces/oscal-types/oscal-catalog.types';
 import {
-  CurrentSessionData, NamedSessionNodes, SessionData
+  CurrentSessionData, NamedSessionNodes, SessionBrief, SessionData
 } from './../../../providers/app-state/state-nav-cat/state-session-data.service';
 import { format, parseISO, getDate, getMonth, getYear } from 'date-fns';
 import { Console } from 'console';
 import { DocumentIDArrayComponent } from '../action-commons/action-array-document-id/action-array-document-id.component';
 import { PropertiesArrayComponent } from '../action-commons/action-array-properties/action-array-properties.component';
+import { CatTheBaseComponent } from '../action-all-common/cat-the-base/cat-the-base.component';
+import { KnownOscalFilesService } from 'src/app/providers/oscal-files/known-files.service';
 
 export interface CloseAddEdit {
   closeAddEditPOoP: (controlKey: string, isValid: boolean, returnObject: PartyOrganizationOrPerson) => any;
@@ -87,7 +89,7 @@ export enum EditingState {
     '../action-all-common/ion-tabs-buttons.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
+export class MetaInfoComponent extends CatTheBaseComponent implements OnInit, AfterViewInit, CloseAddEdit {
   /// The template Holder and accountability array of the loaded controls/components
 
 
@@ -118,26 +120,26 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
   // private db: AppDbInProgressService;
 
   /* 
-    // The overall structure of the metadata in TypeScript form
-    documentIDS?: DocumentIdentifier[];
-    +!!! lastModified: Date;
-    links?: Link[];
-    locations?: Location[];
-    +!!! oscalVersion: string;
-    ++++ parties?: PartyOrganizationOrPerson[];
-    props?: Property[];
-    published?: Date;
-    remarks?: string;
-    responsibleParties?: { [key: string]: ResponsibleParty };
-    revisions?: RevisionHistoryEntry[];
-    roles?: Role[];
-    // A name given to the document, which may be used by a tool for display and navigation.
-    +!!! title: string;
-    +!!! version: string;
+        // The overall structure of the metadata in TypeScript form
+        documentIDS?: DocumentIdentifier[];
+        +!!! lastModified: Date;
+        links?: Link[];
+        locations?: Location[];
+        +!!! oscalVersion: string;
+        ++++ parties?: PartyOrganizationOrPerson[];
+        props?: Property[];
+        published?: Date;
+        remarks?: string;
+        responsibleParties?: { [key: string]: ResponsibleParty };
+        revisions?: RevisionHistoryEntry[];
+        roles?: Role[];
+        // A name given to the document, which may be used by a tool for display and navigation.
+        +!!! title: string;
+        +!!! version: string;
   */
   @Input() metaInfo: PublicationMetadata;
 
-  activeSession: SessionData;
+  // activeSession: SessionData;
 
   activeEntityAddTabName = '';
   activeEditState: EditingState = EditingState.Off;
@@ -157,13 +159,18 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
   currentEditedLink: Link;
   currentEditedLocation: Location;
 
+
   constructor(
-    private session: CurrentSessionData,
+    public rootKnownFiles: KnownOscalFilesService,
+    public rootSessionService: CurrentSessionData,
+    public rootAlertControl: AlertController,
+
     public modalController: ModalController,
     public LMS: LogManagerService,
     // private CFR: ComponentFactoryResolver,
     // private db: AppDbInProgressService,
   ) {
+    super(rootKnownFiles, rootSessionService, rootAlertControl);
     // this.db = new AppDbInProgressService(new Platform(), new SQLite(), new HttpClient(new HttpHandler()), new SQLitePorter());
     // console.log(`x-x-x: EL = ${db.entitiesList}`);
     // console.log(`Before Async`);
@@ -177,14 +184,46 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     //     }
     //   }
     // );
+    // this.readActiveBrief();
   }
 
-  updateMetaFromSession() {
-    if (this.activeSession && !this.activeSession.meta) {
-      if (this.activeSession.knownCat && this.activeSession.knownCat.cat_suffix) {
-        this.metaInfo.title = `Profile Based on ${this.activeSession.knownCat.cat_suffix}`;
-      } else if (this.activeSession && this.activeSession.name) {
-        this.metaInfo.title = this.activeSession.name;
+  ngOnInit() {
+    console.log(this.activeBriefPromise);
+    console.log(this.activeBrief);
+    if (!this.activeBriefPromise && !this.activeBrief || !this.activeSession) {
+      this.readActiveBrief()
+      this.useMetaFromSession();
+    }
+    this.initMetaInfo();
+    // this.db = new AppDbInProgressService(Platform, );
+
+  }
+
+  useMetaFromSession() {
+    console.log(`In Use Session`);
+    console.log(`Active Brief:`);
+    console.log(this.activeBrief);
+    if (!this.activeBrief) {
+      this.readActiveBrief()
+    }
+    console.log(`Active Brief:`);
+    console.log(this.activeBrief);
+    if (!!this.activeBrief) {
+      console.log(`Found Active Brief`);
+      if (!this.activeSession) {
+        console.log(`Reading Session from Brief`);
+        this.activeSession = this.rootSessionService.getActiveSession();
+      }
+      if (!!this.activeSession && !this.activeSession.meta) {
+        if (this.activeSession.knownCat
+          && this.activeSession.knownCat.cat_suffix) {
+          console.log(`Getting Session Meta`);
+          this.metaInfo.title = `Profile Based on ${this.activeSession.knownCat.cat_suffix}`;
+        } else if (this.activeSession && this.activeSession.name) {
+          this.metaInfo = this.activeSession.meta;
+          this.metaInfo.title = this.activeSession.name +
+            ' ' + this.activeSession.uuid;
+        }
       }
     }
   }
@@ -194,12 +233,14 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     // console.log(`Active Session:`);
     // console.log(this.session.ActiveSession);
     // console.log(`Active Brief:`);
-    // console.log(this.session.ActiveBrief);
-    if (!!this.session.ActiveSession) {
+    console.log(this.appSessionService.getActiveSession());
+    console.log(this.appSessionService.getActiveBrief());
+    if (!!this.appSessionService.getActiveSession()) {
       // console.log(`Active Session Found!`);
-      this.activeSession = this.session.ActiveSession;
+      this.activeSession = this.appSessionService.getActiveSession();
       if (!!this.activeSession.meta) {
         this.metaInfo = this.activeSession.meta;
+        console.log(this.appSessionService.getActiveSession());
       } else {
         if (this.activeSession.catalog) {
           console.log(this.activeSession.catalog);
@@ -208,8 +249,8 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
         }
       }
     } else if
-      (this.session.isKeyValuePresent(NamedSessionNodes.ACTIVE_SESSION_NAME)) {
-      this.activeSession = this.session.ActiveSession;
+      (this.appSessionService.isKeyValuePresent(NamedSessionNodes.ACTIVE_SESSION_NAME)) {
+      this.activeSession = this.appSessionService.getActiveSession();
       if (this.activeSession && this.activeSession.meta) {
         this.metaInfo = this.activeSession.meta;
       }
@@ -219,7 +260,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     }
 
     if (!!this.metaInfo) {
-      this.updateMetaFromSession();
+      this.useMetaFromSession();
       return;
     } else {
       this.metaInfo = {
@@ -228,7 +269,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
         lastModified: new Date(),
         oscalVersion: '',
       };
-      this.updateMetaFromSession();
+      this.useMetaFromSession();
     }
 
     // console.log('Beginning Meta Component');
@@ -270,12 +311,7 @@ export class MetaInfoComponent implements OnInit, AfterViewInit, CloseAddEdit {
     });
   }
 
-  ngOnInit() {
-    this.initMetaInfo();
-    this.updateMetaFromSession();
-    // this.db = new AppDbInProgressService(Platform, );
 
-  }
 
   ngAfterViewInit() {
     // console.log(`@ngAfterViewInit.VCR: ${this.VCR}`);
