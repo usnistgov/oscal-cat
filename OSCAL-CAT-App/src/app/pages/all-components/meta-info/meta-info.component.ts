@@ -161,6 +161,7 @@ export class MetaInfoComponent extends CatTheBaseComponent implements OnInit, Af
   briefTitle: string;
 
 
+
   constructor(
     public rootKnownFiles: KnownOscalFilesService,
     public rootSessionService: CurrentSessionData,

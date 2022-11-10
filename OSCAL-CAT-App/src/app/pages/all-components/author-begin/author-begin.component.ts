@@ -221,9 +221,9 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
    */
   handleRadioChange($event: Event) {
     const value = ($event as CustomEvent).detail.value;
-    // console.log($event);
-    // console.log(value);
-    // console.log(`value < this.getCatListSize() : ${value < this.getCatListSize()}`);
+    console.log($event);
+    console.log(value);
+    console.log(`value < this.getCatListSize() : ${value < this.getCatListSize()}`);
     if (value < this.getCatListSize()) {
       // Known files new template
       this.activeIndex = value;
@@ -383,9 +383,9 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
           this.savedWork.push(newBrief);
         }
 
-        // console.log(`savedWork Array has Length:${this.savedWork.length}`);
-        // console.log(`Saved work Array ${this.savedWork}`);
-        // console.log(this.savedWork);
+        console.log(`savedWork Array has Length:${this.savedWork.length}`);
+        console.log(`Saved work Array ${this.savedWork}`);
+        console.log(this.savedWork);
 
         this.persistSavedBriefs(newBrief); // 1. Update session Briefs... & 2. Change the ActiveBrief ...
         this.activeItemString = newSessionUUID; // Reflect in UI the Newly-Created ActiveBrief

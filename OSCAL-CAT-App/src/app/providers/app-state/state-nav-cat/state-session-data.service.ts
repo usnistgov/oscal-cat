@@ -72,7 +72,6 @@ export class SessionBrief {
         this.setUuid(uuid);
         this.name = name;
         this.originalIndexKF = index;
-        this.sessionDataName = SessionBrief.getSessionKeyName(uuid);
     }
 
 
