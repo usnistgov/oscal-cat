@@ -358,7 +358,8 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
     // console.log(`ChosenOscalCat & ChosenBrief`);
     // console.log(this.chosenOscalCat);
     // console.log(this.chosenBrief);
-    if (this.chosenOscalCat) {
+
+    if (this.chosenOscalCat && this.chosenBrief) {
       // User chose BASE CATALOG. We need to :
       // 1. Update session Briefs (Used Only in UI Here so far)
       // 2. Change the ActiveBrief to the new One [Persist It as Well!]
@@ -366,9 +367,10 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
       // console.log(`Cat-Activate - Chosen-Cat - Creating UUID`);
       // console.log(newSessionUUID)
 
-      const newBrief = this.createNewBrief();
-      const newSession = this.createNewSession(newBrief);
-      const newSessionUUID = newSession.uuid;
+      // const newBrief = this.createNewBrief();
+      const newBrief = this.chosenBrief;
+      const newSession = this.createNewSession(this.chosenBrief);
+      const newSessionUUID = this.chosenBrief.uuid;
 
       // TODO: Add list scanning of the briefs to see if session already exists
       if (addSessionToList) {
@@ -377,16 +379,19 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
           // console.log(`Creating new savedWork Array`);
           this.savedWork = new Array<SessionBrief>();
         }
-        this.savedWork.push(newBrief);
+        if (!(this.savedWork.indexOf(newBrief) >= 0)) {
+          this.savedWork.push(newBrief);
+        }
 
-        console.log(`savedWork Array has Length:${this.savedWork.length}`);
-        console.log(`Saved work Array ${this.savedWork}`);
-        console.log(this.savedWork);
+        // console.log(`savedWork Array has Length:${this.savedWork.length}`);
+        // console.log(`Saved work Array ${this.savedWork}`);
+        // console.log(this.savedWork);
 
         this.persistSavedBriefs(newBrief); // 1. Update session Briefs... & 2. Change the ActiveBrief ...
         this.activeItemString = newSessionUUID; // Reflect in UI the Newly-Created ActiveBrief
         const theCat = this.getCatalog(newBrief);
         this.rootSessionService.createNewActiveSession(newBrief, theCat);
+        this.chosenOscalCat = undefined;
       }
     } else if (!this.chosenOscalCat && this.chosenBrief) {
       // In the case of the chosen Brief-Work-Item need to :
