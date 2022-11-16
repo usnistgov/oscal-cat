@@ -18,11 +18,7 @@ on:
   workflow_dispatch:
 jobs:
   build-test-app:
-<<<<<<< HEAD
     name: Build and Test App
-=======
-    name: Build App
->>>>>>> d02f022 (Automate Typescript interface generation from JSON Schema with Quicktype.)
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout App Repo
