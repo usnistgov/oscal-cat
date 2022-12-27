@@ -115,7 +115,7 @@ jobs:
         retention-days: 5
       id: upload-website-build
     - name: Publish Generated Pages
-      uses: stefanzweifel/git-auto-commit-action@49620cd3ed21ee620a48530e81dba0d139c9cb80
+      uses: stefanzweifel/git-auto-commit-action@3ea6ae190baf489ba007f7c92608f33ce20ef04a
       # Only push if commit_resources flag is true and on main branch, ignore PRs until merged.
       if: inputs.commit_resources == true && github.ref_name == 'main'
       with:
