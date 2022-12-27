@@ -7,6 +7,6 @@ jobs:
     timeout-minutes: 10
     steps:
     - name: Delete old artifacts
-      uses: c-hive/gha-remove-artifacts@24dc23384a1fa6a058b79c73727ae0cb2200ca4c
+      uses: c-hive/gha-remove-artifacts@abbb1f6264cd712663bcb880716d3ccd251095ca
       with:
         age: '1 minute'
