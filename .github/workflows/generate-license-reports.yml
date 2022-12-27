@@ -73,7 +73,7 @@ jobs:
         echo "/home/runner/go/bin" >> $GITHUB_PATH
     - name: Setup Golang for SPDX Tool BOM
       if: steps.cache-bom.outputs.cache-hit != 'true'
-      uses: actions/setup-go@268d8c0ca0432bb2cf416faae41297df9d262d7f
+      uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568
       with:
         go-version-file: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/go.mod'
         cache: true
