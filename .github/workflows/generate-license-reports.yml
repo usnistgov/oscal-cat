@@ -50,13 +50,13 @@ jobs:
       working-directory: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App'
       id: reload-packages-npm-command
     - name: SBOM License Analysis - CycloneDX XML
-      uses: CycloneDX/gh-node-module-generatebom@d5fab752c787cefffe85b64455c3636bd00b93c6
+      uses: CycloneDX/gh-node-module-generatebom@134fcf0a702731809152716597a0742c08a75da5
       with:
         path: ${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App
         output: ${{ runner.temp }}/oscal-cat-sbom.cyclonedx.xml
       id: generate-sbom-licensing-cdx-xml
     - name: SBOM License Analysis - CycloneDX JSON
-      uses: CycloneDX/gh-node-module-generatebom@d5fab752c787cefffe85b64455c3636bd00b93c6
+      uses: CycloneDX/gh-node-module-generatebom@134fcf0a702731809152716597a0742c08a75da5
       with:
         path: ${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App
         output: ${{ runner.temp }}/oscal-cat-sbom.cyclonedx.json
