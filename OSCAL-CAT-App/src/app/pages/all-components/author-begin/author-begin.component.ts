@@ -69,7 +69,7 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
   }
 
   ngOnInit() {
-    console.log(`!!!!!! ng-Init !!!!!!`);
+    // console.log(`!!!!!! ng-Init !!!!!!`);
     // Pull up to UI the previously Saved Work-Items  
     // this.radioGroup.value = this.markActiveBrief();
 
@@ -221,9 +221,9 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
    */
   handleRadioChange($event: Event) {
     const value = ($event as CustomEvent).detail.value;
-    console.log($event);
-    console.log(value);
-    console.log(`value < this.getCatListSize() : ${value < this.getCatListSize()}`);
+    // console.log($event);
+    // console.log(value);
+    // console.log(`value < this.getCatListSize() : ${value < this.getCatListSize()}`);
     if (value < this.getCatListSize()) {
       // Known files new template
       this.activeIndex = value;
@@ -238,13 +238,13 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
     } else {
       // Selected existing savedWork item
       this.chosenBrief = this.savedWork[this.getIndexByUUID(value)];
-      console.log('BEGIN: Activating brief');
-      console.log(this.chosenBrief);
+      // console.log('BEGIN: Activating brief');
+      // console.log(this.chosenBrief);
       if (!!this.chosenBrief) {
         // Write down the selection!!!
         this.rootSessionService.activateBrief(this.chosenBrief);
         this.rootSessionService.activateSession(this.chosenBrief);
-        console.log('END: Activating brief');
+        // console.log('END: Activating brief');
       }
       if (!!this.chosenBrief
         && !!this.chosenBrief.originalIndexKF
@@ -486,8 +486,8 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
       this.savedWork.splice(theItemIndex, 1);
       // **********************************************
       // Delete the HEAVY-WEIGHT session object by UUID
-      console.log('Deleting UUID Session');
-      console.log(item.uuid);
+      // console.log('Deleting UUID Session');
+      // console.log(item.uuid);
       this.rootSessionService.removeSession(item.uuid);
       // **********************************************
       this.updateSavedItems();
@@ -594,6 +594,7 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
             // console.log(data);
             this.savedWork[itemIndex].name = data.title;
             this.updateSavedItems()
+
           }
         }
       ]
