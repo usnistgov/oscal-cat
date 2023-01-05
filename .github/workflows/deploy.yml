@@ -40,13 +40,13 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout App Repo
-      uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+      uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
       with:
         path: ${{ github.workspace }}/${{ env.MAIN_REPO_CHECKOUT_PATH }}
         fetch-depth: 0
       id: checkout-main-repo
     - name: Checkout Target Deployment Repo (using commit_token)
-      uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+      uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
       if: github.event_name == 'push' && inputs.commit_resources == true
       with:
         repository: ${{ env.DEPLOY_REPO }}
@@ -56,7 +56,7 @@ jobs:
         token: ${{ secrets.access_token || inputs.access_token }}
       id: checkout-deploy-repo-commit-token
     - name: Checkout Target Deployment Repo
-      uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+      uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
       # If not commiting resources, like above, checkout deploy repo w/o token
       # as we are not committing and push back updated changes.
       if: steps.checkout-deploy-repo-commit-token.conclusion == 'skipped'
