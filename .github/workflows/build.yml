@@ -6,56 +6,56 @@ env:
 on:
   pull_request:
     branches:
-    - main
-    - develop
-    - "release-*"
+      - main
+      - develop
+      - "release-*"
   push:
     branches:
-    - main
-    - develop
-    - "release-*"
+      - main
+      - develop
+      - "release-*"
   workflow_call:
   workflow_dispatch:
 jobs:
   build-test-app:
-    name: Build App
+    name: Build and Test App
     runs-on: ubuntu-20.04
     steps:
-    - name: Checkout App Repo
-      uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
-      with:
-        path: ${{ github.workspace }}/${{ env.MAIN_REPO_CHECKOUT_PATH }}
-        submodules: recursive
-        fetch-depth: 0
-      id: checkout-main-repo
-    - name: Store git commit ID for cache key
-      run: |
-        echo "::set-output name=commit_id::$(git rev-parse HEAD)"
-      working-directory: ${{ env.MAIN_REPO_CHECKOUT_PATH }}
-      id: store-git-metadata
-    - name: Set up NodeJS
-      uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
-      with:
-        node-version-file: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/.nvmrc'
-        cache: 'npm'
-        cache-dependency-path: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/package-lock.json'
-      id: setup
-    - name: Build
-      run: |
-        pushd "${MAIN_REPO_CHECKOUT_PATH}/OSCAL-CAT-App"
-        npm ci
-        echo "$PWD/node_modules/.bin/" >> $GITHUB_PATH
-        npm run build -- \
-          --base-href $BASE_HREF \
-          --deploy-url $DEPLOY_URL
-      id: build
-    - name: Run Linter
-      run: |
-        npm run lint || true # remove conditional when usnistgov/oscal#50 complete
-      working-directory: ${{ env.MAIN_REPO_CHECKOUT_PATH}}/OSCAL-CAT-App
-      id: linter
-    - name: Run Unit Tests
-      run: |
-        npm run test -- --watch=false || true # remove conditional when usnistgov/oscal#49 complete
-      working-directory: ${{ env.MAIN_REPO_CHECKOUT_PATH}}/OSCAL-CAT-App
-      id: unit-tests
+      - name: Checkout App Repo
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+        with:
+          path: ${{ github.workspace }}/${{ env.MAIN_REPO_CHECKOUT_PATH }}
+          submodules: recursive
+          fetch-depth: 0
+        id: checkout-main-repo
+      - name: Store git commit ID for cache key
+        run: |
+          echo "::set-output name=commit_id::$(git rev-parse HEAD)"
+        working-directory: ${{ env.MAIN_REPO_CHECKOUT_PATH }}
+        id: store-git-metadata
+      - name: Set up NodeJS
+        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516
+        with:
+          node-version-file: "${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/.nvmrc"
+          cache: "npm"
+          cache-dependency-path: "${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/package-lock.json"
+        id: setup-nodejs
+      - name: Build
+        run: |
+          pushd "${MAIN_REPO_CHECKOUT_PATH}/OSCAL-CAT-App"
+          npm ci
+          echo "$PWD/node_modules/.bin/" >> $GITHUB_PATH
+          npm run build -- \
+            --base-href $BASE_HREF \
+            --deploy-url $DEPLOY_URL
+        id: build
+      - name: Run Linter
+        run: |
+          npm run lint || true # remove conditional when usnistgov/oscal#50 complete
+        working-directory: ${{ env.MAIN_REPO_CHECKOUT_PATH}}/OSCAL-CAT-App
+        id: linter
+      - name: Run Unit Tests
+        run: |
+          npm run test -- --watch=false || true # remove conditional when usnistgov/oscal#49 complete
+        working-directory: ${{ env.MAIN_REPO_CHECKOUT_PATH}}/OSCAL-CAT-App
+        id: unit-tests

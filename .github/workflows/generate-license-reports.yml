@@ -32,13 +32,13 @@ jobs:
       working-directory: ${{ env.MAIN_REPO_CHECKOUT_PATH }}
       id: store-git-metadata
     - name: Restore Build Cache
-      uses: actions/cache@a7c34adf76222e77931dedbf4a45b2e4648ced19
+      uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77
       with:
         path: ${{ github.workspace }}/${{ env.MAIN_REPO_CHECKOUT_PATH }}//OSCAL-CAT-App/www
         key: cat-${{ runner.os }}-${{ steps.store-git-metadata.outputs.commit_id }}
       id: restore-cache-build
     - name: Set up NodeJS
-      uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
+      uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516
       with:
         node-version-file: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/.nvmrc'
         cache: 'npm'
@@ -51,19 +51,19 @@ jobs:
       working-directory: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App'
       id: reload-packages-npm-command
     - name: SBOM License Analysis - CycloneDX XML
-      uses: CycloneDX/gh-node-module-generatebom@d5fab752c787cefffe85b64455c3636bd00b93c6
+      uses: CycloneDX/gh-node-module-generatebom@134fcf0a702731809152716597a0742c08a75da5
       with:
         path: ${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App
         output: ${{ runner.temp }}/oscal-cat-sbom.cyclonedx.xml
       id: generate-sbom-licensing-cdx-xml
     - name: SBOM License Analysis - CycloneDX JSON
-      uses: CycloneDX/gh-node-module-generatebom@d5fab752c787cefffe85b64455c3636bd00b93c6
+      uses: CycloneDX/gh-node-module-generatebom@134fcf0a702731809152716597a0742c08a75da5
       with:
         path: ${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App
         output: ${{ runner.temp }}/oscal-cat-sbom.cyclonedx.json
       id: generate-sbom-licensing-cdx-json
     - name: Store BOM Executable in Cache
-      uses: actions/cache@a7c34adf76222e77931dedbf4a45b2e4648ced19
+      uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77
       with:
         path: /home/runner/go/bin/bom
         key: ${{ runner.os }}-bom-${{ hashFiles(format('{0}/go.sum', env.BUILD_PATH)) }}
@@ -74,7 +74,7 @@ jobs:
         echo "/home/runner/go/bin" >> $GITHUB_PATH
     - name: Setup Golang for SPDX Tool BOM
       if: steps.cache-bom.outputs.cache-hit != 'true'
-      uses: actions/setup-go@84cbf8094393cdc5fe1fe1671ff2647332956b1a
+      uses: actions/setup-go@268d8c0ca0432bb2cf416faae41297df9d262d7f
       with:
         go-version-file: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/go.mod'
         cache: true

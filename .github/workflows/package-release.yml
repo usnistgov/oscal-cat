@@ -1,0 +1,80 @@
+name: OSCAL CAT Release Packager
+env:
+  DEPLOY_URL: "/oscal-tools/demos/cat/"
+  BASE_HREF: "./"
+  MAIN_REPO_CHECKOUT_PATH: main
+  BUILD_PATH: OSCAL-CAT-App/www/
+on:
+  push:
+    tags:
+    - "v*"
+  workflow_call:
+  workflow_dispatch:
+jobs:
+  package-app-release:
+    name: Package GitHub Release 
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Set env
+      run: |
+        RELEASE_TAG="${GITHUB_REF#refs/*/}"
+        RELEASE_VERSION="${RELEASE_TAG#"v"}"
+        RELEASE_NAME="oscal-cat-${RELEASE_VERSION}"
+        echo "RELEASE_TAG=${RELEASE_TAG}" >> $GITHUB_ENV
+        echo "RELEASE_VERSION=${RELEASE_VERSION}" >> $GITHUB_ENV
+        echo "RELEASE_NAME=${RELEASE_NAME}" >> $GITHUB_ENV
+      id: setup-environment
+    - name: Checkout App Repo
+      uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+      with:
+        path: ${{ github.workspace }}/${{ env.MAIN_REPO_CHECKOUT_PATH }}
+        fetch-depth: 0
+      id: checkout-main-repo
+    - name: Store git commit ID for cache key
+      run: |
+        echo "::set-output name=commit_id::$(git rev-parse HEAD)"
+      working-directory: ${{ env.MAIN_REPO_CHECKOUT_PATH }}
+      id: store-git-metadata
+    - name: Set up NodeJS
+      uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516
+      with:
+        node-version-file: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/.nvmrc'
+        cache: 'npm'
+        cache-dependency-path: '${{ env.MAIN_REPO_CHECKOUT_PATH }}/OSCAL-CAT-App/package-lock.json'
+      id: setup-nodejs
+    - name: Build
+      run: |
+        pushd "${MAIN_REPO_CHECKOUT_PATH}/OSCAL-CAT-App"
+        npm ci
+        echo "$PWD/node_modules/.bin/" >> $GITHUB_PATH
+        npm run build -- \
+          --base-href $BASE_HREF \
+          --deploy-url $DEPLOY_URL
+      id: build
+    - name: Create Compressed BZ2 Archive for Release
+      run: |
+        tar -jcvf "${RUNNER_TEMP}/${RELEASE_NAME}.tar.bz2" -C "${MAIN_REPO_CHECKOUT_PATH}/${BUILD_PATH}" .
+      id: create-artifacts-archives-bz2
+    - name: Create Compressed ZIP Archive for Release
+      run: |
+        pushd "${MAIN_REPO_CHECKOUT_PATH}/${BUILD_PATH}" && zip -r "${RUNNER_TEMP}/${RELEASE_NAME}.zip" . && popd
+      id: create-artifacts-archives-zip
+    - name: Upload Release Artifacts
+      uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+      with:
+        name: release-artifacts
+        path: |
+          ${{ runner.temp }}/${{ env.RELEASE_NAME }}.tar.bz2
+          ${{ runner.temp }}/${{ env.RELEASE_NAME }}.zip
+        retention-days: 5
+      id: upload-release-files
+    - name: Create or Update Release
+      uses: ncipollo/release-action@58ae73b360456532aafd58ee170c045abbeaee37
+      with:
+        name: OSCAL CAT ${{ env.RELEASE_VERSION }} Release
+        allowUpdates: false
+        draft: true
+        generateReleaseNotes: true
+        token: ${{ secrets.COMMIT_TOKEN }}
+        artifacts: "${{ runner.temp }}/*.zip,${{ runner.temp }}/*.bz2"
+      id: create-update-release
