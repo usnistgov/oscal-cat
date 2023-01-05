@@ -457,7 +457,7 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
   /**
    * Handles caught generic promise errors
    *
-   * @param {*} e - the cought error
+   * @param {*} e - the caught error
    * @param {string} [extraInfo=undefined] - the error message for the context
    * @memberof AuthorBeginComponent
    */
