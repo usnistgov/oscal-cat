@@ -69,11 +69,7 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
   }
 
   ngOnInit() {
-<<<<<<< HEAD
-    // console.log(`!!!!!! ng-Init !!!!!!`);
-=======
     console.log(`!!!!!! ng-Init !!!!!!`);
->>>>>>> 6288be7491426fec8c59949df5d49b203607dec2
     // Pull up to UI the previously Saved Work-Items  
     // this.radioGroup.value = this.markActiveBrief();
 
@@ -225,15 +221,9 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
    */
   handleRadioChange($event: Event) {
     const value = ($event as CustomEvent).detail.value;
-<<<<<<< HEAD
-    // console.log($event);
-    // console.log(value);
-    // console.log(`value < this.getCatListSize() : ${value < this.getCatListSize()}`);
-=======
     console.log($event);
     console.log(value);
     console.log(`value < this.getCatListSize() : ${value < this.getCatListSize()}`);
->>>>>>> 6288be7491426fec8c59949df5d49b203607dec2
     if (value < this.getCatListSize()) {
       // Known files new template
       this.activeIndex = value;
@@ -248,22 +238,13 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
     } else {
       // Selected existing savedWork item
       this.chosenBrief = this.savedWork[this.getIndexByUUID(value)];
-<<<<<<< HEAD
-      // console.log('BEGIN: Activating brief');
-      // console.log(this.chosenBrief);
-=======
       console.log('BEGIN: Activating brief');
       console.log(this.chosenBrief);
->>>>>>> 6288be7491426fec8c59949df5d49b203607dec2
       if (!!this.chosenBrief) {
         // Write down the selection!!!
         this.rootSessionService.activateBrief(this.chosenBrief);
         this.rootSessionService.activateSession(this.chosenBrief);
-<<<<<<< HEAD
         // console.log('END: Activating brief');
-=======
-        console.log('END: Activating brief');
->>>>>>> 6288be7491426fec8c59949df5d49b203607dec2
       }
       if (!!this.chosenBrief
         && !!this.chosenBrief.originalIndexKF
@@ -476,7 +457,7 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
   /**
    * Handles caught generic promise errors
    *
-   * @param {*} e - the cought error
+   * @param {*} e - the caught error
    * @param {string} [extraInfo=undefined] - the error message for the context
    * @memberof AuthorBeginComponent
    */
@@ -505,13 +486,8 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
       this.savedWork.splice(theItemIndex, 1);
       // **********************************************
       // Delete the HEAVY-WEIGHT session object by UUID
-<<<<<<< HEAD
       // console.log('Deleting UUID Session');
       // console.log(item.uuid);
-=======
-      console.log('Deleting UUID Session');
-      console.log(item.uuid);
->>>>>>> 6288be7491426fec8c59949df5d49b203607dec2
       this.rootSessionService.removeSession(item.uuid);
       // **********************************************
       this.updateSavedItems();
@@ -618,10 +594,6 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
             // console.log(data);
             this.savedWork[itemIndex].name = data.title;
             this.updateSavedItems()
-<<<<<<< HEAD
-
-=======
->>>>>>> 6288be7491426fec8c59949df5d49b203607dec2
           }
         }
       ]
