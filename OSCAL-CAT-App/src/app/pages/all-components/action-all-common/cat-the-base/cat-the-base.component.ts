@@ -50,7 +50,7 @@ export class CatTheBaseComponent implements OnInit {
    * Read briefs from 'OC:Active-Briefs' (NamedSessionNodes.ACTIVE_BRIEF) for the UI & Session
    * @memberof AuthorBeginComponent
    */
-  readActiveBrief() {
+  readActiveBrief(callback: (briefValue: SessionBrief) => void = undefined) {
     const isInBrief = true;
     // Read the persisted Active-Brief
     // console.log(`Reading Active Brief:`)
@@ -65,6 +65,9 @@ export class CatTheBaseComponent implements OnInit {
           if (savedValue) {
             this.activeBrief = savedValue;
             this.readCurrentSession(isInBrief);
+            if (!!callback) {
+              callback(savedValue);
+            }
             // this.radioGroup.value = this.markActiveBrief();
           } else {
             this.activeBrief = undefined;

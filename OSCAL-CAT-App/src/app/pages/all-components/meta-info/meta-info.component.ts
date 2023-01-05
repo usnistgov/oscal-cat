@@ -158,6 +158,7 @@ export class MetaInfoComponent extends CatTheBaseComponent implements OnInit, Af
   currentEditedProperty: Array<Property>;
   currentEditedLink: Link;
   currentEditedLocation: Location;
+  briefTitle: string;
 
 
   constructor(
@@ -191,21 +192,23 @@ export class MetaInfoComponent extends CatTheBaseComponent implements OnInit, Af
     console.log(this.activeBriefPromise);
     console.log(this.activeBrief);
     if (!this.activeBriefPromise && !this.activeBrief || !this.activeSession) {
-      this.readActiveBrief()
-      this.useMetaFromSession();
+      this.readActiveBrief(
+        (storedBrief: SessionBrief) => {
+          console.log(`In Lambda`);
+          console.log(storedBrief);
+          console.log(storedBrief.name);
+          if (!!storedBrief) {
+            this.activeBrief = storedBrief;
+            this.briefTitle = storedBrief.name;
+            this.useMetaFromSession();
+          }
+        })
     }
     this.initMetaInfo();
     // this.db = new AppDbInProgressService(Platform, );
-
   }
 
   useMetaFromSession() {
-    console.log(`In Use Session`);
-    console.log(`Active Brief:`);
-    console.log(this.activeBrief);
-    if (!this.activeBrief) {
-      this.readActiveBrief()
-    }
     console.log(`Active Brief:`);
     console.log(this.activeBrief);
     if (!!this.activeBrief) {
@@ -264,7 +267,7 @@ export class MetaInfoComponent extends CatTheBaseComponent implements OnInit, Af
       return;
     } else {
       this.metaInfo = {
-        title: '',
+        title: this.briefTitle, // ''
         version: '',
         lastModified: new Date(),
         oscalVersion: '',
