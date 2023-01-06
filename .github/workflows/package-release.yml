@@ -60,7 +60,7 @@ jobs:
         pushd "${MAIN_REPO_CHECKOUT_PATH}/${BUILD_PATH}" && zip -r "${RUNNER_TEMP}/${RELEASE_NAME}.zip" . && popd
       id: create-artifacts-archives-zip
     - name: Upload Release Artifacts
-      uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
+      uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce
       with:
         name: release-artifacts
         path: |
