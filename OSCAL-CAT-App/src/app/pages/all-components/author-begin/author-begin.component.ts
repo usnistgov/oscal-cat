@@ -221,9 +221,9 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
    */
   handleRadioChange($event: Event) {
     const value = ($event as CustomEvent).detail.value;
-    console.log($event);
-    console.log(value);
-    console.log(`value < this.getCatListSize() : ${value < this.getCatListSize()}`);
+    // console.log($event);
+    // console.log(value);
+    // console.log(`value < this.getCatListSize() : ${value < this.getCatListSize()}`);
     if (value < this.getCatListSize()) {
       // Known files new template
       this.activeIndex = value;

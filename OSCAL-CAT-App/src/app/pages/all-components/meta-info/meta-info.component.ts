@@ -649,7 +649,7 @@ export class MetaInfoComponent extends CatTheBaseComponent implements OnInit, Af
   }
 
   hasPredefinedRolesAlready(): boolean {
-    return !!this.metaInfo.roles && this.metaInfo.roles.length >= 3;
+    return !!this.metaInfo && !!this.metaInfo.roles && this.metaInfo.roles.length > 0;
   }
 
   isPresetRole(role: Role): boolean {
