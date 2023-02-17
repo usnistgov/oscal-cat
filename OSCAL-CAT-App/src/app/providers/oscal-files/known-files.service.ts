@@ -276,12 +276,16 @@ export class KnownOscalFilesService {
 
     loadSchemas(httpClient: HttpClient, storage: Storage, platform: Platform) {
         if (!KnownOscalFilesService.cat_schema) {
+            // Load static data element for Catalog Schema  (used to verify integrity of the data)
+            // !!! SideNote: the constructor will check browser cache and expiration
             KnownOscalFilesService.cat_schema = new SchemaFile(
                 httpClient, storage, platform,
                 KnownOscalFilesService.cat_url,
                 KnownOscalFilesService.cat_local,);
         }
         if (!KnownOscalFilesService.pro_schema) {
+            // Load static data element for Profile Schema (used to verify integrity of the data)
+            // !!! SideNote: the constructor will check browser cache and expiration
             KnownOscalFilesService.pro_schema = new SchemaFile(
                 httpClient, storage, platform,
                 KnownOscalFilesService.pro_url,
@@ -349,11 +353,11 @@ export class KnownOscalFilesService {
 
     refreshCat(cat: KnownOscalFileLocation) {
         if (cat.needsRefresh && cat.cat_use_as == CatSampleIntendedUse.BaselineReferenceAndResolved) {
-            if (!!cat.content_pro && !cat.content_pro.loadedEntity) {
+            if (!cat.content_pro || (!!cat.content_pro && !cat.content_pro.loadedEntity)) {
                 cat.content_pro.loadRemoteEntity();
                 cat.needsRefresh = false;
             }
-            if (!!cat.content_res_pro && !cat.content_res_pro.loadedEntity) {
+            if (!cat.content_res_pro || (!!cat.content_res_pro && !cat.content_res_pro.loadedEntity)) {
                 cat.content_res_pro.loadRemoteEntity();
                 cat.needsRefresh = false;
             }

@@ -94,10 +94,16 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
     const baselineChecks = resArray[1];
     const cat = this.rootKnownFiles.getAllKnownFiles()[index];
     // console.log(cat);
+    // User chose Cat to be refreshed
     if (cat && entityChecks[0]) {
       cat.needsRefresh = entityChecks[0];
     }
-    if ((cat && cat.cat_baselines && baselineChecks.length > 0)) {
+    // User chose Baselines to be refreshed
+    if ((cat && resArray[1] && cat.cat_baselines && baselineChecks.length > 0)) {
+      // Get the UserSelected check-marks count 
+      // !!! Baselines array is sized static to avoid reading  
+      // !!! the size dynamically and sync-failing occasionally.
+      // !!! Hence, the MATH.MIN below
       const limit = Math.min(cat.cat_baselines.length, baselineChecks.length);
       for (let i = 0; i < limit; i++) {
         cat.cat_baselines[i].needsRefresh = baselineChecks[i];
