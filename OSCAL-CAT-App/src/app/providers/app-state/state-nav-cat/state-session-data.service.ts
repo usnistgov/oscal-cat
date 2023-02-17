@@ -134,6 +134,7 @@ export class CurrentSessionData extends KvServiceBase {
     ) {
         super(theStorage, platform);
         this.init();
+        CurrentSessionData.activeBrief = this.getActiveBrief();
     }
 
     async init() {
@@ -193,7 +194,7 @@ export class CurrentSessionData extends KvServiceBase {
     }
 
     public getActiveSession(): SessionData {
-        if (CurrentSessionData.activeSession) {
+        if (!!CurrentSessionData.activeSession) {
             return CurrentSessionData.activeSession;
         } else {
             var sessionID;
