@@ -200,18 +200,21 @@ export class MetaInfoComponent extends CatTheBaseComponent implements OnInit, Af
           console.log(storedBrief.name);
           if (!!storedBrief) {
             this.activeBrief = storedBrief;
+            this.rootSessionService.setActiveBrief(storedBrief);
             this.briefTitle = storedBrief.name;
-            this.useMetaFromSession();
+            this.useMetaFromSession(storedBrief);
           }
         })
     }
     this.initMetaInfo();
+
     // this.db = new AppDbInProgressService(Platform, );
   }
 
-  useMetaFromSession() {
+  useMetaFromSession(storedBrief: SessionBrief = undefined) {
     console.log(`Active Brief:`);
     console.log(this.activeBrief);
+    this.activeBrief = storedBrief;
     if (!!this.activeBrief) {
       console.log(`Found Active Brief`);
       if (!this.activeSession) {
@@ -229,6 +232,7 @@ export class MetaInfoComponent extends CatTheBaseComponent implements OnInit, Af
             ' ' + this.activeSession.uuid;
         }
       }
+      // console.log(this.activeSession.catalog.metadata.roles);
     }
   }
 
@@ -590,7 +594,7 @@ export class MetaInfoComponent extends CatTheBaseComponent implements OnInit, Af
   addTestParties() {
     // TODO: Even though it saves time testing - 
     // this functionality has to be commented out for release
-    if (!this.metaInfo.parties) {
+    if (this.metaInfo && !this.metaInfo.parties) {
       this.metaInfo.parties = new Array<PartyOrganizationOrPerson>();
     }
     const a: PartyOrganizationOrPerson = {
@@ -1041,6 +1045,7 @@ export class MetaInfoComponent extends CatTheBaseComponent implements OnInit, Af
     return !!theArray && theArray.length > 0;
   }
   haveParties(): boolean {
+
     return this.hasElements<PartyOrganizationOrPerson>(this.metaInfo.parties);
   }
   haveRoles(): boolean {
