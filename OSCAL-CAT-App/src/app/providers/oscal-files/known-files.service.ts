@@ -275,6 +275,7 @@ export class KnownOscalFilesService {
     }
 
     loadSchemas(httpClient: HttpClient, storage: Storage, platform: Platform) {
+        // Create Catalog-Schema entity if the entity is absent
         if (!KnownOscalFilesService.cat_schema) {
             // Load static data element for Catalog Schema  (used to verify integrity of the data)
             // !!! SideNote: the constructor will check browser cache and expiration
@@ -283,6 +284,7 @@ export class KnownOscalFilesService {
                 KnownOscalFilesService.cat_url,
                 KnownOscalFilesService.cat_local,);
         }
+        // Create Profile-Schema entity if the entity is absent
         if (!KnownOscalFilesService.pro_schema) {
             // Load static data element for Profile Schema (used to verify integrity of the data)
             // !!! SideNote: the constructor will check browser cache and expiration
@@ -291,9 +293,11 @@ export class KnownOscalFilesService {
                 KnownOscalFilesService.pro_url,
                 KnownOscalFilesService.pro_local,);
         }
+        // Load Catalog-Schema instance if necessary
         if (KnownOscalFilesService.cat_schema && !KnownOscalFilesService.cat_schema.schema) {
             KnownOscalFilesService.cat_schema.loadSchema();
         }
+        // Load Profile-Schema instance if necessary
         if (KnownOscalFilesService.pro_schema && !KnownOscalFilesService.pro_schema.schema) {
             KnownOscalFilesService.pro_schema.loadSchema();
         }

@@ -30,9 +30,13 @@ import { Storage } from '@ionic/storage';
 import { ReadStream } from 'fs';
 import { Observable } from 'rxjs/internal/Observable';
 import { Catalog, Profile } from 'src/app/interfaces/oscal-types/oscal-catalog.types';
-import { KvServiceBase } from './state-kv-base.service';
-import addFormats from "ajv-formats"
+// Needed for Validation of the JSON files
+// import addFormats from "ajv-formats"
 import Ajv from "ajv"
+// Needed for persisting the loaded catalogs
+import { KvServiceBase } from './state-kv-base.service';
+import { CatSettingsStoreService } from '../state-nav-cat/cat-settings-store.service';
+
 
 
 export class AjvValidationResult {
@@ -286,7 +290,7 @@ export class OscalRemoteFile<ResultType> extends OsFileOperations /* extends KvS
         this.entitySchema = schema;
         this.remoteUrl = urlFile;
         this.localUrl = localFile;
-
+        this.storeName = '';
         // console.log(this.remoteUrl);
         // console.log(this.localUrl);
 

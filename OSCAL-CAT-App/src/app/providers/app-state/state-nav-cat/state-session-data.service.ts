@@ -318,7 +318,7 @@ export class CurrentSessionData extends KvServiceBase {
                 console.log(
                     `Promise of the ` +
                     ` ${storeEntryName}:` +
-                    ` is not complete ${JSON.stringify(error)}`);
+                    ` is not complete @Exception-Catch: ${JSON.stringify(error)}`);
             })
         return undefined;
     }
