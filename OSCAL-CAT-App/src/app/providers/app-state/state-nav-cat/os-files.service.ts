@@ -312,6 +312,7 @@ export class OscalRemoteFile<ResultType> extends OsFileOperations /* extends KvS
                     // console.log(this.loadedEntity);
                 },
                 error => {// Process error
+
                     // console.log('ERROR-Stage #1');
                     this.isRemoteFileError = error;
                     if (error && this.localUrl) {
