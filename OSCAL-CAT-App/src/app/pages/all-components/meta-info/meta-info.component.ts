@@ -190,6 +190,7 @@ export class MetaInfoComponent extends CatTheBaseComponent implements OnInit, Af
   }
 
   ngOnInit() {
+    super.ngOnInit();
     console.log(this.activeBriefPromise);
     console.log(this.activeBrief);
     if (!this.activeBriefPromise && !this.activeBrief || !this.activeSession) {
@@ -204,6 +205,7 @@ export class MetaInfoComponent extends CatTheBaseComponent implements OnInit, Af
             this.briefTitle = storedBrief.name;
             this.useMetaFromSession(storedBrief);
           }
+          this.initMetaInfo();
         })
     }
     this.initMetaInfo();
