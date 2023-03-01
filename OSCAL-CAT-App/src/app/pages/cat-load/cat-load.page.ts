@@ -90,9 +90,10 @@ export class CatLoadPage implements OnInit {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  handleFileInput(files: FileList) {
-
+  handleFileInput($event: Event) {
     // await this.delay(1000);
+    const filesElement = ($event.target as HTMLInputElement);
+    const files = filesElement.files;
     this.fileToUpload = files.item(0);
     console.log(this.fileToUpload);
     // this.fileOperations.uploadFileToSession(files);
