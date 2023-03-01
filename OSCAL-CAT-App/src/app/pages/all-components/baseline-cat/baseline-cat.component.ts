@@ -23,7 +23,7 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
-import { IonicModule } from '@ionic/angular';
+
 import { Component, OnInit } from '@angular/core';
 
 @Component({

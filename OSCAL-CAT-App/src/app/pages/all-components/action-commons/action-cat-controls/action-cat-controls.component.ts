@@ -49,6 +49,12 @@ import { IMustCommitFormDataArray } from '../action-ancestor-base/action-ancesto
 export class CatControlsComponent
   extends ActionAncestorSimpleArrayComponent
   implements OnInit, IMustCommitFormDataArray<Control> {
+  onSubmitData() {
+    throw new Error('Method not implemented.');
+  }
+  onCancelButton() {
+    throw new Error('Method not implemented.');
+  }
   // @Input() control: Control;
   @Input() controls: Array<Control>;
 

@@ -135,9 +135,8 @@
           <ion-row>
             <ion-col>
               <!--  Addresses -->
-              <oscal-address-list #addressList [addressList]="this.partyInfo.addresses"
-                [entryName]="this.partyInfo.addresses" [partyName]="getActualPartyName()"
-                [isArrayOptionalText]="'(Optional)'">
+              <oscal-address-list #addressList [addressList]="this.partyInfo.addresses" entryName="Address"
+                [partyName]="getActualPartyName()" [isArrayOptionalText]="'(Optional)'">
               </oscal-address-list>
             </ion-col>
           </ion-row>

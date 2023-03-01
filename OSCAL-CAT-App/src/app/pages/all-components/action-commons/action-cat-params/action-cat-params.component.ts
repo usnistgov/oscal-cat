@@ -41,6 +41,9 @@ import { ArrayStringsComponent } from '../action-array-strings/action-array-stri
 export class CatParamsComponent
   extends ActionAncestorSimpleArrayComponent
   implements OnInit, IMustCommitFormDataArray<Parameter> {
+  onSave() {
+    throw new Error('Method not implemented.');
+  }
 
   @Input() params: Array<Parameter>;
 
