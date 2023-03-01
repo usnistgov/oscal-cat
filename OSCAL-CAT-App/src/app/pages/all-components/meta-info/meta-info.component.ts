@@ -90,6 +90,8 @@ export enum EditingState {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetaInfoComponent extends CatTheBaseComponent implements OnInit, AfterViewInit, CloseAddEdit {
+
+
   /// The template Holder and accountability array of the loaded controls/components
 
 
@@ -321,6 +323,14 @@ export class MetaInfoComponent extends CatTheBaseComponent implements OnInit, Af
     });
   }
 
+  parentIonViewWillLeave() {
+    this.saveMetaDataOnLeave();
+  }
+
+
+  saveMetaDataOnLeave() {
+    console.log(`Plug-in for saving the meta data`);
+  }
 
 
   ngAfterViewInit() {

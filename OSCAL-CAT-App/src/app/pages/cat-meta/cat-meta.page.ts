@@ -25,6 +25,7 @@
  */
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { AuthorBeginComponent } from '../all-components/author-begin/author-begin.component';
+import { MetaInfoComponent } from '../all-components/meta-info/meta-info.component';
 
 @Component({
   selector: 'app-cat-meta',
@@ -33,7 +34,7 @@ import { AuthorBeginComponent } from '../all-components/author-begin/author-begi
 })
 export class CatMetaPage implements OnInit, AfterViewInit {
 
-  @ViewChild(AuthorBeginComponent, { static: false }) private metaInfo: AuthorBeginComponent;
+  @ViewChild(MetaInfoComponent, { static: false }) private metaInfoComponent: MetaInfoComponent;
 
   constructor() {
 
@@ -54,7 +55,8 @@ export class CatMetaPage implements OnInit, AfterViewInit {
 
   ionViewWillLeave(): void {
     // About to leave tha page - MUST update the session object
-    console.log(`Updating the Session with Meta-Data`)
+    console.log(`Updating the Session with Meta-Data`);
+    this.metaInfoComponent.parentIonViewWillLeave();
 
   }
 

@@ -91,6 +91,7 @@ export class CatLoadPage implements OnInit {
   }
 
   handleFileInput(files: FileList) {
+
     // await this.delay(1000);
     this.fileToUpload = files.item(0);
     console.log(this.fileToUpload);
@@ -125,7 +126,7 @@ export class CatLoadPage implements OnInit {
     // let proSchemaUrl = this.catFiles.getHttpEntity<any>('https://raw.githubusercontent.com/usnistgov/OSCAL/main/json/schema/oscal_profile_schema.json');
 
     if (!!this.catSchemaFromUrl && this.isProFromUrlLoadDone && this.isProFromUrlLoadDoneDone) {
-      this.catFiles.loadRemoteEntity(url); //, this.catSchemaFromUrl , this.onDataReadyCallback
+      this.catFiles.loadRemoteEntity('---', url, '==='); //, this.catSchemaFromUrl , this.onDataReadyCallback
       console.log(`Done?:${this.isProFromUrlLoadDone}\t Done2x?:${this.isProFromUrlLoadDoneDone}`);
     } else {
       console.log(`Done?:${this.isProFromUrlLoadDone}\t Done2x?:${this.isProFromUrlLoadDoneDone}`);

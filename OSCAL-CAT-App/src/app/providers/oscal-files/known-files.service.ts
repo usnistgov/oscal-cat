@@ -310,44 +310,49 @@ export class KnownOscalFilesService {
                 if (!cat.content_cat) {
                     cat.content_cat = new OscalRemoteFile<Catalog>(
                         httpClient, storage, platform,
-                        cat.cat_url,
-                        cat.cat_file,
-                        KnownOscalFilesService.cat_schema.schema,
-                        cat.cat_store_name,
+
                     );
                     if (!cat.content_cat.loadedEntity) {
-                        cat.content_cat.loadRemoteEntity();
+                        cat.content_cat.loadRemoteEntity(
+                            cat.cat_store_name,
+                            cat.cat_url,
+                            cat.cat_file,
+                            KnownOscalFilesService.cat_schema.schema,
+                        );
                     }
                     console.log(cat.cat_store_name);
                 }
                 if (cat.cat_baselines && cat.cat_baselines.length > 0) {
                     cat.cat_baselines.forEach(
-                        catBaseline => {
+                        (catBaseline) => {
                             console.log(catBaseline.cat_store_name);
 
                             if (!cat.content_pro) {
                                 cat.content_pro = new OscalRemoteFile<Profile>(
                                     httpClient, storage, platform,
-                                    catBaseline.pro_url,
-                                    catBaseline.pro_file,
-                                    KnownOscalFilesService.pro_schema.schema,
-                                    catBaseline.cat_store_name,
+
                                 )
                             }
                             if (!cat.content_res_pro) {
                                 cat.content_res_pro = new OscalRemoteFile<Catalog>(
                                     httpClient, storage, platform,
-                                    catBaseline.pro_url_res,
-                                    catBaseline.pro_file_res,
-                                    KnownOscalFilesService.cat_schema.schema,
-                                    catBaseline.cat_store_name + "-Res",
+
                                 )
                             }
                             if (!cat.content_pro.loadedEntity) {
-                                cat.content_pro.loadRemoteEntity();
+                                cat.content_pro.loadRemoteEntity(
+                                    catBaseline.cat_store_name + "-Pro",
+                                    catBaseline.pro_url,
+                                    catBaseline.pro_file,
+                                    KnownOscalFilesService.pro_schema.schema,
+                                );
                             }
                             if (!cat.content_res_pro.loadedEntity) {
-                                cat.content_res_pro.loadRemoteEntity();
+                                cat.content_res_pro.loadRemoteEntity(
+                                    catBaseline.cat_store_name + "-Res",
+                                    catBaseline.pro_url_res,
+                                    catBaseline.pro_file_res,
+                                    KnownOscalFilesService.cat_schema.schema,);
                             }
                         })
                 }
@@ -358,18 +363,33 @@ export class KnownOscalFilesService {
     refreshCat(cat: KnownOscalFileLocation) {
         if (cat.needsRefresh && cat.cat_use_as == CatSampleIntendedUse.BaselineReferenceAndResolved) {
             if (!cat.content_pro || (!!cat.content_pro && !cat.content_pro.loadedEntity)) {
-                cat.content_pro.loadRemoteEntity();
+                cat.content_pro.loadRemoteEntity(
+                    cat.cat_store_name + "-Pro",
+                    cat.pro_url,
+                    cat.pro_file,
+                    KnownOscalFilesService.pro_schema.schema,
+                );
                 cat.needsRefresh = false;
             }
             if (!cat.content_res_pro || (!!cat.content_res_pro && !cat.content_res_pro.loadedEntity)) {
-                cat.content_res_pro.loadRemoteEntity();
+                cat.content_res_pro.loadRemoteEntity(
+                    cat.cat_store_name + "-Res",
+                    cat.pro_url_res,
+                    cat.pro_file_res,
+                    KnownOscalFilesService.cat_schema.schema,
+                );
                 cat.needsRefresh = false;
             }
         }
 
         if (cat.cat_use_as == CatSampleIntendedUse.CatalogSample) {
             if (cat.needsRefresh && !!cat.content_cat && !cat.content_cat.loadedEntity) {
-                cat.content_cat.loadRemoteEntity();
+                cat.content_cat.loadRemoteEntity(
+                    cat.cat_store_name,
+                    cat.cat_url,
+                    cat.cat_file,
+                    KnownOscalFilesService.cat_schema.schema,
+                );
                 cat.needsRefresh = false;
             }
         }

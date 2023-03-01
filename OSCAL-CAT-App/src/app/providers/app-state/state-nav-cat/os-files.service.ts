@@ -276,21 +276,14 @@ export class OscalRemoteFile<ResultType> extends OsFileOperations /* extends KvS
     isLocalFileDone: boolean;
 
     validationResult: FilePullResult<ResultType>;
+    storeName: string;
 
     constructor(
         public httpClient: HttpClient,
         public storage: Storage,
         public platform: Platform,
-        public urlFile?: string,
-        public localFile?: string,
-        public schema?: any,
-        public storeName?: string
     ) {
         super(httpClient, storage, platform);
-        this.entitySchema = schema;
-        this.remoteUrl = urlFile;
-        this.localUrl = localFile;
-        this.storeName = '';
         // console.log(this.remoteUrl);
         // console.log(this.localUrl);
 
@@ -298,12 +291,16 @@ export class OscalRemoteFile<ResultType> extends OsFileOperations /* extends KvS
         // this.loadRemoteEntity(this.remoteUrl);
     }
 
-    loadRemoteEntity(url?: string) {
-        if (!url) {
-            url = this.remoteUrl;
-        }
+    loadRemoteEntity(storeName: string,
+        urlFile: string,
+        localFile?: string,
+        schema?: any,) {
+        this.entitySchema = schema;
+        this.remoteUrl = urlFile;
+        this.localUrl = localFile;
+        this.storeName = storeName;
         // console.log(`Loading... ${url}`);
-        this.getHttpEntity<any>(url)
+        this.getHttpEntity<any>(urlFile)
             .subscribe(
                 data => {
                     this.loadedEntity = data;
@@ -333,6 +330,8 @@ export class OscalRemoteFile<ResultType> extends OsFileOperations /* extends KvS
                         // console.log(this.validationResult)
                     }
                     this.doneLoadDateTime = Date.now();
+                    console.log(`Saving Entity: ${this.storeName}`);
+                    this.storage.set(this.storeName, this.loadedEntity);
                 }
             );
     }
