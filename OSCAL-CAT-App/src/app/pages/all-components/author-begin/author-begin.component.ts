@@ -381,10 +381,12 @@ export class AuthorBeginComponent extends CatTheBaseComponent implements OnInit,
       // TODO: Add list scanning of the briefs to see if session already exists
       if (addSessionToList) {
 
+        // Plug if the Saved Work was not yet created
         if (!this.savedWork) {
           // console.log(`Creating new savedWork Array`);
           this.savedWork = new Array<SessionBrief>();
         }
+        // Add the new brief ONLY IF it is not in the saved work yet
         if (!(this.savedWork.indexOf(newBrief) >= 0)) {
           this.savedWork.push(newBrief);
         }
