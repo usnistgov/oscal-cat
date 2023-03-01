@@ -43,7 +43,6 @@ enum StateMark {
 })
 export class SelectBaselineComponent implements OnInit {
 
-
   // Baselines Handling
   showBaselinesOptions = false;
   showBaselinesRadio = false;
@@ -128,6 +127,12 @@ export class SelectBaselineComponent implements OnInit {
   showBaselines(): boolean {
     this.showBaselinesRadio = (this.formState == StateMark.cutOut || this.formState == StateMark.preCheck);
     return this.showBaselinesRadio;
+  }
+
+
+  onCheckBaselineUpdate($event: Event, idx: number) {
+    // Figure out what to do on the check in the baseline
+    throw new Error('Method not implemented.');
   }
 
 }

@@ -35,6 +35,7 @@ import { TreeProfileComponent } from './tree-profile/tree-profile.component';
 import { ListGroupsComponent } from './list-groups/list-groups.component';
 import { TreeGroupsComponent } from './tree-groups/tree-groups.component';
 import { RecursiveGroupsComponent } from './tree-groups/recursive-groups.component';
+import { ComponentsModule } from "./components.module";
 //import { XCatTreeComponent } from './x-cat-tree-select/x-cat-tree-select.component';
 //import { RecursiveXCatTreeSelectComponent } from './x-cat-tree-select/recursive-x-cat-tree-select.component';
 
@@ -50,8 +51,6 @@ import { RecursiveGroupsComponent } from './tree-groups/recursive-groups.compone
     RecursiveProfileComponent, ListGroupsComponent, TreeGroupsComponent, TreeGroupsComponent,
     //    ZCatTreeComponent, RecursiveZCatTreeSelectComponent
   ],
-
-  imports: [IonicModule, ReactiveFormsModule, FormsModule, CommonModule,
-  ]
+  imports: [IonicModule, ReactiveFormsModule, FormsModule, CommonModule, ComponentsModule]
 })
 export class TreesModule { }

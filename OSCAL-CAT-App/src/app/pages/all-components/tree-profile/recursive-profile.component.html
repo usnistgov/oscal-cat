@@ -62,7 +62,9 @@
         [parent]="item.parent" [class.hidden]="!item.open" [level]="level != undefined ? level + 1 : 0">
     </ul>
 
-    <oscal-cat-controls controls="this.cat">
+    <!--     
+    <oscal-cat-controls [controls]="this.children">
     </oscal-cat-controls>
+ -->
 
 </li>

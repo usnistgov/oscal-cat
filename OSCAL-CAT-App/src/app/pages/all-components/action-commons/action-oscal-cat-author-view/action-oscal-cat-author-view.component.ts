@@ -45,7 +45,9 @@ export class OscalCatAuthorViewComponent implements OnInit, IMustCommitFormDataA
     return !!this.knownCat && !!this.knownCat.cat_baselines && this.knownCat.cat_baselines.length > 0 && this.entityChecks[1];
   }
 
-  onCheckEntityUpdate($event: CustomEvent<CheckboxChangeEventDetail>, id: number = -1) {
+  onCheckEntityUpdate($o_event: Event, id: number = -1) {
+
+    const $event = ($o_event as CustomEvent<CheckboxChangeEventDetail>);
     if (id < 2 && id >= 0) {
       this.entityChecks[id] = $event.detail.checked; //!this.entityChecks[id];
     }
@@ -55,7 +57,9 @@ export class OscalCatAuthorViewComponent implements OnInit, IMustCommitFormDataA
     $event.stopPropagation();
   }
 
-  onCheckBaselineUpdate($event: CustomEvent, id: number = -1) {
+  onCheckBaselineUpdate($o_event: Event, id: number = -1) {
+
+    const $event = $o_event as CustomEvent;
     if (id < this.baselineChecks.length && id >= 0) {
       this.baselineChecks[id] = $event.detail.checked;
     }
