@@ -280,26 +280,28 @@ export class KnownOscalFilesService {
             // Load static data element for Catalog Schema  (used to verify integrity of the data)
             // !!! SideNote: the constructor will check browser cache and expiration
             KnownOscalFilesService.cat_schema = new SchemaFile(
-                httpClient, storage, platform,
+                httpClient, storage, platform,);
+        }
+        // Load Catalog-Schema instance if necessary
+        if (KnownOscalFilesService.cat_schema && !KnownOscalFilesService.cat_schema.schema) {
+            KnownOscalFilesService.cat_schema.loadSchema(
                 KnownOscalFilesService.cat_url,
                 KnownOscalFilesService.cat_local,);
         }
+
         // Create Profile-Schema entity if the entity is absent
         if (!KnownOscalFilesService.pro_schema) {
             // Load static data element for Profile Schema (used to verify integrity of the data)
             // !!! SideNote: the constructor will check browser cache and expiration
             KnownOscalFilesService.pro_schema = new SchemaFile(
-                httpClient, storage, platform,
-                KnownOscalFilesService.pro_url,
-                KnownOscalFilesService.pro_local,);
-        }
-        // Load Catalog-Schema instance if necessary
-        if (KnownOscalFilesService.cat_schema && !KnownOscalFilesService.cat_schema.schema) {
-            KnownOscalFilesService.cat_schema.loadSchema();
+                httpClient, storage, platform,);
         }
         // Load Profile-Schema instance if necessary
         if (KnownOscalFilesService.pro_schema && !KnownOscalFilesService.pro_schema.schema) {
-            KnownOscalFilesService.pro_schema.loadSchema();
+            KnownOscalFilesService.pro_schema.loadSchema(
+                KnownOscalFilesService.pro_url,
+                KnownOscalFilesService.pro_local,
+            );
         }
     }
 

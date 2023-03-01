@@ -424,11 +424,11 @@ export class SchemaFile extends OsFileOperations {
     remote_schema_error: any;
     local_schema_error: any;
 
-    constructor(httpClient: HttpClient, storage: Storage, platform: Platform, url?: string, backup_file?: string,) {
+    constructor(httpClient: HttpClient, storage: Storage, platform: Platform) {
         super(httpClient, storage, platform);
         //this.cat_schema_loader = new OscalSchemaFile<any>(httpClient, storage, platform);
-        this.url = url;
-        this.fallback_file = backup_file;
+        this.url = undefined;
+        this.fallback_file = undefined;
 
     }
 
