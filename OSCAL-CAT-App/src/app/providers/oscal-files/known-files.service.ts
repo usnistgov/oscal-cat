@@ -314,6 +314,7 @@ export class KnownOscalFilesService {
                         httpClient, storage, platform,
 
                     );
+                    console.log(` Store-As:${cat.cat_store_name};\t Entity ${cat.content_cat.loadedEntity}`)
                     if (!cat.content_cat.loadedEntity) {
                         cat.content_cat.loadRemoteEntity(
                             cat.cat_store_name,
@@ -329,28 +330,28 @@ export class KnownOscalFilesService {
                         (catBaseline) => {
                             console.log(catBaseline.cat_store_name);
 
-                            if (!cat.content_pro) {
-                                cat.content_pro = new OscalRemoteFile<Profile>(
+                            if (!catBaseline.content_pro) {
+                                catBaseline.content_pro = new OscalRemoteFile<Profile>(
                                     httpClient, storage, platform,
 
                                 )
                             }
-                            if (!cat.content_res_pro) {
-                                cat.content_res_pro = new OscalRemoteFile<Catalog>(
+                            if (!catBaseline.content_res_pro) {
+                                catBaseline.content_res_pro = new OscalRemoteFile<Catalog>(
                                     httpClient, storage, platform,
 
                                 )
                             }
-                            if (!cat.content_pro.loadedEntity) {
-                                cat.content_pro.loadRemoteEntity(
+                            if (!catBaseline.content_pro.loadedEntity) {
+                                catBaseline.content_pro.loadRemoteEntity(
                                     catBaseline.cat_store_name + "-Pro",
                                     catBaseline.pro_url,
                                     catBaseline.pro_file,
                                     KnownOscalFilesService.pro_schema.schema,
                                 );
                             }
-                            if (!cat.content_res_pro.loadedEntity) {
-                                cat.content_res_pro.loadRemoteEntity(
+                            if (!catBaseline.content_res_pro.loadedEntity) {
+                                catBaseline.content_res_pro.loadRemoteEntity(
                                     catBaseline.cat_store_name + "-Res",
                                     catBaseline.pro_url_res,
                                     catBaseline.pro_file_res,
