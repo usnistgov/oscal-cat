@@ -31,7 +31,7 @@ jobs:
       working-directory: ${{ env.MAIN_REPO_CHECKOUT_PATH }}
       id: store-git-metadata
     - name: Restore Build Cache
-      uses: actions/cache@4723a57e26efda3a62cbde1812113b730952852d
+      uses: actions/cache@940f3d7cf195ba83374c77632d1e2cbb2f24ae68
       with:
         path: ${{ github.workspace }}/${{ env.MAIN_REPO_CHECKOUT_PATH }}//OSCAL-CAT-App/www
         key: cat-${{ runner.os }}-${{ steps.store-git-metadata.outputs.commit_id }}
@@ -62,7 +62,7 @@ jobs:
         output: ${{ runner.temp }}/oscal-cat-sbom.cyclonedx.json
       id: generate-sbom-licensing-cdx-json
     - name: Store BOM Executable in Cache
-      uses: actions/cache@4723a57e26efda3a62cbde1812113b730952852d
+      uses: actions/cache@940f3d7cf195ba83374c77632d1e2cbb2f24ae68
       with:
         path: /home/runner/go/bin/bom
         key: ${{ runner.os }}-bom-${{ hashFiles(format('{0}/go.sum', env.BUILD_PATH)) }}
