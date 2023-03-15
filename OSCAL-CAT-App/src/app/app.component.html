@@ -7,7 +7,7 @@
 [class.dark-theme]="this.dark"
 -->
 <ion-app [class.dark-theme]="this.dark">
-  <ion-item class="archived">
+  <ion-item *ngIf="showArchived" class="archived">
     <ion-label>
       <div>
         The code in this repository (and the related website, if it exists) is no longer under active <br />
@@ -21,7 +21,7 @@
         it with consideration to the available resources.
       </div>
     </ion-label>
-    <ion-button title="Close this warning" color="danger">
+    <ion-button (click)="closeArchived()" title="Close this warning" color="danger">
       <ion-icon position="end" icon="close"></ion-icon>
     </ion-button>
 
