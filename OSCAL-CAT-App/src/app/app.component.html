@@ -7,6 +7,26 @@
 [class.dark-theme]="this.dark"
 -->
 <ion-app [class.dark-theme]="this.dark">
+  <ion-item class="archived">
+    <ion-label>
+      <div>
+        The code in this repository (and the related website, if it exists) is no longer under active <br />
+        development. At this time, the NIST OSCAL Team does not maintain the code or update <br />
+        dependencies. We do not review issues for feature requests or bug fixes. The repository is <br />
+        archived: it can be reactivated, but can be deleted at any time.
+        <br />
+        <br />
+        If you are interested in reactivation of this repository, feature requests, or bug fixes -<br />
+        please, let us know and we may consider reactivating this repository again prioritizing<br />
+        it with consideration to the available resources.
+      </div>
+    </ion-label>
+    <ion-button title="Close this warning" color="danger">
+      <ion-icon position="end" icon="close"></ion-icon>
+    </ion-button>
+
+  </ion-item>
+
   <ion-split-pane contentId="main-content">
 
     <ion-menu contentId="main-content">
@@ -99,7 +119,9 @@
       </ion-content>
     </ion-menu>
 
+
     <ion-router-outlet id="main-content">
+
 
     </ion-router-outlet>
 
