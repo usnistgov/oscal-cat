@@ -11,8 +11,27 @@ ion-menu ion-item {
   max-width:240px;
 }
 
+
+
 ion-item.selected {
   --color: var(--ion-color-primary);
+}
+
+ion-item.archived {
+  --background: #d9e8f6;;
+  --color: #661111;
+
+  --border-color: #fff;
+  --border-style: dashed;
+  --border-width: 2px;
+
+  --border-radius: 20px;
+
+  --ripple-color: purple;
+
+  --detail-icon-color: white;
+  --detail-icon-opacity: 1;
+  --detail-icon-font-size: 20px;
 }
 
 /*
