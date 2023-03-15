@@ -44,6 +44,7 @@ const theme_dark = 'dark';
 })
 export class AppComponent implements OnInit {
 
+  showArchived = true;
   userWarningAcceptedName = 'OC:App-Warning-Accepted';
   userAcceptanceYes = 'Warning Accepted';
   dark = true;
@@ -222,4 +223,9 @@ export class AppComponent implements OnInit {
     // console.log(`Dark=${this.dark}`)
     this.toggleDarkTheme();
   }
+
+  closeArchived() {
+    this.showArchived = false;
+  }
+
 }
