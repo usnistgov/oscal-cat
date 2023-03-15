@@ -1,5 +1,9 @@
 # OSCAL Content/Catalog Authoring Tool (OSCAL CAT)
 
+## The code in this repository (and the related website, if it exists) is no longer under active development. At this time, the NIST OSCAL Team does not maintain the code or update dependencies. We do not review issues for feature requests or bug fixes. The repository is archived: it can be reactivated, but can be deleted at any time.
+
+## If you are interested in reactivation of this repository, feature requests, or bug fixes - please, let us know and we may consider reactivating this repository again prioritizing it with consideration to the available resources.
+
 ## Prerequisites:
 
 ### Required:
