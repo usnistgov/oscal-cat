@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout App Repo
-      uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+      uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f
       with:
         path: ${{ github.workspace }}/${{ env.MAIN_REPO_CHECKOUT_PATH }}
         fetch-depth: 0
