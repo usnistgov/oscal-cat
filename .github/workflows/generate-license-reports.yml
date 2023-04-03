@@ -100,7 +100,7 @@ jobs:
         popd
       id: zip-sbom-licenses-report
     - name: Upload SBOM License Reports
-      uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+      uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce
       with:
         name: oscal-cat_sbom
         path: |
